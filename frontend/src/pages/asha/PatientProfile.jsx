@@ -8,7 +8,7 @@ import Loader from '../../components/ui/Loader';
 export default function PatientProfile() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { lang } = useLang();
+  const { lang, t } = useLang();
   const [patient, setPatient] = useState(null);
   const [timeline, setTimeline] = useState({ records: [], referrals: [], followups: [] });
   const [loading, setLoading] = useState(true);
@@ -31,7 +31,7 @@ export default function PatientProfile() {
     setLoading(false);
   };
 
-  const formatDate = (d) => d ? new Date(d).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '—';
+  const formatDate = (d) => d ? new Date(d).toLocaleDateString(lang === 'mr' ? 'mr-IN' : 'en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '—';
 
   const formatVitals = (vitals) => {
     if (!vitals) return null;
@@ -52,7 +52,7 @@ export default function PatientProfile() {
       events.push({
         type: 'record',
         date: r.created_at,
-        title: r.record_type === 'vitals' ? 'Vitals Recorded' : r.record_type === 'consultation' ? 'Consultation' : r.record_type === 'assessment' ? 'Assessment' : r.record_type,
+        title: r.record_type === 'vitals' ? (lang === 'mr' ? 'व्हिटल्स नोंदवले' : 'Vitals Recorded') : r.record_type === 'consultation' ? (lang === 'mr' ? 'सल्लामसलत' : 'Consultation') : (lang === 'mr' ? 'मूल्यांकन' : 'Assessment'),
         facility: r.facility_name,
         recordedBy: r.recorded_by_name,
         detail: r.notes,
@@ -69,7 +69,7 @@ export default function PatientProfile() {
       events.push({
         type: 'referral',
         date: r.created_at,
-        title: `Referral — ${r.status.replace('_', ' ')}`,
+        title: `${lang === 'mr' ? 'संदर्भ' : 'Referral'} — ${t(`status_${r.status}`) || r.status.replace('_', ' ')}`,
         facility: `${r.from_facility_name} → ${r.to_facility_name}`,
         detail: r.reason,
         urgency: r.urgency,
@@ -86,7 +86,7 @@ export default function PatientProfile() {
       events.push({
         type: 'followup',
         date: f.due_date,
-        title: `Follow-up: ${f.follow_up_type?.replace('_', ' ')}`,
+        title: `${lang === 'mr' ? 'पाठपुरावा' : 'Follow-up'}: ${f.follow_up_type?.replace('_', ' ')}`,
         detail: f.notes,
         status: isOverdue ? 'overdue' : f.status,
         assignedTo: f.assigned_to_name,
@@ -103,7 +103,7 @@ export default function PatientProfile() {
   }
 
   if (!patient) {
-    return <div className="empty-state"><p>Patient record not found</p></div>;
+    return <div className="empty-state"><p>{t('patient_not_found')}</p></div>;
   }
 
   const events = buildTimeline();
@@ -112,17 +112,17 @@ export default function PatientProfile() {
   return (
     <div>
       <button className="btn btn-ghost mb-lg" onClick={() => navigate('/asha')}>
-        <ArrowLeft size={16} /> Back to patients
+        <ArrowLeft size={16} /> {t('back_to_patients')}
       </button>
 
       {/* Patient Header */}
       <div className="glass-card mb-xl">
         <div className="flex items-center gap-lg" style={{ flexWrap: 'wrap' }}>
-          <div className="patient-avatar" style={{ width: 64, height: 64, fontSize: 'var(--font-2xl)' }}>
+          <div className="patient-avatar" style={{ width: 64, height: 64, fontSize: '1.5rem' }}>
             {patient.full_name?.charAt(0)}
           </div>
           <div style={{ flex: 1 }}>
-            <h2 style={{ fontSize: 'var(--font-2xl)', fontWeight: 800 }}>
+            <h2 style={{ fontSize: '1.5rem', fontWeight: 800 }}>
               {lang === 'mr' && patient.full_name_mr ? patient.full_name_mr : patient.full_name}
             </h2>
             <div className="text-secondary text-sm mt-xs flex gap-lg" style={{ flexWrap: 'wrap' }}>
@@ -132,7 +132,7 @@ export default function PatientProfile() {
               {patient.phone && <span>📱 {patient.phone}</span>}
             </div>
             <div className="flex gap-sm mt-md" style={{ flexWrap: 'wrap' }}>
-              <span className={`badge risk-${patient.risk_level}`}>{patient.risk_level} risk</span>
+              <span className={`badge risk-${patient.risk_level}`}>{t(`risk_${patient.risk_level}`) || `${patient.risk_level} risk`}</span>
               {patient.conditions?.map(c => (
                 <span key={c} className="badge badge-purple">{c}</span>
               ))}
@@ -140,7 +140,7 @@ export default function PatientProfile() {
           </div>
           <div>
             <button className="btn btn-primary" onClick={() => navigate(`/asha/triage/${patient.id}`)}>
-              <ClipboardList size={16} /> Start Triage Assessment
+              <ClipboardList size={16} /> {t('start_triage_assessment')}
             </button>
           </div>
         </div>
@@ -151,11 +151,11 @@ export default function PatientProfile() {
         <div className="alert-banner emergency mb-xl">
           <div className="alert-icon"><AlertTriangle size={22} /></div>
           <div className="alert-content">
-            <div className="alert-title">{overdueFollowups.length} overdue follow-up(s)</div>
+            <div className="alert-title">{overdueFollowups.length} {t('overdue_followup_count')}</div>
             <div className="alert-subtitle">
-              {overdueFollowups.map((f, i) => (
+              {overdueFollowups.map((f) => (
                 <div key={f.id}>
-                  {f.follow_up_type?.replace('_', ' ')} — due {formatDate(f.due_date)} · {Math.floor((new Date() - new Date(f.due_date)) / (1000 * 60 * 60 * 24))} days overdue
+                  {f.follow_up_type?.replace('_', ' ')} — due {formatDate(f.due_date)}
                 </div>
               ))}
             </div>
@@ -165,8 +165,8 @@ export default function PatientProfile() {
 
       {/* Timeline */}
       <h3 className="section-title">
-        <Activity size={20} style={{ display: 'inline', marginRight: '8px', verticalAlign: 'middle', color: 'var(--accent-teal)' }} />
-        Longitudinal Patient Journey Record Across Facilities
+        <Activity size={20} style={{ display: 'inline', marginRight: '8px', verticalAlign: 'middle', color: 'var(--brand-teal)' }} />
+        {t('longitudinal_patient_journey')}
       </h3>
 
       <div className="timeline">
@@ -180,7 +180,7 @@ export default function PatientProfile() {
                 {event.title}
                 {event.urgency && (
                   <span className={`badge badge-${event.urgency === 'emergency_review' ? 'danger' : event.urgency === 'urgent' ? 'warning' : 'info'}`} style={{ marginLeft: '8px', fontSize: '10px' }}>
-                    {event.urgency}
+                    {t(`urgency_${event.urgency}`) || event.urgency}
                   </span>
                 )}
               </div>
@@ -189,7 +189,7 @@ export default function PatientProfile() {
               {event.detail && <div className="event-detail">{event.detail}</div>}
               {event.feedback && (
                 <div className="event-detail" style={{ color: '#047857', marginTop: '4px', fontWeight: 600 }}>
-                  ✅ Doctor feedback: {event.feedback}
+                  ✅ {lang === 'mr' ? 'डॉक्टर अभिप्राय:' : 'Doctor feedback:'} {event.feedback}
                 </div>
               )}
             </div>
