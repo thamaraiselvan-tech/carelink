@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Check, CheckCircle2, Stethoscope, Building2 } from 'lucide-react';
+import { ArrowLeft, Check, CheckCircle2, Stethoscope } from 'lucide-react';
 import { getReferrals, updateReferralStatus, getPatientTimeline, createFollowUp } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 import Loader from '../../components/ui/Loader';
@@ -105,16 +105,16 @@ export default function ReferralDetail() {
   const isConfirmed = referral.status === 'confirmed' || referral.status === 'in_consultation' || referral.status === 'completed';
 
   return (
-    <div style={{ maxWidth: '880px', margin: '0 auto' }}>
+    <div>
       <button className="btn btn-ghost mb-lg" onClick={() => navigate('/doctor')}>
         <ArrowLeft size={16} /> Back to Doctor Queue
       </button>
 
       {/* Referral Summary Header */}
       <div className="glass-card mb-xl">
-        <div className="flex justify-between items-start mb-md" style={{ flexWrap: 'wrap', gap: '12px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px', flexWrap: 'wrap', gap: '12px' }}>
           <div>
-            <div className="flex items-center gap-sm" style={{ flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
               <h2 style={{ fontSize: '1.5rem', fontWeight: 800 }}>
                 {referral.patient_name}
               </h2>
@@ -125,7 +125,7 @@ export default function ReferralDetail() {
                 {referral.status?.replace('_', ' ')}
               </span>
             </div>
-            <div className="text-sm text-secondary mt-xs">
+            <div style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginTop: '4px' }}>
               Referred from <strong>{referral.from_facility_name}</strong> to <strong>{referral.to_facility_name}</strong>
             </div>
           </div>
@@ -137,13 +137,13 @@ export default function ReferralDetail() {
           )}
         </div>
 
-        <div className="form-group mt-md" style={{ background: 'var(--bg-tertiary)', padding: '16px', borderRadius: 'var(--radius-md)' }}>
-          <div className="text-xs font-bold text-tertiary uppercase tracking-wider mb-xs">
+        <div className="form-group" style={{ background: 'var(--bg-tertiary)', padding: '16px', borderRadius: 'var(--radius-md)', marginBottom: 0 }}>
+          <div style={{ fontSize: '0.6875rem', fontWeight: 800, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '4px' }}>
             Structured Clinical Reason from Referring Worker ({referral.referred_by_name || 'ASHA'}):
           </div>
-          <div className="text-sm font-semibold">{referral.reason}</div>
+          <div style={{ fontSize: '0.9375rem', fontWeight: 600, color: 'var(--text-primary)' }}>{referral.reason}</div>
           {referral.prior_history_summary && (
-            <div className="text-xs text-secondary mt-sm">
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '6px' }}>
               <strong>Prior History:</strong> {referral.prior_history_summary}
             </div>
           )}
@@ -152,13 +152,13 @@ export default function ReferralDetail() {
 
       {/* Consultation & Closed-Loop Feedback Section */}
       <div className="glass-card">
-        <h3 className="section-title" style={{ display: 'flex', itemsCenter: 'center', gap: '8px' }}>
-          <Stethoscope size={22} style={{ color: 'var(--accent-teal)' }} />
+        <h3 className="section-title">
+          <Stethoscope size={20} style={{ color: 'var(--brand-teal)' }} />
           Doctor Consultation & Closed-Loop Feedback
         </h3>
 
         <form onSubmit={handleCompleteConsultation}>
-          <div className="form-group mb-lg">
+          <div className="form-group" style={{ marginBottom: '20px' }}>
             <label className="form-label">Consultation Outcome / Diagnosis</label>
             <textarea
               rows={3}
@@ -169,8 +169,8 @@ export default function ReferralDetail() {
             />
           </div>
 
-          <div className="form-group mb-lg" style={{ border: '1px solid rgba(13, 148, 136, 0.3)', padding: '18px', borderRadius: 'var(--radius-md)', background: 'rgba(13, 148, 136, 0.05)' }}>
-            <label className="form-label" style={{ color: '#0F766E' }}>
+          <div className="form-group" style={{ border: '1px solid rgba(13, 148, 136, 0.25)', padding: '18px', borderRadius: 'var(--radius-md)', background: 'rgba(13, 148, 136, 0.04)', marginBottom: '24px' }}>
+            <label className="form-label" style={{ color: 'var(--brand-teal)' }}>
               Feedback-on-Record Back to Referring ASHA/ANM ({referral.referred_by_name || 'Frontline Worker'})
             </label>
             <textarea
@@ -180,7 +180,7 @@ export default function ReferralDetail() {
               placeholder="Contextual clinical guidance for the frontline worker regarding this patient's ongoing care..."
               required
             />
-            <div className="text-xs text-tertiary mt-xs">
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)', marginTop: '6px' }}>
               This feedback populates directly into the ASHA's Referral Tracker and supervisor competency view.
             </div>
           </div>

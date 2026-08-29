@@ -18,40 +18,35 @@ export default function Background3D() {
     };
     window.addEventListener('resize', handleResize);
 
-    // Create 3D floating nodes
-    const nodes = Array.from({ length: 28 }, () => ({
+    const nodes = Array.from({ length: 24 }, () => ({
       x: Math.random() * width,
       y: Math.random() * height,
       z: Math.random() * 2 + 0.5,
-      vx: (Math.random() - 0.5) * 0.4,
-      vy: (Math.random() - 0.5) * 0.4,
-      radius: Math.random() * 3 + 1.5,
+      vx: (Math.random() - 0.5) * 0.3,
+      vy: (Math.random() - 0.5) * 0.3,
+      radius: Math.random() * 2.5 + 1.5,
       color: Math.random() > 0.5 ? 'rgba(13, 148, 136, ' : 'rgba(37, 99, 235, ',
     }));
 
     const render = () => {
       ctx.clearRect(0, 0, width, height);
 
-      // Draw subtle connections
       for (let i = 0; i < nodes.length; i++) {
         const nodeA = nodes[i];
-
-        // Move
         nodeA.x += nodeA.vx * nodeA.z;
         nodeA.y += nodeA.vy * nodeA.z;
 
         if (nodeA.x < 0 || nodeA.x > width) nodeA.vx *= -1;
         if (nodeA.y < 0 || nodeA.y > height) nodeA.vy *= -1;
 
-        // Draw connections
         for (let j = i + 1; j < nodes.length; j++) {
           const nodeB = nodes[j];
           const dx = nodeA.x - nodeB.x;
           const dy = nodeA.y - nodeB.y;
           const dist = Math.sqrt(dx * dx + dy * dy);
 
-          if (dist < 180) {
-            const alpha = (1 - dist / 180) * 0.15;
+          if (dist < 160) {
+            const alpha = (1 - dist / 160) * 0.12;
             ctx.beginPath();
             ctx.moveTo(nodeA.x, nodeA.y);
             ctx.lineTo(nodeB.x, nodeB.y);
@@ -61,12 +56,9 @@ export default function Background3D() {
           }
         }
 
-        // Draw node
         ctx.beginPath();
         ctx.arc(nodeA.x, nodeA.y, nodeA.radius * nodeA.z, 0, Math.PI * 2);
-        ctx.fillStyle = nodeA.color + (0.3 * nodeA.z) + ')';
-        ctx.shadowBlur = 10;
-        ctx.shadowColor = 'rgba(13, 148, 136, 0.3)';
+        ctx.fillStyle = nodeA.color + (0.25 * nodeA.z) + ')';
         ctx.fill();
       }
 
@@ -82,10 +74,10 @@ export default function Background3D() {
   }, []);
 
   return (
-    <>
+    <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 0, overflow: 'hidden' }}>
       <div className="ambient-orb ambient-orb-1" />
       <div className="ambient-orb ambient-orb-2" />
-      <canvas ref={canvasRef} className="background-3d-canvas" />
-    </>
+      <canvas ref={canvasRef} style={{ display: 'block', width: '100vw', height: '100vh' }} />
+    </div>
   );
 }
