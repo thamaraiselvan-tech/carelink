@@ -28,7 +28,7 @@ export default function Header() {
 
   return (
     <header className="app-header">
-      <div className="flex items-center gap-lg">
+      <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
         <div className="sync-indicator">
           <div className={`sync-dot ${isOnline ? 'synced' : 'offline'}`} />
           <span>{isOnline ? 'Connected' : 'Offline'}</span>
@@ -36,7 +36,7 @@ export default function Header() {
         </div>
       </div>
 
-      <div className="flex items-center gap-lg">
+      <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
         <div className="lang-toggle">
           <button className={lang === 'en' ? 'active' : ''} onClick={() => lang !== 'en' && toggleLang()}>EN</button>
           <button className={lang === 'mr' ? 'active' : ''} onClick={() => lang !== 'mr' && toggleLang()}>मराठी</button>

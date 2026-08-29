@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, AlertTriangle, Users, ArrowRight, Activity, CalendarX } from 'lucide-react';
+import { Search, AlertTriangle, Users, ArrowRight, CalendarX } from 'lucide-react';
 import { getPatients, getOutreachAlerts, getFollowUps, getReferrals } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 import { useLang } from '../../context/LanguageContext';
@@ -84,7 +84,7 @@ export default function AshaDashboard() {
   return (
     <div>
       {/* Page Header */}
-      <div className="page-header-box flex items-center justify-between">
+      <div className="page-header-box">
         <div>
           <h1 className="page-title">{t('patients')}</h1>
           <p className="page-subtitle">
@@ -94,7 +94,7 @@ export default function AshaDashboard() {
       </div>
 
       {/* Stats Row */}
-      <div className="stats-grid mb-xl">
+      <div className="stats-grid" style={{ marginBottom: '24px' }}>
         <div className="stat-card">
           <div className="stat-icon"><Users size={20} /></div>
           <span className="stat-label">Total Registered</span>
@@ -123,9 +123,9 @@ export default function AshaDashboard() {
 
       {/* Outreach Alert Banner */}
       {alerts.length > 0 && (
-        <div className="alert-banner emergency mb-xl">
+        <div className="alert-banner emergency" style={{ marginBottom: '24px' }}>
           <div className="alert-icon">
-            <AlertTriangle size={22} />
+            <AlertTriangle size={20} />
           </div>
           <div className="alert-content">
             <div className="alert-title">⚠ {alerts.length} Proactive Outreach Flag(s) (Overdue Care Events)</div>
@@ -146,18 +146,19 @@ export default function AshaDashboard() {
         </div>
       )}
 
-      {/* Search & Filter */}
-      <div className="flex items-center gap-lg mb-xl" style={{ flexWrap: 'wrap' }}>
-        <div className="search-input-wrapper" style={{ flex: 1, minWidth: '220px' }}>
-          <Search size={18} />
+      {/* Search & Filter Controls */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '24px', flexWrap: 'wrap' }}>
+        <div style={{ position: 'relative', flex: 1, minWidth: '220px' }}>
+          <Search size={18} style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-tertiary)' }} />
           <input
             type="text"
             placeholder="Search patients by name or village..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
+            style={{ paddingLeft: '44px' }}
           />
         </div>
-        <div className="tab-bar" style={{ marginBottom: 0, flex: 'none' }}>
+        <div className="tab-bar" style={{ marginBottom: 0 }}>
           {[
             { key: 'all', label: 'All Patients' },
             { key: 'high_risk', label: 'High Risk' },
@@ -172,8 +173,8 @@ export default function AshaDashboard() {
         </div>
       </div>
 
-      {/* Patient List */}
-      <div className="flex flex-col gap-sm">
+      {/* Patient Cards List */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
         {filteredPatients.map(patient => {
           const isOverdue = alerts.some(a => a.patient_id === patient.id);
 
@@ -201,7 +202,7 @@ export default function AshaDashboard() {
                   )}
                 </div>
                 {patient.conditions?.length > 0 && (
-                  <div className="patient-conditions mt-xs flex gap-xs" style={{ flexWrap: 'wrap' }}>
+                  <div style={{ display: 'flex', gap: '6px', marginTop: '6px', flexWrap: 'wrap' }}>
                     {patient.conditions.map(c => {
                       const config = conditionLabels[c] || { en: c, color: '#64748B' };
                       return (
@@ -218,16 +219,16 @@ export default function AshaDashboard() {
                 )}
               </div>
 
-              <div className="patient-actions flex flex-col items-end gap-xs">
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '6px' }}>
                 <span className={`badge ${riskColors[patient.risk_level]}`}>
                   {patient.risk_level} risk
                 </span>
                 {isOverdue && (
-                  <span className="badge badge-danger" style={{ animation: 'pulse-badge 2s infinite' }}>
+                  <span className="badge badge-danger">
                     ⚠ {t('overdue')}
                   </span>
                 )}
-                <ArrowRight size={16} className="text-tertiary" />
+                <ArrowRight size={16} style={{ color: 'var(--text-tertiary)' }} />
               </div>
             </div>
           );
@@ -236,7 +237,7 @@ export default function AshaDashboard() {
         {filteredPatients.length === 0 && (
           <div className="empty-state">
             <Users size={48} />
-            <p>No patients found</p>
+            <p>No patients found matching your search</p>
           </div>
         )}
       </div>

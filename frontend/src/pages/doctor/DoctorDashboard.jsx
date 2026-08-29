@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Stethoscope, ArrowRight, AlertTriangle } from 'lucide-react';
+import { Stethoscope, ArrowRight } from 'lucide-react';
 import { getReferrals } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 import Loader from '../../components/ui/Loader';
@@ -31,7 +31,7 @@ export default function DoctorDashboard() {
 
   return (
     <div>
-      <div className="page-header-box flex items-center justify-between" style={{ flexWrap: 'wrap', gap: '16px' }}>
+      <div className="page-header-box">
         <div>
           <h1 className="page-title">Incoming Referrals Queue</h1>
           <p className="page-subtitle">
@@ -39,13 +39,13 @@ export default function DoctorDashboard() {
           </p>
         </div>
         <div>
-          <span className="badge badge-teal" style={{ padding: '8px 16px', fontSize: 'var(--font-sm)' }}>
+          <span className="badge badge-teal" style={{ height: '32px', padding: '0 16px', fontSize: '0.8125rem' }}>
             {referrals.length} Pending Cases
           </span>
         </div>
       </div>
 
-      <div className="flex flex-col gap-lg">
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
         {referrals.map(ref => {
           const isEmergency = ref.urgency === 'emergency_review';
           return (
@@ -55,15 +55,15 @@ export default function DoctorDashboard() {
               onClick={() => navigate(`/doctor/referral/${ref.id}`)}
               style={isEmergency ? { borderColor: 'rgba(225, 29, 72, 0.4)', background: 'linear-gradient(135deg, #FFF1F2 0%, #FFFFFF 100%)' } : {}}
             >
-              <div className="flex justify-between items-start mb-md" style={{ flexWrap: 'wrap', gap: '12px' }}>
-                <div className="flex items-center gap-md">
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px', flexWrap: 'wrap', gap: '12px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
                   <div className="patient-avatar">
                     {ref.patient_name?.charAt(0)}
                   </div>
                   <div>
-                    <div className="flex items-center gap-sm" style={{ flexWrap: 'wrap' }}>
-                      <span className="font-bold text-base">{ref.patient_name}</span>
-                      <span className="text-xs text-tertiary">({ref.patient_age}y · {ref.patient_gender})</span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                      <span style={{ fontWeight: 800, fontSize: '1rem', color: 'var(--text-primary)' }}>{ref.patient_name}</span>
+                      <span style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)', fontWeight: 500 }}>({ref.patient_age}y · {ref.patient_gender})</span>
                       <span className={`badge risk-${ref.patient_risk_level}`}>
                         {ref.patient_risk_level} risk
                       </span>
@@ -71,26 +71,28 @@ export default function DoctorDashboard() {
                         {ref.urgency?.replace('_', ' ')}
                       </span>
                     </div>
-                    <div className="text-xs text-tertiary mt-xs">
-                      Referred from: <strong className="text-primary">{ref.from_facility_name}</strong> · Category: {ref.complaint_category}
+                    <div style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)', marginTop: '4px' }}>
+                      Referred from: <strong style={{ color: 'var(--text-primary)' }}>{ref.from_facility_name}</strong> · Category: {ref.complaint_category}
                     </div>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-md">
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                   <span className={`badge ref-${ref.status}`}>
                     {ref.status?.replace('_', ' ')}
                   </span>
-                  <ArrowRight size={18} className="text-tertiary" />
+                  <ArrowRight size={18} style={{ color: 'var(--text-tertiary)' }} />
                 </div>
               </div>
 
               {/* Structured Complaint Box */}
-              <div style={{ background: 'var(--bg-tertiary)', padding: '12px 16px', borderRadius: 'var(--radius-md)', fontSize: 'var(--font-sm)' }}>
-                <div className="text-xs text-tertiary font-bold uppercase tracking-wider mb-xs">Structured Clinical Reason:</div>
-                <div className="font-semibold text-primary">{ref.reason}</div>
+              <div style={{ background: 'var(--bg-tertiary)', padding: '14px 18px', borderRadius: 'var(--radius-md)' }}>
+                <div style={{ fontSize: '0.6875rem', color: 'var(--text-tertiary)', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '4px' }}>
+                  Structured Clinical Reason:
+                </div>
+                <div style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-primary)' }}>{ref.reason}</div>
                 {ref.symptoms_summary && (
-                  <div className="text-xs text-secondary mt-xs">
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '4px' }}>
                     <strong>Symptoms:</strong> {ref.symptoms_summary}
                   </div>
                 )}
