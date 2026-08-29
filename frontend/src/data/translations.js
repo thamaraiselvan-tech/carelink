@@ -10,6 +10,23 @@ export const translations = {
     active_user: 'Active User',
     exit_portal: 'Exit Portal',
 
+    // Voice / IVR Telephony Copy
+    ivr_suite: 'Voice / IVR Telephony',
+    ivr_badge: 'Toll-Free Missed Call',
+    ivr_banner_title: 'Toll-Free Telephony Access (No App / Smartphone Required)',
+    ivr_banner_desc: 'Patients or family members can dial 1800-CareLink or give a missed call. CareLink AI executes autonomous Marathi voice triage by phone call.',
+    simulate_ivr_btn: 'Simulate IVR Call & Marathi Voice Triage',
+    ivr_modal_title: 'CareLink AI IVR Telephony Simulator',
+    ivr_calling: 'Dialing 1800-CareLink (Toll-Free)...',
+    ivr_connected: 'Connected to CareLink AI Voice Gateway (Marathi Dialect)',
+    ivr_simulated_prompt: '"नमस्कार! CareLink AI मध्ये आपले स्वागत आहे. तुम्हाला कोणती लक्षणे जाणवत आहेत?"',
+    ivr_result_logged: '✅ Voice Triage Completed! Assessment logged to Sunita Jadhav (p1) longitudinal record.',
+    close_simulator: 'Close Simulator',
+
+    // Entry Hierarchy Grouping
+    credentialed_group: '🔐 Credentialed Staff Access',
+    low_friction_group: '📱 Low-Friction Public Access (No Password)',
+
     // Login & Authentication Copy
     secure_healthcare_login: 'Secure Healthcare Gateway',
     select_role_prompt: 'Select your operational role to access the CareLink AI platform:',
@@ -157,6 +174,23 @@ export const translations = {
     launch_portal: 'पोर्टल सुरू करा',
     active_user: 'सक्रिय वापरकर्ता',
     exit_portal: 'पोर्टल बंद करा',
+
+    // Voice / IVR Telephony Copy
+    ivr_suite: 'व्हॉइस / IVR टेलिफोनी',
+    ivr_badge: 'टोल-फ्री मिस्ड कॉल',
+    ivr_banner_title: 'टोल-फ्री टेलिफोनी ॲक्सेस (ॲप किंवा स्मार्टफोनची गरज नाही)',
+    ivr_banner_desc: 'रुग्ण किंवा कुटुंबीय १८००-केरलिंक वर कॉल करू शकतात किंवा मिस्ड कॉल देऊ शकतात. केरलिंक AI फोन कॉलद्वारे मराठीत ऑटोनामस व्हॉइस ट्रियाज चालवते.',
+    simulate_ivr_btn: 'IVR कॉल आणि मराठी व्हॉइस ट्रियाज सिम्युलेट करा',
+    ivr_modal_title: 'केरलिंक AI IVR टेलिफोनी सिम्युलेटर',
+    ivr_calling: '१८००-केरलिंक (टोल-फ्री) वर कॉल करत आहे...',
+    ivr_connected: 'केरलिंक AI व्हॉइस गेटवेशी कनेक्ट केले (मराठी बोलीभाषा)',
+    ivr_simulated_prompt: '"नमस्कार! CareLink AI मध्ये आपले स्वागत आहे. तुम्हाला कोणती लक्षणे जाणवत आहेत?"',
+    ivr_result_logged: '✅ व्हॉइस ट्रियाज पूर्ण! मूल्यांकन सुनीता जाधव (p1) च्या रेकॉर्डमध्ये नोंदवले गेले.',
+    close_simulator: 'सिम्युलेटर बंद करा',
+
+    // Entry Hierarchy Grouping
+    credentialed_group: '<ctrl42> अधिकृत कर्मचारी प्रवेश (लॉगिन आवश्यक)',
+    low_friction_group: '📱 सार्वजनिक प्रवेश (पासवर्डची गरज नाही)',
 
     // Login & Authentication Copy
     secure_healthcare_login: 'सुरक्षित आरोग्य गेटवे लॉगिन',
