@@ -191,7 +191,7 @@ export default function TriageFlow() {
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
-                    justify-content: 'space-between',
+                    justifyContent: 'space-between',
                     transition: 'all 0.2s ease',
                   }}
                 >
