@@ -37,7 +37,7 @@ export default function LoginPage() {
     else if (selectedRole === 'kiosk') setUsername('');
   }, [selectedRole]);
 
-  // Access Ladder Hierarchy Grouping (Credentialed vs Low-Friction)
+  // Access Ladder Hierarchy Grouping
   const credentialedRoles = [
     { id: 'asha', key: 'asha_suite', badgeKey: 'asha_badge', icon: Heart, color: '#0D9488', gradient: 'linear-gradient(135deg, #0D9488, #0F766E)', route: '/asha' },
     { id: 'doctor', key: 'doctor_suite', badgeKey: 'doctor_badge', icon: Stethoscope, color: '#2563EB', gradient: 'linear-gradient(135deg, #2563EB, #1D4ED8)', route: '/doctor' },
@@ -97,14 +97,14 @@ export default function LoginPage() {
       <Background3D />
 
       {/* Top Header Bar */}
-      <header style={{ padding: '16px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', zIndex: 10, flexWrap: 'wrap', gap: '12px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
-          <div style={{ width: 40, height: 40, borderRadius: '12px', background: 'linear-gradient(135deg, #0D9488, #2563EB)', color: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 8px 20px rgba(13, 148, 136, 0.3)' }}>
-            <Activity size={22} />
+      <header style={{ padding: '14px 28px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', zIndex: 10, flexWrap: 'wrap', gap: '12px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div style={{ width: 42, height: 42, borderRadius: '12px', background: 'linear-gradient(135deg, #0D9488, #2563EB)', color: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 8px 20px rgba(13, 148, 136, 0.3)' }}>
+            <Activity size={24} />
           </div>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <span style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.02em', lineHeight: 1.1 }}>{t('app_name')}</span>
-            <span style={{ fontSize: '0.6875rem', color: 'var(--brand-teal)', fontWeight: 800, marginTop: '2px', padding: '2px 6px', borderRadius: 'var(--radius-full)', background: 'var(--brand-teal-bg)', border: '1px solid rgba(13, 148, 136, 0.2)', width: 'fit-content' }}>
+            <span style={{ fontSize: '1.375rem', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.02em', lineHeight: 1.1 }}>{t('app_name')}</span>
+            <span style={{ fontSize: '0.6875rem', color: 'var(--brand-teal)', fontWeight: 800, marginTop: '2px', padding: '2px 8px', borderRadius: 'var(--radius-full)', background: 'var(--brand-teal-bg)', border: '1px solid rgba(13, 148, 136, 0.2)', width: 'fit-content' }}>
               {t('secure_healthcare_login')}
             </span>
           </div>
@@ -116,132 +116,11 @@ export default function LoginPage() {
         </div>
       </header>
 
-      {/* Main Container */}
-      <main style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '16px 12px 40px', zIndex: 10, width: '100%' }}>
-        <div style={{ width: '100%', maxWidth: '540px' }}>
+      {/* Main Container — 2-COLUMN DESKTOP LAYOUT (Above The Fold on 1366x768) */}
+      <main style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px 20px 28px', zIndex: 10, width: '100%' }}>
+        <div style={{ width: '100%', maxWidth: '1080px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '24px', alignItems: 'start' }}>
 
-          {/* VOICE / IVR TELEPHONY PROMINENT ACCESSIBILITY BANNER */}
-          <div
-            className="ivr-telephony-banner"
-            style={{
-              background: 'linear-gradient(135deg, #0F172A 0%, #1E293B 100%)',
-              color: '#FFFFFF',
-              borderRadius: '18px',
-              padding: '16px',
-              marginBottom: '16px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              gap: '12px',
-              boxShadow: '0 12px 30px rgba(15, 23, 42, 0.2)',
-              width: '100%',
-              overflow: 'hidden',
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: 1 }}>
-              <div style={{ width: 40, height: 40, borderRadius: '12px', background: 'rgba(13, 148, 136, 0.25)', color: '#14B8A6', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                <PhoneCall size={20} />
-              </div>
-              <div style={{ minWidth: 0, flex: 1 }}>
-                <div style={{ fontSize: '0.84375rem', fontWeight: 800, color: '#F8FAFC', lineHeight: 1.25 }}>
-                  📞 {t('ivr_banner_title')}
-                </div>
-                <div style={{ fontSize: '0.71875rem', color: '#94A3B8', marginTop: '3px', lineHeight: 1.3 }}>
-                  {t('ivr_banner_desc')}
-                </div>
-              </div>
-            </div>
-            <button
-              onClick={startIvrSimulation}
-              className="btn btn-primary btn-sm"
-              style={{ height: '36px', fontSize: '0.75rem', fontWeight: 800, borderRadius: 'var(--radius-full)', padding: '0 14px' }}
-            >
-              {t('simulate_ivr_btn')}
-            </button>
-          </div>
-          
-          {/* ACCESS HIERARCHY ROLE TAB BAR */}
-          <div style={{ background: 'rgba(255, 255, 255, 0.92)', backdropFilter: 'blur(12px)', padding: '10px', borderRadius: '18px', border: '1px solid rgba(255, 255, 255, 0.9)', boxShadow: '0 12px 32px rgba(15, 23, 42, 0.06)', marginBottom: '16px', width: '100%' }}>
-            
-            {/* Group 1: Credentialed Staff Access */}
-            <div style={{ fontSize: '0.625rem', fontWeight: 800, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '6px', paddingLeft: '4px' }}>
-              {t('credentialed_group')}
-            </div>
-            <div className="role-tabs-grid" style={{ display: 'flex', gap: '4px', marginBottom: '8px' }}>
-              {credentialedRoles.map(r => {
-                const Icon = r.icon;
-                const isSelected = selectedRole === r.id;
-                return (
-                  <button
-                    key={r.id}
-                    type="button"
-                    onClick={() => setSelectedRole(r.id)}
-                    style={{
-                      flex: 1,
-                      padding: '8px 4px',
-                      borderRadius: '10px',
-                      border: 'none',
-                      background: isSelected ? r.gradient : 'transparent',
-                      color: isSelected ? '#FFFFFF' : '#64748B',
-                      fontWeight: isSelected ? 800 : 600,
-                      fontSize: '0.71875rem',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      gap: '3px',
-                      cursor: 'pointer',
-                      boxShadow: isSelected ? `0 6px 16px ${r.color}40` : 'none',
-                      transition: 'all 0.2s ease',
-                    }}
-                  >
-                    <Icon size={16} />
-                    <span>{t(r.badgeKey)}</span>
-                  </button>
-                );
-              })}
-            </div>
-
-            {/* Group 2: Low-Friction Public Access */}
-            <div style={{ fontSize: '0.625rem', fontWeight: 800, color: 'var(--brand-teal)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '6px', paddingLeft: '4px' }}>
-              {t('low_friction_group')}
-            </div>
-            <div style={{ display: 'flex', gap: '4px' }}>
-              {lowFrictionRoles.map(r => {
-                const Icon = r.icon;
-                const isSelected = selectedRole === r.id;
-                return (
-                  <button
-                    key={r.id}
-                    type="button"
-                    onClick={() => setSelectedRole(r.id)}
-                    style={{
-                      flex: 1,
-                      padding: '8px 8px',
-                      borderRadius: '10px',
-                      border: 'none',
-                      background: isSelected ? r.gradient : 'rgba(217, 119, 6, 0.08)',
-                      color: isSelected ? '#FFFFFF' : '#D97706',
-                      fontWeight: isSelected ? 800 : 600,
-                      fontSize: '0.75rem',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: '6px',
-                      cursor: 'pointer',
-                      boxShadow: isSelected ? `0 6px 16px ${r.color}40` : 'none',
-                      transition: 'all 0.2s ease',
-                    }}
-                  >
-                    <Icon size={16} />
-                    <span>{t(r.key)} ({t(r.badgeKey)})</span>
-                  </button>
-                );
-              })}
-            </div>
-
-          </div>
-
-          {/* ELEVATED GLASS LOGIN CARD */}
+          {/* LEFT COLUMN: PRIMARY CREDENTIAL GATEWAY CARD */}
           <div
             className="glass-card"
             style={{
@@ -254,152 +133,261 @@ export default function LoginPage() {
               width: '100%',
             }}
           >
-            
+            {/* Access Ladder Role Tabs Bar */}
+            <div style={{ marginBottom: '16px' }}>
+              <div style={{ fontSize: '0.625rem', fontWeight: 800, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '6px' }}>
+                {t('credentialed_group')}
+              </div>
+              <div className="role-tabs-grid" style={{ display: 'flex', gap: '4px' }}>
+                {credentialedRoles.map(r => {
+                  const Icon = r.icon;
+                  const isSelected = selectedRole === r.id;
+                  return (
+                    <button
+                      key={r.id}
+                      type="button"
+                      onClick={() => setSelectedRole(r.id)}
+                      style={{
+                        flex: 1,
+                        padding: '8px 4px',
+                        borderRadius: '10px',
+                        border: 'none',
+                        background: isSelected ? r.gradient : 'var(--bg-tertiary)',
+                        color: isSelected ? '#FFFFFF' : '#64748B',
+                        fontWeight: isSelected ? 800 : 600,
+                        fontSize: '0.71875rem',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        gap: '3px',
+                        cursor: 'pointer',
+                        boxShadow: isSelected ? `0 6px 16px ${r.color}40` : 'none',
+                        transition: 'all 0.2s ease',
+                      }}
+                    >
+                      <Icon size={16} />
+                      <span>{t(r.badgeKey)}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
             {/* Role Header Banner */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px', paddingBottom: '16px', borderBottom: '1px solid var(--border-subtle)' }}>
-              <div style={{ width: 44, height: 44, borderRadius: '14px', background: activeConfig.gradient, color: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: `0 8px 20px ${activeConfig.color}35`, flexShrink: 0 }}>
-                <activeConfig.icon size={22} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px', paddingBottom: '12px', borderBottom: '1px solid var(--border-subtle)' }}>
+              <div style={{ width: 40, height: 40, borderRadius: '12px', background: activeConfig.gradient, color: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: `0 6px 16px ${activeConfig.color}35`, flexShrink: 0 }}>
+                <activeConfig.icon size={20} />
               </div>
               <div style={{ minWidth: 0 }}>
-                <h2 style={{ fontSize: '1.125rem', fontWeight: 800, color: 'var(--text-primary)', lineHeight: 1.2 }}>
+                <h2 style={{ fontSize: '1.0625rem', fontWeight: 800, color: 'var(--text-primary)', lineHeight: 1.2 }}>
                   {t(activeConfig.key)}
                 </h2>
-                <p style={{ fontSize: '0.78125rem', color: 'var(--text-tertiary)', fontWeight: 600, marginTop: '2px' }}>
-                  {selectedRole === 'kiosk' ? t('kiosk_no_login_notice') : t('select_role_prompt')}
+                <p style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)', fontWeight: 600, marginTop: '2px' }}>
+                  {t('select_role_prompt')}
                 </p>
               </div>
             </div>
 
             {authSuccess && (
-              <div className="alert-banner" style={{ background: '#ECFDF5', borderColor: '#10B981', color: '#047857', marginBottom: '16px', padding: '12px 14px', borderRadius: '12px' }}>
-                <CheckCircle2 size={20} />
-                <div style={{ fontSize: '0.875rem', fontWeight: 700 }}>{t('login_success')}</div>
+              <div className="alert-banner" style={{ background: '#ECFDF5', borderColor: '#10B981', color: '#047857', marginBottom: '16px', padding: '10px 12px', borderRadius: '12px' }}>
+                <CheckCircle2 size={18} />
+                <div style={{ fontSize: '0.8125rem', fontWeight: 700 }}>{t('login_success')}</div>
               </div>
             )}
 
             {/* FORM: Standard Healthcare Role Login */}
-            {selectedRole !== 'kiosk' ? (
-              <form onSubmit={handleLoginSubmit}>
-                <div className="form-group mb-md">
-                  <label className="form-label" style={{ fontSize: '0.65rem', fontWeight: 800, letterSpacing: '0.05em', textTransform: 'uppercase', color: 'var(--text-tertiary)', marginBottom: '4px' }}>
-                    {t('username_or_phone')}
+            <form onSubmit={handleLoginSubmit}>
+              <div className="form-group" style={{ marginBottom: '14px' }}>
+                <label className="form-label" style={{ fontSize: '0.625rem', fontWeight: 800, letterSpacing: '0.05em', textTransform: 'uppercase', color: 'var(--text-tertiary)', marginBottom: '4px' }}>
+                  {t('username_or_phone')}
+                </label>
+                <div style={{ position: 'relative' }}>
+                  <div style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: 'var(--brand-teal)', display: 'flex', alignItems: 'center' }}>
+                    <User size={16} />
+                  </div>
+                  <input
+                    type="text"
+                    value={username}
+                    onChange={e => setUsername(e.target.value)}
+                    placeholder="e.g. 9812345001"
+                    required
+                    style={{ height: '44px', paddingLeft: '42px', fontSize: '0.875rem', fontWeight: 600, borderRadius: '12px' }}
+                  />
+                </div>
+              </div>
+
+              <div className="form-group" style={{ marginBottom: '14px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                  <label className="form-label" style={{ fontSize: '0.625rem', fontWeight: 800, letterSpacing: '0.05em', textTransform: 'uppercase', color: 'var(--text-tertiary)', marginBottom: 0 }}>
+                    {t('password')}
                   </label>
-                  <div style={{ position: 'relative' }}>
-                    <div style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: 'var(--brand-teal)', display: 'flex', alignItems: 'center' }}>
-                      <User size={16} />
-                    </div>
-                    <input
-                      type="text"
-                      value={username}
-                      onChange={e => setUsername(e.target.value)}
-                      placeholder="e.g. 9812345001"
-                      required
-                      style={{ height: '46px', paddingLeft: '44px', fontSize: '0.875rem', fontWeight: 600, borderRadius: '12px' }}
-                    />
-                  </div>
+                  <a href="#forgot" onClick={e => e.preventDefault()} style={{ fontSize: '0.71875rem', color: 'var(--brand-teal)', fontWeight: 700, textDecoration: 'none' }}>
+                    {t('forgot_password')}
+                  </a>
                 </div>
-
-                <div className="form-group mb-md">
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-                    <label className="form-label" style={{ fontSize: '0.65rem', fontWeight: 800, letterSpacing: '0.05em', textTransform: 'uppercase', color: 'var(--text-tertiary)', marginBottom: 0 }}>
-                      {t('password')}
-                    </label>
-                    <a href="#forgot" onClick={e => e.preventDefault()} style={{ fontSize: '0.75rem', color: 'var(--brand-teal)', fontWeight: 700, textDecoration: 'none' }}>
-                      {t('forgot_password')}
-                    </a>
+                <div style={{ position: 'relative' }}>
+                  <div style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: 'var(--brand-teal)', display: 'flex', alignItems: 'center' }}>
+                    <Lock size={16} />
                   </div>
-                  <div style={{ position: 'relative' }}>
-                    <div style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: 'var(--brand-teal)', display: 'flex', alignItems: 'center' }}>
-                      <Lock size={16} />
-                    </div>
-                    <input
-                      type={showPassword ? 'text' : 'password'}
-                      value={password}
-                      onChange={e => setPassword(e.target.value)}
-                      placeholder="••••••••"
-                      required
-                      style={{ height: '46px', paddingLeft: '44px', paddingRight: '44px', fontSize: '0.875rem', fontWeight: 600, borderRadius: '12px' }}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(prev => !prev)}
-                      style={{ position: 'absolute', right: 14, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: 'var(--text-tertiary)', cursor: 'pointer', padding: 0 }}
-                    >
-                      {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-                    </button>
-                  </div>
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    value={password}
+                    onChange={e => setPassword(e.target.value)}
+                    placeholder="••••••••"
+                    required
+                    style={{ height: '44px', paddingLeft: '42px', paddingRight: '42px', fontSize: '0.875rem', fontWeight: 600, borderRadius: '12px' }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(prev => !prev)}
+                    style={{ position: 'absolute', right: 14, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: 'var(--text-tertiary)', cursor: 'pointer', padding: 0 }}
+                  >
+                    {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                  </button>
                 </div>
+              </div>
 
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '20px' }}>
-                  <input type="checkbox" id="remember" defaultChecked style={{ width: 16, height: 16, accentColor: 'var(--brand-teal)' }} />
-                  <label htmlFor="remember" style={{ fontSize: '0.78125rem', color: 'var(--text-secondary)', cursor: 'pointer', fontWeight: 600 }}>
-                    {t('remember_me')}
-                  </label>
-                </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
+                <input type="checkbox" id="remember" defaultChecked style={{ width: 16, height: 16, accentColor: 'var(--brand-teal)' }} />
+                <label htmlFor="remember" style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', cursor: 'pointer', fontWeight: 600 }}>
+                  {t('remember_me')}
+                </label>
+              </div>
 
-                <button
-                  type="submit"
-                  className="btn btn-primary btn-block btn-lg"
-                  disabled={loading || authSuccess}
-                  style={{ height: '48px', fontSize: '0.9375rem', fontWeight: 800, borderRadius: '14px', background: activeConfig.gradient, borderColor: 'transparent', boxShadow: `0 8px 20px ${activeConfig.color}40` }}
-                >
-                  {loading ? (
-                    <>
-                      <div className="sync-dot synced" />
-                      <span>{t('authenticating')}</span>
-                    </>
-                  ) : (
-                    <>
-                      <ShieldCheck size={18} />
-                      <span>{t('secure_login_btn')}</span>
-                    </>
-                  )}
+              <button
+                type="submit"
+                className="btn btn-primary btn-block btn-lg"
+                disabled={loading || authSuccess}
+                style={{ height: '46px', fontSize: '0.875rem', fontWeight: 800, borderRadius: '12px', background: activeConfig.gradient, borderColor: 'transparent', boxShadow: `0 8px 20px ${activeConfig.color}40` }}
+              >
+                {loading ? (
+                  <>
+                    <div className="sync-dot synced" />
+                    <span>{t('authenticating')}</span>
+                  </>
+                ) : (
+                  <>
+                    <ShieldCheck size={18} />
+                    <span>{t('secure_login_btn')}</span>
+                  </>
+                )}
+              </button>
+            </form>
+
+            {/* DEMO CREDENTIALS CHIPS */}
+            <div style={{ marginTop: '16px', paddingTop: '12px', borderTop: '1px dashed var(--border-subtle)', textAlign: 'center' }}>
+              <div style={{ fontSize: '0.625rem', fontWeight: 800, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '6px' }}>
+                {t('quick_demo_access')}
+              </div>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', justifyContent: 'center' }}>
+                <button type="button" className="btn btn-ghost btn-sm" onClick={() => { setSelectedRole('asha'); setUsername('9812345001'); }} style={{ fontSize: '0.71875rem', height: '30px' }}>
+                  <Heart size={13} /> Anita Shinde
                 </button>
-              </form>
-            ) : (
-              /* KIOSK ENTRY FORM */
+                <button type="button" className="btn btn-ghost btn-sm" onClick={() => { setSelectedRole('doctor'); setUsername('dr.kulkarni@carelink.gov.in'); }} style={{ fontSize: '0.71875rem', height: '30px' }}>
+                  <Stethoscope size={13} /> Dr. Kulkarni
+                </button>
+                <button type="button" className="btn btn-ghost btn-sm" onClick={() => { setSelectedRole('admin'); setUsername('dho.satara@carelink.gov.in'); }} style={{ fontSize: '0.71875rem', height: '30px' }}>
+                  <LayoutDashboard size={13} /> Manoj Thorat
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* RIGHT COLUMN: TELEPHONY & PUBLIC ACCESS CARD */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            
+            {/* VOICE / IVR TELEPHONY PROMINENT ACCESSIBILITY BANNER */}
+            <div
+              className="ivr-telephony-banner"
+              style={{
+                background: 'linear-gradient(135deg, #0F172A 0%, #1E293B 100%)',
+                color: '#FFFFFF',
+                borderRadius: '22px',
+                padding: '20px',
+                boxShadow: '0 16px 36px rgba(15, 23, 42, 0.15)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '14px',
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div style={{ width: 44, height: 44, borderRadius: '14px', background: 'rgba(13, 148, 136, 0.25)', color: '#14B8A6', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <PhoneCall size={22} />
+                </div>
+                <div>
+                  <div style={{ fontSize: '0.9375rem', fontWeight: 800, color: '#F8FAFC', lineHeight: 1.25 }}>
+                    📞 {t('ivr_banner_title')}
+                  </div>
+                  <span className="badge badge-teal" style={{ height: '22px', fontSize: '0.6875rem', marginTop: '4px' }}>
+                    1800-CareLink (Toll-Free)
+                  </span>
+                </div>
+              </div>
+
+              <div style={{ fontSize: '0.78125rem', color: '#94A3B8', lineHeight: 1.45 }}>
+                {t('ivr_banner_desc')}
+              </div>
+
+              <button
+                onClick={startIvrSimulation}
+                className="btn btn-primary btn-block"
+                style={{ height: '42px', fontSize: '0.8125rem', fontWeight: 800, borderRadius: '12px', background: 'linear-gradient(135deg, #0D9488, #2563EB)' }}
+              >
+                {t('simulate_ivr_btn')}
+              </button>
+            </div>
+
+            {/* GRAM PANCHAYAT KIOSK PUBLIC CARD */}
+            <div
+              className="glass-card"
+              style={{
+                padding: '20px',
+                borderRadius: '22px',
+                background: 'rgba(255, 255, 255, 0.95)',
+                backdropFilter: 'blur(16px)',
+                border: '1px solid rgba(217, 119, 6, 0.2)',
+                boxShadow: '0 12px 30px rgba(15, 23, 42, 0.05)',
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
+                <div style={{ width: 40, height: 40, borderRadius: '12px', background: 'rgba(217, 119, 6, 0.12)', color: '#D97706', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <Store size={20} />
+                </div>
+                <div>
+                  <h3 style={{ fontSize: '0.9375rem', fontWeight: 800, color: 'var(--text-primary)' }}>
+                    {t('kiosk_suite')}
+                  </h3>
+                  <span className="badge badge-warning" style={{ height: '22px', fontSize: '0.6875rem', marginTop: '2px' }}>
+                    {t('low_friction_group')}
+                  </span>
+                </div>
+              </div>
+
+              <p style={{ fontSize: '0.78125rem', color: 'var(--text-secondary)', marginBottom: '14px', lineHeight: 1.4 }}>
+                {t('kiosk_no_login_notice')}
+              </p>
+
               <form onSubmit={handleLoginSubmit}>
-                <div className="form-group mb-lg">
-                  <label className="form-label" style={{ fontSize: '0.65rem', fontWeight: 800, letterSpacing: '0.05em', textTransform: 'uppercase', color: 'var(--text-tertiary)', marginBottom: '4px' }}>
-                    {t('token_input_label')}
-                  </label>
+                <div className="form-group" style={{ marginBottom: '12px' }}>
                   <input
                     type="text"
                     value={token}
                     onChange={e => setToken(e.target.value)}
-                    placeholder="e.g. T-99120"
-                    style={{ height: '48px', fontSize: '1rem', textAlign: 'center', fontWeight: 800, borderRadius: '12px', border: '2px solid rgba(217, 119, 6, 0.3)' }}
+                    placeholder="Enter Token (e.g. T-99120)"
+                    style={{ height: '40px', fontSize: '0.84375rem', textAlign: 'center', fontWeight: 700, borderRadius: '10px' }}
                   />
                 </div>
-
                 <button
                   type="submit"
-                  className="btn btn-primary btn-block btn-lg"
-                  disabled={loading || authSuccess}
-                  style={{ height: '48px', fontSize: '0.9375rem', fontWeight: 800, borderRadius: '14px', background: 'linear-gradient(135deg, #D97706, #B45309)', borderColor: 'transparent', boxShadow: '0 8px 20px rgba(217, 119, 6, 0.35)' }}
+                  onClick={() => setSelectedRole('kiosk')}
+                  className="btn btn-secondary btn-block"
+                  style={{ height: '42px', fontSize: '0.8125rem', fontWeight: 800, borderRadius: '12px', color: '#D97706', borderColor: 'rgba(217, 119, 6, 0.3)' }}
                 >
-                  <Store size={18} />
+                  <Store size={16} />
                   <span>{t('launch_kiosk_btn')}</span>
                 </button>
               </form>
-            )}
-
-            {/* DEMO CREDENTIALS CHIPS */}
-            <div style={{ marginTop: '20px', paddingTop: '16px', borderTop: '1px dashed var(--border-subtle)', textAlign: 'center' }}>
-              <div style={{ fontSize: '0.65rem', fontWeight: 800, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '8px' }}>
-                {t('quick_demo_access')}
-              </div>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', justifyContent: 'center' }}>
-                <button type="button" className="btn btn-ghost btn-sm" onClick={() => { setSelectedRole('asha'); setUsername('9812345001'); }} style={{ fontSize: '0.71875rem', height: '32px' }}>
-                  <Heart size={13} /> Anita Shinde
-                </button>
-                <button type="button" className="btn btn-ghost btn-sm" onClick={() => { setSelectedRole('doctor'); setUsername('dr.kulkarni@carelink.gov.in'); }} style={{ fontSize: '0.71875rem', height: '32px' }}>
-                  <Stethoscope size={13} /> Dr. Kulkarni
-                </button>
-                <button type="button" className="btn btn-ghost btn-sm" onClick={() => { setSelectedRole('admin'); setUsername('dho.satara@carelink.gov.in'); }} style={{ fontSize: '0.71875rem', height: '32px' }}>
-                  <LayoutDashboard size={13} /> Manoj Thorat
-                </button>
-              </div>
             </div>
 
           </div>
@@ -464,7 +452,7 @@ export default function LoginPage() {
       )}
 
       {/* Footer Disclaimer */}
-      <footer style={{ padding: '12px 16px', textAlign: 'center', fontSize: '0.71875rem', color: 'var(--text-tertiary)', zIndex: 10 }}>
+      <footer style={{ padding: '10px 16px', textAlign: 'center', fontSize: '0.71875rem', color: 'var(--text-tertiary)', zIndex: 10 }}>
         {t('data_disclaimer')}
       </footer>
     </div>
