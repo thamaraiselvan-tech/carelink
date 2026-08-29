@@ -10,6 +10,18 @@ export const translations = {
     active_user: 'Active User',
     exit_portal: 'Exit Portal',
 
+    // Key-Value Table Field Headers
+    source_facility: 'Source Facility',
+    specialty_category: 'Specialty Category',
+    clinical_rationale: 'Clinical Rationale',
+    symptom_tags: 'Symptom Intake',
+    symptom_duration: 'Symptom Duration',
+    severity_tier: 'Severity Tier',
+    patient_id: 'Patient ID',
+    age_gender: 'Age & Gender',
+    location: 'Village Location',
+    est_wait_time: 'Est. Queue Wait',
+
     // Voice / IVR Telephony Copy
     ivr_suite: 'Voice / IVR Telephony',
     ivr_badge: 'Toll-Free Missed Call',
@@ -151,7 +163,7 @@ export const translations = {
 
     // Disclaimers & Empty States
     decision_support_disclaimer: 'This is decision support for the health worker, not a diagnosis. Health worker verification required before action.',
-    data_disclaimer: 'CareLink AI · SIH 2026 Problem Statement SIH26133 · Government of Maharashtra State Innovation Society',
+    data_disclaimer: 'CareLink AI Prototype · SIH 2026 Problem Statement SIH26133 · Synthetic Patient & Facility Data for Demonstration Purposes.',
     empty_patients: 'No patients found — tap "+ New Visit" to register a patient.',
     empty_referrals: 'No incoming referrals pending for review.',
     no_active_referrals: 'No active referrals being tracked',
@@ -175,6 +187,18 @@ export const translations = {
     active_user: 'सक्रिय वापरकर्ता',
     exit_portal: 'पोर्टल बंद करा',
 
+    // Key-Value Table Field Headers
+    source_facility: 'स्रोत आरोग्य केंद्र',
+    specialty_category: 'विशेष विभाग',
+    clinical_rationale: 'वैद्यकीय कारण',
+    symptom_tags: 'नोंदवलेली लक्षणे',
+    symptom_duration: 'लक्षणे कालावधी',
+    severity_tier: 'तीव्रतेची पातळी',
+    patient_id: 'रुग्ण आयडी',
+    age_gender: 'वय आणि लिंग',
+    location: 'गावाचे ठिकाण',
+    est_wait_time: 'अंदाजे रांगेतील वेळ',
+
     // Voice / IVR Telephony Copy
     ivr_suite: 'व्हॉइस / IVR टेलिफोनी',
     ivr_badge: 'टोल-फ्री मिस्ड कॉल',
@@ -189,7 +213,7 @@ export const translations = {
     close_simulator: 'सिम्युलेटर बंद करा',
 
     // Entry Hierarchy Grouping
-    credentialed_group: '<ctrl42> अधिकृत कर्मचारी प्रवेश (लॉगिन आवश्यक)',
+    credentialed_group: '🔐 अधिकृत कर्मचारी प्रवेश (लॉगिन आवश्यक)',
     low_friction_group: '📱 सार्वजनिक प्रवेश (पासवर्डची गरज नाही)',
 
     // Login & Authentication Copy
@@ -316,7 +340,7 @@ export const translations = {
 
     // Disclaimers & Empty States
     decision_support_disclaimer: 'हे आरोग्य कर्मचाऱ्यांसाठी निर्णय समर्थन आहे, निदान नाही. कृती करण्यापूर्वी आरोग्य कर्मचाऱ्याची पडताळणी आवश्यक आहे.',
-    data_disclaimer: 'केरलिंक AI · एसआयएच २०२६ समस्या विधान SIH26133 · महाराष्ट्र शासन',
+    data_disclaimer: 'केरलिंक AI प्रोटोटाइप · SIH 2026 समस्या विधान SIH26133 · प्रात्यक्षिक उद्देशांसाठी सिंथेटिक रुग्ण आणि आरोग्य केंद्र डेटा.',
     empty_patients: 'कोणतेही रुग्ण आढळले नाहीत — नवीन नोंदणीसाठी "+ नवीन भेट" वर टॅप करा.',
     empty_referrals: 'पुनरावलोकनासाठी कोणतेही येणारे संदर्भ नाहीत.',
     no_active_referrals: 'ट्रॅक केलेले कोणतेही सक्रिय संदर्भ नाहीत',

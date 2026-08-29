@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User, Activity, Clock, Calendar, LogOut, ArrowRight, ShieldCheck, Stethoscope, Building2 } from 'lucide-react';
+import { User, Activity, Clock, Calendar, LogOut, ShieldCheck, Stethoscope, Building2 } from 'lucide-react';
 import { getPatient, getPatientTimeline } from '../../services/api';
 import { useLang } from '../../context/LanguageContext';
 
@@ -44,7 +44,7 @@ export default function PatientPortal() {
               {lang === 'mr' && patient?.full_name_mr ? patient.full_name_mr : patient?.full_name || 'Sunita Jadhav'}
             </h1>
             <div style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)', fontWeight: 600 }}>
-              {t('opd_portal_title')} · ID: {patient?.id || 'p1'} · {patient?.age}y, {patient?.gender} · 📍 {patient?.village}
+              {t('opd_portal_title')}
             </div>
           </div>
         </div>
@@ -62,24 +62,80 @@ export default function PatientPortal() {
 
       <main style={{ maxWidth: '800px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '20px' }}>
         
-        {/* Active Appointment Ticket Card */}
+        {/* STRUCTURED PATIENT BIO SUMMARY GRID (Replaces paragraph text line) */}
+        <div className="glass-card" style={{ padding: '18px 24px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '14px' }}>
+            <div>
+              <div style={{ fontSize: '0.6875rem', fontWeight: 800, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                {t('patient_id')}
+              </div>
+              <div style={{ fontSize: '0.9375rem', fontWeight: 800, color: 'var(--brand-teal)' }}>
+                {patient?.id || 'p1'}
+              </div>
+            </div>
+            <div>
+              <div style={{ fontSize: '0.6875rem', fontWeight: 800, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                {t('age_gender')}
+              </div>
+              <div style={{ fontSize: '0.9375rem', fontWeight: 700, color: 'var(--text-primary)' }}>
+                {patient?.age}y · {patient?.gender}
+              </div>
+            </div>
+            <div>
+              <div style={{ fontSize: '0.6875rem', fontWeight: 800, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                {t('location')}
+              </div>
+              <div style={{ fontSize: '0.9375rem', fontWeight: 700, color: 'var(--text-primary)' }}>
+                📍 {patient?.village || 'Wai'}, Satara
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Active Appointment Ticket Card with Structured Key-Value Table */}
         <div className="glass-card" style={{ borderLeft: '4px solid var(--brand-teal)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '14px' }}>
             <Clock size={20} style={{ color: 'var(--brand-teal)' }} />
             <h2 style={{ fontSize: '1.0625rem', fontWeight: 800 }}>{t('active_appointment')}</h2>
           </div>
 
-          <div style={{ background: 'var(--bg-tertiary)', padding: '16px', borderRadius: 'var(--radius-md)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-              <span style={{ fontWeight: 800, fontSize: '1rem' }}>District Hospital Satara</span>
-              <span className="badge badge-teal">OPD Ticket #24</span>
-            </div>
-            <div style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)' }}>
-              Category: <strong>Obstetrics (ANC High-Risk Consultation)</strong>
-            </div>
-            <div style={{ fontSize: '0.8125rem', color: '#059669', fontWeight: 700, marginTop: '6px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <ShieldCheck size={16} /> {t('queue_wait_time')}
-            </div>
+          <div style={{ background: '#FFFFFF', border: '1px solid var(--border-subtle)', borderRadius: '14px', overflow: 'hidden' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.84375rem' }}>
+              <tbody>
+                <tr style={{ borderBottom: '1px solid var(--border-subtle)' }}>
+                  <td style={{ padding: '10px 14px', background: 'var(--bg-tertiary)', color: 'var(--text-tertiary)', fontWeight: 800, width: '40%', textTransform: 'uppercase', fontSize: '0.6875rem', letterSpacing: '0.04em' }}>
+                    Facility
+                  </td>
+                  <td style={{ padding: '10px 14px', fontWeight: 800, color: 'var(--text-primary)' }}>
+                    District Hospital Satara
+                  </td>
+                </tr>
+                <tr style={{ borderBottom: '1px solid var(--border-subtle)' }}>
+                  <td style={{ padding: '10px 14px', background: 'var(--bg-tertiary)', color: 'var(--text-tertiary)', fontWeight: 800, textTransform: 'uppercase', fontSize: '0.6875rem', letterSpacing: '0.04em' }}>
+                    {t('specialty_category')}
+                  </td>
+                  <td style={{ padding: '10px 14px', fontWeight: 700, color: 'var(--brand-teal)' }}>
+                    Obstetrics (ANC High-Risk)
+                  </td>
+                </tr>
+                <tr style={{ borderBottom: '1px solid var(--border-subtle)' }}>
+                  <td style={{ padding: '10px 14px', background: 'var(--bg-tertiary)', color: 'var(--text-tertiary)', fontWeight: 800, textTransform: 'uppercase', fontSize: '0.6875rem', letterSpacing: '0.04em' }}>
+                    {t('urgency_level')}
+                  </td>
+                  <td style={{ padding: '10px 14px' }}>
+                    <span className="badge badge-danger">Emergency Review</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td style={{ padding: '10px 14px', background: 'var(--bg-tertiary)', color: 'var(--text-tertiary)', fontWeight: 800, textTransform: 'uppercase', fontSize: '0.6875rem', letterSpacing: '0.04em' }}>
+                    {t('est_wait_time')}
+                  </td>
+                  <td style={{ padding: '10px 14px', fontWeight: 800, color: '#059669' }}>
+                    ~15 mins (OPD Ticket #24)
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
 
