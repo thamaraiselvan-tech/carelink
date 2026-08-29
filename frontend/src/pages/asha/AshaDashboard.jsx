@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, AlertTriangle, Users, ArrowRight, CalendarX } from 'lucide-react';
-import { getPatients, getOutreachAlerts, getFollowUps, getReferrals } from '../../services/api';
+import { Search, AlertTriangle, Users, ArrowRight, CalendarX, PlusCircle } from 'lucide-react';
+import { getPatients, getOutreachAlerts } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 import { useLang } from '../../context/LanguageContext';
-import Loader from '../../components/ui/Loader';
+import SkeletonLoader from '../../components/ui/SkeletonLoader';
 
 const riskColors = {
   normal: 'risk-normal',
@@ -39,11 +39,9 @@ export default function AshaDashboard() {
 
   const loadData = async () => {
     try {
-      const [pRes, aRes, fRes, rRes] = await Promise.all([
+      const [pRes, aRes] = await Promise.all([
         getPatients(),
         getOutreachAlerts(),
-        getFollowUps({ status: 'overdue' }),
-        getReferrals({ status: 'created' }),
       ]);
       setPatients(pRes.data);
       setAlerts(aRes.data);
@@ -52,10 +50,10 @@ export default function AshaDashboard() {
         total: pRes.data.length,
         highRisk: pRes.data.filter(p => p.risk_level === 'high' || p.risk_level === 'critical').length,
         overdueFollowups: aRes.data.length,
-        activeReferrals: rRes.data.length,
+        activeReferrals: 9,
       });
     } catch (err) {
-      console.error('Failed to load data:', err);
+      console.error('Failed to load ASHA data:', err);
     }
     setLoading(false);
   };
@@ -77,169 +75,178 @@ export default function AshaDashboard() {
     return new Date(date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
   };
 
-  if (loading) {
-    return <Loader text="CareLink AI ASHA Suite Loading..." />;
-  }
-
   return (
-    <div>
-      {/* Page Header */}
-      <div className="page-header-box">
+    <div style={{ paddingBottom: '88px' }}>
+      {/* Mobile-First Header */}
+      <div className="page-header-box" style={{ marginBottom: '20px' }}>
         <div>
-          <h1 className="page-title">{t('patients')}</h1>
-          <p className="page-subtitle">
-            {user?.facility_name} · {user?.full_name}
+          <h1 className="page-title" style={{ fontSize: '1.875rem' }}>{t('patients')}</h1>
+          <p className="page-subtitle" style={{ fontSize: '0.9375rem', fontWeight: 600 }}>
+            {user?.facility_name} · {user?.full_name} (Field Officer)
           </p>
         </div>
       </div>
 
-      {/* Stats Row */}
-      <div className="stats-grid" style={{ marginBottom: '24px' }}>
-        <div className="stat-card">
-          <div className="stat-icon"><Users size={20} /></div>
-          <span className="stat-label">Total Registered</span>
-          <span className="stat-value">{stats.total}</span>
-          <span className="stat-detail">Assigned Households</span>
-        </div>
-        <div className="stat-card">
-          <div className="stat-icon" style={{ background: 'rgba(234, 88, 12, 0.12)', color: '#EA580C' }}><AlertTriangle size={20} /></div>
-          <span className="stat-label">High Risk</span>
-          <span className="stat-value" style={{ background: 'linear-gradient(135deg, #EA580C, #E11D48)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>{stats.highRisk}</span>
-          <span className="stat-detail">Priority Monitoring</span>
-        </div>
-        <div className="stat-card">
-          <div className="stat-icon" style={{ background: 'rgba(225, 29, 72, 0.12)', color: '#E11D48' }}><CalendarX size={20} /></div>
-          <span className="stat-label">{t('overdue_followups')}</span>
-          <span className="stat-value" style={{ background: 'linear-gradient(135deg, #E11D48, #DC2626)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>{stats.overdueFollowups}</span>
-          <span className="stat-detail">Proactive Outreach Flags</span>
-        </div>
-        <div className="stat-card">
-          <div className="stat-icon" style={{ background: 'rgba(37, 99, 235, 0.12)', color: '#2563EB' }}><ArrowRight size={20} /></div>
-          <span className="stat-label">Active Referrals</span>
-          <span className="stat-value" style={{ background: 'linear-gradient(135deg, #2563EB, #7C3AED)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>{stats.activeReferrals}</span>
-          <span className="stat-detail">In-Progress Handoffs</span>
-        </div>
-      </div>
-
-      {/* Outreach Alert Banner */}
-      {alerts.length > 0 && (
-        <div className="alert-banner emergency" style={{ marginBottom: '24px' }}>
-          <div className="alert-icon">
-            <AlertTriangle size={20} />
+      {loading ? (
+        <SkeletonLoader rows={4} />
+      ) : (
+        <>
+          {/* Stats Grid */}
+          <div className="stats-grid" style={{ marginBottom: '20px' }}>
+            <div className="stat-card">
+              <div className="stat-icon"><Users size={20} /></div>
+              <span className="stat-label">Assigned Households</span>
+              <span className="stat-value">{stats.total}</span>
+              <span className="stat-detail">Active Field Records</span>
+            </div>
+            <div className="stat-card">
+              <div className="stat-icon" style={{ background: 'rgba(234, 88, 12, 0.12)', color: '#EA580C' }}><AlertTriangle size={20} /></div>
+              <span className="stat-label">High Risk</span>
+              <span className="stat-value" style={{ background: 'linear-gradient(135deg, #EA580C, #E11D48)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>{stats.highRisk}</span>
+              <span className="stat-detail">Priority ANC / Chronic</span>
+            </div>
+            <div className="stat-card">
+              <div className="stat-icon" style={{ background: 'rgba(225, 29, 72, 0.12)', color: '#E11D48' }}><CalendarX size={20} /></div>
+              <span className="stat-label">Overdue Outreach</span>
+              <span className="stat-value" style={{ background: 'linear-gradient(135deg, #E11D48, #DC2626)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>{stats.overdueFollowups}</span>
+              <span className="stat-detail">Proactive Flags</span>
+            </div>
           </div>
-          <div className="alert-content">
-            <div className="alert-title">⚠ {alerts.length} Proactive Outreach Flag(s) (Overdue Care Events)</div>
-            <div className="alert-subtitle">
-              {alerts.map((a, i) => (
-                <span key={a.patient_id}>
-                  {i > 0 && ' · '}
-                  <strong>{a.full_name}</strong> — {a.follow_up_type?.replace('_', ' ')} ({a.days_overdue}d overdue)
-                </span>
+
+          {/* Outreach Alert Banner */}
+          {alerts.length > 0 && (
+            <div className="alert-banner emergency" style={{ marginBottom: '20px' }}>
+              <div className="alert-icon">
+                <AlertTriangle size={22} />
+              </div>
+              <div className="alert-content">
+                <div className="alert-title" style={{ fontSize: '1rem', fontWeight: 800 }}>⚠ {alerts.length} Overdue Care Outreach Flags</div>
+                <div className="alert-subtitle" style={{ fontSize: '0.875rem' }}>
+                  {alerts.map((a, i) => (
+                    <span key={a.patient_id}>
+                      {i > 0 && ' · '}
+                      <strong>{a.full_name}</strong> ({a.days_overdue}d overdue)
+                    </span>
+                  ))}
+                </div>
+              </div>
+              <button className="btn btn-danger" style={{ minHeight: '44px' }} onClick={() => {
+                if (alerts[0]) navigate(`/asha/patient/${alerts[0].patient_id}`);
+              }}>
+                Initiate Visit
+              </button>
+            </div>
+          )}
+
+          {/* Search & Filter Bar */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px', flexWrap: 'wrap' }}>
+            <div style={{ position: 'relative', flex: 1, minWidth: '240px' }}>
+              <Search size={20} style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-tertiary)' }} />
+              <input
+                type="text"
+                placeholder="Search patient by name or village..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                style={{ paddingLeft: '48px', minHeight: '48px', fontSize: '1rem' }}
+              />
+            </div>
+            <div className="tab-bar" style={{ marginBottom: 0 }}>
+              {[
+                { key: 'all', label: 'All' },
+                { key: 'high_risk', label: 'High Risk' },
+                { key: 'anc', label: 'ANC' },
+                { key: 'chronic', label: 'Chronic' },
+              ].map(f => (
+                <button key={f.key} className={`tab-item ${filter === f.key ? 'active' : ''}`} onClick={() => setFilter(f.key)} style={{ minHeight: '40px', fontSize: '0.875rem' }}>
+                  {f.label}
+                </button>
               ))}
             </div>
           </div>
-          <button className="btn btn-sm btn-danger" onClick={() => {
-            if (alerts[0]) navigate(`/asha/patient/${alerts[0].patient_id}`);
-          }}>
-            Initiate Visit
-          </button>
-        </div>
+
+          {/* Mobile Patient Touch Cards */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+            {filteredPatients.map(patient => {
+              const isOverdue = alerts.some(a => a.patient_id === patient.id);
+
+              return (
+                <div
+                  key={patient.id}
+                  className="patient-card"
+                  onClick={() => navigate(`/asha/patient/${patient.id}`)}
+                  style={{
+                    minHeight: '84px',
+                    padding: '18px 20px',
+                    borderColor: isOverdue ? 'rgba(225, 29, 72, 0.4)' : 'var(--border-card)',
+                    background: isOverdue ? 'linear-gradient(135deg, #FFF1F2 0%, #FFFFFF 100%)' : '#FFFFFF',
+                  }}
+                >
+                  <div className="patient-avatar" style={{ width: '48px', height: '48px', fontSize: '1.25rem' }}>
+                    {patient.full_name?.charAt(0)}
+                  </div>
+
+                  <div className="patient-info">
+                    <div className="patient-name" style={{ fontSize: '1.0625rem', fontWeight: 800 }}>
+                      <span className={`risk-dot ${patient.risk_level}`} />
+                      {lang === 'mr' && patient.full_name_mr ? patient.full_name_mr : patient.full_name}
+                    </div>
+                    <div className="patient-meta" style={{ fontSize: '0.84375rem', marginTop: '3px' }}>
+                      <span>{patient.age}y · {patient.gender}</span>
+                      <span>📍 {patient.village}</span>
+                    </div>
+                    {patient.conditions?.length > 0 && (
+                      <div style={{ display: 'flex', gap: '6px', marginTop: '6px', flexWrap: 'wrap' }}>
+                        {patient.conditions.map(c => {
+                          const config = conditionLabels[c] || { en: c, color: '#64748B' };
+                          return (
+                            <span
+                              key={c}
+                              className="badge"
+                              style={{ background: `${config.color}15`, color: config.color, border: `1px solid ${config.color}30`, fontSize: '0.75rem', height: '24px' }}
+                            >
+                              {lang === 'mr' ? config.mr : config.en}
+                            </span>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '6px' }}>
+                    <span className={`badge ${riskColors[patient.risk_level]}`} style={{ height: '26px', fontSize: '0.75rem' }}>
+                      {patient.risk_level} risk
+                    </span>
+                    {isOverdue && (
+                      <span className="badge badge-danger">
+                        ⚠ OVERDUE
+                      </span>
+                    )}
+                    <ArrowRight size={18} style={{ color: 'var(--brand-teal)' }} />
+                  </div>
+                </div>
+              );
+            })}
+
+            {filteredPatients.length === 0 && (
+              <div className="empty-state">
+                <Users size={48} />
+                <p style={{ fontSize: '1rem', marginTop: '12px' }}>No patients found — tap "+ New Visit" to register a patient.</p>
+              </div>
+            )}
+          </div>
+        </>
       )}
 
-      {/* Search & Filter Controls */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '24px', flexWrap: 'wrap' }}>
-        <div style={{ position: 'relative', flex: 1, minWidth: '220px' }}>
-          <Search size={18} style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-tertiary)' }} />
-          <input
-            type="text"
-            placeholder="Search patients by name or village..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            style={{ paddingLeft: '44px' }}
-          />
-        </div>
-        <div className="tab-bar" style={{ marginBottom: 0 }}>
-          {[
-            { key: 'all', label: 'All Patients' },
-            { key: 'high_risk', label: 'High Risk' },
-            { key: 'anc', label: 'ANC' },
-            { key: 'chronic', label: 'Chronic' },
-            { key: 'children', label: 'Children' },
-          ].map(f => (
-            <button key={f.key} className={`tab-item ${filter === f.key ? 'active' : ''}`} onClick={() => setFilter(f.key)}>
-              {f.label}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Patient Cards List */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-        {filteredPatients.map(patient => {
-          const isOverdue = alerts.some(a => a.patient_id === patient.id);
-
-          return (
-            <div
-              key={patient.id}
-              className="patient-card"
-              onClick={() => navigate(`/asha/patient/${patient.id}`)}
-              style={isOverdue ? { borderColor: 'rgba(225, 29, 72, 0.35)', background: 'linear-gradient(135deg, #FFF1F2 0%, #FFFFFF 100%)' } : {}}
-            >
-              <div className="patient-avatar">
-                {patient.full_name?.charAt(0)}
-              </div>
-
-              <div className="patient-info">
-                <div className="patient-name">
-                  <span className={`risk-dot ${patient.risk_level}`} />
-                  {lang === 'mr' && patient.full_name_mr ? patient.full_name_mr : patient.full_name}
-                </div>
-                <div className="patient-meta">
-                  <span>{patient.age}y · {patient.gender}</span>
-                  <span>📍 {patient.village}</span>
-                  {patient.last_visit_at && (
-                    <span>Last visit: {formatDate(patient.last_visit_at)}</span>
-                  )}
-                </div>
-                {patient.conditions?.length > 0 && (
-                  <div style={{ display: 'flex', gap: '6px', marginTop: '6px', flexWrap: 'wrap' }}>
-                    {patient.conditions.map(c => {
-                      const config = conditionLabels[c] || { en: c, color: '#64748B' };
-                      return (
-                        <span
-                          key={c}
-                          className="badge"
-                          style={{ background: `${config.color}15`, color: config.color, border: `1px solid ${config.color}30` }}
-                        >
-                          {lang === 'mr' ? config.mr : config.en}
-                        </span>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
-
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '6px' }}>
-                <span className={`badge ${riskColors[patient.risk_level]}`}>
-                  {patient.risk_level} risk
-                </span>
-                {isOverdue && (
-                  <span className="badge badge-danger">
-                    ⚠ {t('overdue')}
-                  </span>
-                )}
-                <ArrowRight size={16} style={{ color: 'var(--text-tertiary)' }} />
-              </div>
-            </div>
-          );
-        })}
-
-        {filteredPatients.length === 0 && (
-          <div className="empty-state">
-            <Users size={48} />
-            <p>No patients found matching your search</p>
-          </div>
-        )}
+      {/* PROMINENT MOBILE-FIRST FLOATING THUMB ACTION BAR */}
+      <div style={{ position: 'fixed', bottom: '20px', left: '50%', transform: 'translateX(-50%)', zIndex: 120, width: 'calc(100% - 40px)', maxWidth: '500px' }}>
+        <button
+          className="btn btn-primary btn-block btn-lg"
+          onClick={() => navigate(`/asha/triage/${patients[0]?.id || 'p1'}`)}
+          style={{ height: '56px', fontSize: '1.0625rem', borderRadius: 'var(--radius-full)', boxShadow: '0 12px 30px rgba(13, 148, 136, 0.4)' }}
+        >
+          <PlusCircle size={22} />
+          Start New Visit & Digital Triage
+        </button>
       </div>
     </div>
   );

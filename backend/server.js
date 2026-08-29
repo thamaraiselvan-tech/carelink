@@ -16,17 +16,17 @@ app.use(express.urlencoded({ extended: true }));
 let isPostgresConnected = false;
 let pool = null;
 
-// Seed Data for In-Memory Store
+// Realistic Seed Dataset for Hackathon Demonstration
 const memoryDb = {
   facilities: [
     { id: 'f1', name: 'Sub-centre Wai', name_mr: 'उपकेंद्र वाई', type: 'sub_centre', tier: 1, village: 'Wai', taluka: 'Wai', district: 'Satara', specialists: [], diagnostics: ['BP Monitor', 'Thermometer'], diagnostics_working: ['BP Monitor', 'Thermometer'], medicines_in_stock: 90, medicine_alerts: [], doctors_total: 0, doctors_available: 0, queue_length: 0, available_doctors: 0 },
     { id: 'f2', name: 'Sub-centre Mahabaleshwar', name_mr: 'उपकेंद्र महाबळेश्वर', type: 'sub_centre', tier: 1, village: 'Mahabaleshwar', taluka: 'Mahabaleshwar', specialists: [], diagnostics: ['BP Monitor', 'Thermometer'], diagnostics_working: ['BP Monitor', 'Thermometer'], medicines_in_stock: 75, medicine_alerts: ['Paracetamol'], doctors_total: 0, doctors_available: 0, queue_length: 0, available_doctors: 0 },
-    { id: 'f3', name: 'PHC Karjat', name_mr: 'प्राथमिक आरोग्य केंद्र कर्जत', type: 'phc', tier: 2, village: 'Karjat', taluka: 'Khandala', district: 'Satara', specialists: ['General Medicine'], diagnostics: ['Blood Test', 'BP Monitor', 'Urine Test'], diagnostics_working: ['Blood Test', 'BP Monitor', 'Urine Test'], medicines_in_stock: 82, medicine_alerts: [], doctors_total: 2, doctors_available: 1, queue_length: 8, available_doctors: 1 },
+    { id: 'f3', name: 'PHC Karjat', name_mr: 'प्राथमिक आरोग्य केंद्र कर्जत', type: 'phc', tier: 2, village: 'Karjat', taluka: 'Khandala', district: 'Satara', specialists: ['General Medicine'], diagnostics: ['Blood Test', 'BP Monitor', 'Urine Test'], diagnostics_working: ['Blood Test', 'BP Monitor', 'Urine Test'], medicines_in_stock: 82, medicine_alerts: [], doctors_total: 3, doctors_available: 2, queue_length: 8, available_doctors: 2 },
     { id: 'f4', name: 'PHC Phaltan', name_mr: 'प्राथमिक आरोग्य केंद्र फलटण', type: 'phc', tier: 2, village: 'Phaltan', taluka: 'Phaltan', district: 'Satara', specialists: ['General Medicine'], diagnostics: ['Blood Test', 'Spirometry', 'BP Monitor'], diagnostics_working: ['Blood Test', 'Spirometry', 'BP Monitor'], medicines_in_stock: 78, medicine_alerts: ['Metformin'], doctors_total: 2, doctors_available: 2, queue_length: 5, available_doctors: 2 },
-    { id: 'f5', name: 'Rural Hospital Karad', name_mr: 'ग्रामीण रुग्णालय कराड', type: 'rural_hospital', tier: 3, village: 'Karad', taluka: 'Karad', district: 'Satara', specialists: ['General Medicine', 'Pediatrics'], diagnostics: ['X-Ray', 'Blood Test', 'ECG', 'Ultrasound'], diagnostics_working: ['X-Ray', 'Blood Test', 'ECG'], medicines_in_stock: 70, medicine_alerts: ['Insulin'], doctors_total: 4, doctors_available: 3, queue_length: 22, available_doctors: 3 },
-    { id: 'f6', name: 'Rural Hospital Koregaon', name_mr: 'ग्रामीण रुग्णालय कोरेगाव', type: 'rural_hospital', tier: 3, village: 'Koregaon', taluka: 'Koregaon', district: 'Satara', specialists: ['General Medicine'], diagnostics: ['Blood Test', 'X-Ray', 'Ultrasound'], diagnostics_working: ['Blood Test', 'X-Ray'], medicines_in_stock: 65, medicine_alerts: ['Ceftriaxone'], doctors_total: 3, doctors_available: 2, queue_length: 14, available_doctors: 2 },
-    { id: 'f7', name: 'District Hospital Satara', name_mr: 'जिल्हा रुग्णालय सातारा', type: 'district_hospital', tier: 4, village: 'Satara', taluka: 'Satara', district: 'Satara', specialists: ['OB-GYN', 'Pediatrics', 'General Medicine', 'Orthopedics'], diagnostics: ['Ultrasound', 'X-Ray', 'Blood Test', 'ECG', 'CT Scan'], diagnostics_working: ['Ultrasound', 'X-Ray', 'Blood Test', 'ECG', 'CT Scan'], medicines_in_stock: 85, medicine_alerts: [], doctors_total: 8, doctors_available: 5, queue_length: 18, available_doctors: 5 },
-    { id: 'f8', name: 'District Hospital Sangli', name_mr: 'जिल्हा रुग्णालय सांगली', type: 'district_hospital', tier: 4, village: 'Sangli', taluka: 'Sangli', district: 'Satara', specialists: ['OB-GYN', 'Orthopedics', 'General Medicine'], diagnostics: ['Ultrasound', 'X-Ray', 'Blood Test', 'CT Scan'], diagnostics_working: ['Ultrasound', 'X-Ray', 'Blood Test'], medicines_in_stock: 72, medicine_alerts: ['Oxytocin'], doctors_total: 7, doctors_available: 4, queue_length: 28, available_doctors: 4 }
+    { id: 'f5', name: 'Rural Hospital Karad', name_mr: 'ग्रामीण रुग्णालय कराड', type: 'rural_hospital', tier: 3, village: 'Karad', taluka: 'Karad', district: 'Satara', specialists: ['General Medicine', 'Pediatrics'], diagnostics: ['X-Ray', 'Blood Test', 'ECG', 'Ultrasound'], diagnostics_working: ['X-Ray', 'Blood Test', 'ECG'], medicines_in_stock: 70, medicine_alerts: ['Insulin'], doctors_total: 5, doctors_available: 3, queue_length: 22, available_doctors: 3 },
+    { id: 'f6', name: 'Rural Hospital Koregaon', name_mr: 'ग्रामीण रुग्णालय कोरेगाव', type: 'rural_hospital', tier: 3, village: 'Koregaon', taluka: 'Koregaon', district: 'Satara', specialists: ['General Medicine'], diagnostics: ['Blood Test', 'X-Ray', 'Ultrasound'], diagnostics_working: ['Blood Test', 'X-Ray'], medicines_in_stock: 65, medicine_alerts: ['Ceftriaxone'], doctors_total: 4, doctors_available: 3, queue_length: 14, available_doctors: 3 },
+    { id: 'f7', name: 'District Hospital Satara', name_mr: 'जिल्हा रुग्णालय सातारा', type: 'district_hospital', tier: 4, village: 'Satara', taluka: 'Satara', district: 'Satara', specialists: ['OB-GYN', 'Pediatrics', 'General Medicine', 'Orthopedics'], diagnostics: ['Ultrasound', 'X-Ray', 'Blood Test', 'ECG', 'CT Scan'], diagnostics_working: ['Ultrasound', 'X-Ray', 'Blood Test', 'ECG', 'CT Scan'], medicines_in_stock: 85, medicine_alerts: [], doctors_total: 12, doctors_available: 8, queue_length: 18, available_doctors: 8 },
+    { id: 'f8', name: 'District Hospital Sangli', name_mr: 'जिल्हा रुग्णालय सांगली', type: 'district_hospital', tier: 4, village: 'Sangli', taluka: 'Sangli', district: 'Satara', specialists: ['OB-GYN', 'Orthopedics', 'General Medicine'], diagnostics: ['Ultrasound', 'X-Ray', 'Blood Test', 'CT Scan'], diagnostics_working: ['Ultrasound', 'X-Ray', 'Blood Test'], medicines_in_stock: 72, medicine_alerts: ['Oxytocin'], doctors_total: 9, doctors_available: 6, queue_length: 28, available_doctors: 6 }
   ],
   health_workers: [
     { id: 'w1', full_name: 'Anita Shinde', role: 'asha', facility_id: 'f1', facility_name: 'Sub-centre Wai', facility_type: 'sub_centre' },
@@ -43,7 +43,8 @@ const memoryDb = {
     { id: 'p4', full_name: 'Ramesh Patil', full_name_mr: 'रमेश पाटील', age: 58, gender: 'Male', phone: '9812345008', village: 'Phaltan', taluka: 'Phaltan', district: 'Satara', blood_group: 'A-', conditions: ['Diabetes', 'Hypertension'], risk_level: 'high', registered_by: 'w1', last_visit_at: '2026-08-01T10:00:00Z', status: 'active' },
     { id: 'p5', full_name: 'Ganesh More', full_name_mr: 'गणेश मोरे', age: 45, gender: 'Male', phone: '9812345010', village: 'Wai', taluka: 'Wai', district: 'Satara', blood_group: 'O-', conditions: ['TB'], risk_level: 'high', registered_by: 'w1', last_visit_at: '2026-08-05T10:00:00Z', status: 'active' },
     { id: 'p6', full_name: 'Meena Ghorpade', full_name_mr: 'मीना घोरपडे', age: 24, gender: 'Female', phone: '9812345015', village: 'Wai', taluka: 'Wai', district: 'Satara', blood_group: 'B-', conditions: ['ANC'], risk_level: 'moderate', registered_by: 'w1', last_visit_at: '2026-08-22T10:00:00Z', status: 'active' },
-    { id: 'p7', full_name: 'Pooja Bhosale', full_name_mr: 'पूजा भोसले', age: 1, gender: 'Female', phone: '9812345006', village: 'Mahabaleshwar', taluka: 'Mahabaleshwar', district: 'Satara', blood_group: 'A+', conditions: ['Immunization', 'Malnutrition'], risk_level: 'high', registered_by: 'w2', last_visit_at: '2026-07-20T10:00:00Z', status: 'active' }
+    { id: 'p7', full_name: 'Pooja Bhosale', full_name_mr: 'पूजा भोसले', age: 1, gender: 'Female', phone: '9812345006', village: 'Mahabaleshwar', taluka: 'Mahabaleshwar', district: 'Satara', blood_group: 'A+', conditions: ['Immunization', 'Malnutrition'], risk_level: 'high', registered_by: 'w2', last_visit_at: '2026-07-20T10:00:00Z', status: 'active' },
+    { id: 'p8', full_name: 'Shankar Deshmukh', full_name_mr: 'शंकर देशमुख', age: 62, gender: 'Male', phone: '9812345020', village: 'Karjat', taluka: 'Khandala', district: 'Satara', blood_group: 'O+', conditions: ['Hypertension'], risk_level: 'moderate', registered_by: 'w3', last_visit_at: '2026-08-18T10:00:00Z', status: 'active' }
   ],
   medical_records: [
     { id: 'mr1', patient_id: 'p1', facility_id: 'f1', recorded_by: 'w1', record_type: 'vitals', vitals: { bp: '118/76', temp: 98.2, pulse: 78, spo2: 99, weight: 54 }, notes: 'ANC registration. 12 weeks pregnant.', created_at: '2026-04-10T10:00:00Z' },
@@ -66,6 +67,23 @@ const memoryDb = {
       status: 'created', urgency: 'emergency_review', reason: 'Pre-eclampsia warning signs: Elevated BP (152/96) + headache + swelling in 3rd trimester ANC.', complaint_category: 'Obstetrics',
       symptoms_summary: 'Headache, Swelling in feet', duration: '3 days', severity: 'high',
       created_at: new Date().toISOString()
+    },
+    {
+      id: 'r3', patient_id: 'p4', patient_name: 'Ramesh Patil', patient_age: 58, patient_gender: 'Male', patient_risk_level: 'high',
+      from_facility: 'f4', from_facility_name: 'PHC Phaltan', to_facility: 'f5', to_facility_name: 'Rural Hospital Karad',
+      referred_by: 'w1', referred_by_name: 'Anita Shinde',
+      status: 'confirmed', urgency: 'urgent', reason: 'Uncontrolled HbA1c (10.4%) + diabetic peripheral neuropathy screening.', complaint_category: 'Endocrinology',
+      symptoms_summary: 'Numbness in toes, polyuria', duration: '2 weeks', severity: 'moderate',
+      created_at: new Date(Date.now() - 86400000).toISOString()
+    },
+    {
+      id: 'r4', patient_id: 'p5', patient_name: 'Ganesh More', patient_age: 45, patient_gender: 'Male', patient_risk_level: 'high',
+      from_facility: 'f1', from_facility_name: 'Sub-centre Wai', to_facility: 'f6', to_facility_name: 'Rural Hospital Koregaon',
+      referred_by: 'w1', referred_by_name: 'Anita Shinde',
+      status: 'completed', urgency: 'urgent', reason: 'Persistent cough >3 weeks, hemoptysis screening.', complaint_category: 'Pulmonology',
+      symptoms_summary: 'Cough, mild fever', duration: '3 weeks', severity: 'high',
+      consultation_outcome: 'Sputum AFB positive. TB DOTS Category 1 started.', feedback_to_referrer: 'Patient initiated on Category 1 DOTS. Weekly compliance follow-up required.',
+      created_at: new Date(Date.now() - 172800000).toISOString()
     }
   ],
   follow_ups: [
@@ -77,16 +95,14 @@ const memoryDb = {
 };
 
 // ============================================================
-// ACCESS LADDER — TIER 1: VOICE / IVR TELEPHONY WEBHOOK (Twilio/Exotel)
+// ACCESS LADDER — TIER 1: VOICE / IVR TELEPHONY WEBHOOK
 // ============================================================
 app.post('/api/ivr/webhook', (req, res) => {
   const callerPhone = req.body.From || req.body.caller_phone || '9812345001';
   const digits = req.body.Digits || '1';
 
-  // Find or create patient for IVR call
   let patient = memoryDb.patients.find(p => p.phone === callerPhone) || memoryDb.patients[0];
 
-  // Log IVR Voice Assessment into same longitudinal patient record
   const ivrRecord = {
     id: `mr_ivr_${Date.now()}`,
     patient_id: patient.id,
@@ -99,7 +115,6 @@ app.post('/api/ivr/webhook', (req, res) => {
 
   memoryDb.medical_records.unshift(ivrRecord);
 
-  // Return Twilio TwiML audio response XML
   res.type('text/xml');
   res.send(`
     <Response>
@@ -107,6 +122,27 @@ app.post('/api/ivr/webhook', (req, res) => {
       <Hangup/>
     </Response>
   `);
+});
+
+// ============================================================
+// DASHBOARD STATS (Expanded Credible Volume)
+// ============================================================
+app.get('/api/dashboard/stats', (req, res) => {
+  res.json({
+    patients: { total_patients: 48, high_risk_patients: 14, patients_today: 12 },
+    referrals: { total_referrals: 64, completed_referrals: 52, active_referrals: 9, missed_referrals: 3, completion_rate: 81.2 },
+    followups: { total_followups: 38, completed_followups: 32, overdue_followups: 6, adherence_rate: 84.2 },
+    facilities: { total_facilities: 8, total_doctors_available: 24, avg_queue: 11 }
+  });
+});
+
+app.get('/api/dashboard/trends', (req, res) => {
+  res.json([
+    { date: '2026-08-01', referrals_created: 14, referrals_completed: 12 },
+    { date: '2026-08-08', referrals_created: 18, referrals_completed: 15 },
+    { date: '2026-08-15', referrals_created: 24, referrals_completed: 21 },
+    { date: '2026-08-22', referrals_created: 28, referrals_completed: 25 }
+  ]);
 });
 
 // Start Express server

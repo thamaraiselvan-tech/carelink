@@ -69,10 +69,10 @@ export const getFollowUps = (params) => safeCall(() => api.get('/followups', { p
 export const updateFollowUp = (id, data) => safeCall(() => api.patch(`/followups/${id}`, data), { id, ...data });
 export const createFollowUp = (data) => safeCall(() => api.post('/followups', data), { id: `fu${Date.now()}`, ...data });
 export const getDashboardStats = () => safeCall(() => api.get('/dashboard/stats'), {
-  patients: { total_patients: 7, high_risk_patients: 4, patients_today: 3 },
-  referrals: { total_referrals: 2, completed_referrals: 1, active_referrals: 1, missed_referrals: 0, completion_rate: 82 },
-  followups: { total_followups: 4, completed_followups: 1, overdue_followups: 3, adherence_rate: 76 },
-  facilities: { total_facilities: 8, total_doctors_available: 17, avg_queue: 11 }
+  patients: { total_patients: 48, high_risk_patients: 14, patients_today: 12 },
+  referrals: { total_referrals: 64, completed_referrals: 52, active_referrals: 9, missed_referrals: 3, completion_rate: 81.2 },
+  followups: { total_followups: 38, completed_followups: 32, overdue_followups: 6, adherence_rate: 84.2 },
+  facilities: { total_facilities: 8, total_doctors_available: 24, avg_queue: 11 }
 });
 export const getDashboardTrends = () => safeCall(() => api.get('/dashboard/trends'), [
   { date: '2026-08-01', referrals_created: 5, referrals_completed: 4 },
