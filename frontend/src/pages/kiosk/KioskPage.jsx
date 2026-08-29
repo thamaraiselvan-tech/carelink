@@ -1,13 +1,15 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Store, Clock, LogOut, CheckCircle2, ShieldAlert, PhoneCall, HeartHandshake, Sparkles, Activity } from 'lucide-react';
+import { Store, Clock, LogOut, CheckCircle2, HeartHandshake, PhoneCall } from 'lucide-react';
 import { symptomCatalog } from '../../data/symptoms';
+import { useLang } from '../../context/LanguageContext';
 
 export default function KioskPage() {
   const navigate = useNavigate();
+  const { lang, toggleLang, t } = useLang();
   const [token, setToken] = useState('');
   const [sessionActive, setSessionActive] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(180); // 3-minute session auto-wipe
+  const [timeLeft, setTimeLeft] = useState(180);
   const [selectedSymptoms, setSelectedSymptoms] = useState([]);
   const [completed, setCompleted] = useState(false);
   const [sensitiveTriggered, setSensitiveTriggered] = useState(false);
@@ -46,8 +48,7 @@ export default function KioskPage() {
   };
 
   const handleSubmitKiosk = () => {
-    // Check sensitive condition (e.g. reproductive health or mental health)
-    const isSensitive = selectedSymptoms.some(s => s === 'headache' || s === 'vision_changes'); // demo sensitive trigger check
+    const isSensitive = selectedSymptoms.some(s => s === 'headache' || s === 'swelling');
     if (isSensitive) {
       setSensitiveTriggered(true);
     }
@@ -69,22 +70,29 @@ export default function KioskPage() {
             <Store size={22} />
           </div>
           <div>
-            <h1 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-primary)' }}>CareLink AI — Village Kiosk</h1>
-            <div style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)', fontWeight: 600 }}>Public Health Portal · Gram Panchayat Kiosk Mode</div>
+            <h1 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-primary)' }}>{t('kiosk_title')}</h1>
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)', fontWeight: 600 }}>{t('kiosk_subtitle')}</div>
           </div>
         </div>
 
-        {sessionActive && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'var(--status-warning-bg)', color: 'var(--status-warning)', padding: '6px 14px', borderRadius: 'var(--radius-full)', fontWeight: 700, fontSize: '0.8125rem', border: '1px solid rgba(217, 119, 6, 0.2)' }}>
-              <Clock size={16} /> Session Auto-Wipe: {formatTimer(timeLeft)}
-            </div>
-
-            <button className="btn btn-danger btn-sm" onClick={handleEndSession}>
-              <LogOut size={14} /> End Session
-            </button>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+          <div className="lang-toggle">
+            <button className={lang === 'en' ? 'active' : ''} onClick={() => lang !== 'en' && toggleLang()}>EN</button>
+            <button className={lang === 'mr' ? 'active' : ''} onClick={() => lang !== 'mr' && toggleLang()}>मराठी</button>
           </div>
-        )}
+
+          {sessionActive && (
+            <>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'var(--status-warning-bg)', color: 'var(--status-warning)', padding: '6px 14px', borderRadius: 'var(--radius-full)', fontWeight: 700, fontSize: '0.8125rem', border: '1px solid rgba(217, 119, 6, 0.2)' }}>
+                <Clock size={16} /> {formatTimer(timeLeft)}
+              </div>
+
+              <button className="btn btn-danger btn-sm" onClick={handleEndSession}>
+                <LogOut size={14} /> {t('end_session')}
+              </button>
+            </>
+          )}
+        </div>
       </header>
 
       {/* MAIN KIOSK BODY */}
@@ -93,13 +101,13 @@ export default function KioskPage() {
           <div style={{ width: 64, height: 64, borderRadius: 'var(--radius-lg)', background: 'var(--brand-teal-bg)', color: 'var(--brand-teal)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', marginBottom: '20px' }}>
             <Store size={32} />
           </div>
-          <h2 style={{ fontSize: '1.75rem', fontWeight: 800, marginBottom: '8px' }}>Touch Screen to Begin</h2>
+          <h2 style={{ fontSize: '1.75rem', fontWeight: 800, marginBottom: '8px' }}>{t('kiosk_welcome')}</h2>
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.9375rem', marginBottom: '28px' }}>
-            Self-service health check & referral token generator. Your session automatically clears for privacy when done.
+            {t('kiosk_instructions')}
           </p>
 
           <div className="form-group" style={{ textAlign: 'left', marginBottom: '24px' }}>
-            <label className="form-label">Enter Token / Ration Card ID (Optional)</label>
+            <label className="form-label">{t('token_input_label')}</label>
             <input
               type="text"
               placeholder="e.g. T-88219"
@@ -110,7 +118,7 @@ export default function KioskPage() {
           </div>
 
           <button className="btn btn-primary btn-block btn-lg" onClick={handleStartSession}>
-            Start Private Health Check
+            {t('start_session')}
           </button>
         </div>
       ) : completed ? (
@@ -122,15 +130,15 @@ export default function KioskPage() {
                 <HeartHandshake size={32} />
               </div>
               <h2 style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '12px' }}>
-                This Will Be Discussed Privately
+                {t('kiosk_privacy_title')}
               </h2>
               <div style={{ background: '#F8FAFC', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-md)', padding: '20px', textAlign: 'left', marginBottom: '24px', fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
                 <p style={{ marginBottom: '12px' }}>
-                  🔒 <strong>Privacy Assurance:</strong> Diagnostic details for sensitive health symptoms are never displayed on public kiosk screens to protect patient confidentiality.
+                  🔒 <strong>{t('kiosk_privacy_desc')}</strong>
                 </p>
                 <div style={{ display: 'flex', gap: '12px', alignItems: 'center', color: 'var(--brand-teal)', fontWeight: 700 }}>
                   <PhoneCall size={18} />
-                  <span>Confidential IVR Voice Callback queued to your phone. An ASHA worker will also offer a private home visit.</span>
+                  <span>{lang === 'mr' ? 'गोपनीय IVR व्हॉइस कॉल तुमच्या फोनवर पाठवला गेला आहे.' : 'Confidential IVR Voice Callback queued to your phone.'}</span>
                 </div>
               </div>
             </div>
@@ -139,24 +147,25 @@ export default function KioskPage() {
               <div style={{ width: 64, height: 64, borderRadius: 'var(--radius-lg)', background: 'var(--status-success-bg)', color: 'var(--status-success)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', marginBottom: '20px' }}>
                 <CheckCircle2 size={32} />
               </div>
-              <h2 style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: '8px' }}>Triage Assessment Submitted</h2>
+              <h2 style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: '8px' }}>
+                {lang === 'mr' ? 'आरोग्य तपासणी सबमिट केली' : 'Triage Assessment Submitted'}
+              </h2>
               <p style={{ color: 'var(--text-secondary)', marginBottom: '24px' }}>
-                Your health check has been securely logged into the CareLink AI network.
+                {lang === 'mr' ? 'तुमची माहिती केरलिंक AI नेटवर्कमध्ये सुरक्षितपणे नोंदवली गेली आहे.' : 'Your health check has been securely logged into the CareLink AI network.'}
               </p>
             </div>
           )}
 
           <button className="btn btn-primary btn-block btn-lg" onClick={handleEndSession}>
-            End Session & Clear Memory
+            {t('end_session')}
           </button>
         </div>
       ) : (
         /* ICON-FIRST SYMPTOM INTAKE */
         <div className="glass-card" style={{ maxWidth: '840px', margin: '0 auto', padding: '32px' }}>
-          <h2 style={{ fontSize: '1.375rem', fontWeight: 800, marginBottom: '8px' }}>Tap Symptoms You Are Experiencing</h2>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', marginBottom: '24px' }}>
-            Large touch targets for public kiosk self-service:
-          </p>
+          <h2 style={{ fontSize: '1.375rem', fontWeight: 800, marginBottom: '8px' }}>
+            {lang === 'mr' ? 'तुम्हाला जाणवणारी लक्षणे टॅप करा' : 'Tap Symptoms You Are Experiencing'}
+          </h2>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px', marginBottom: '32px' }}>
             {symptomCatalog.map(sym => {
@@ -175,15 +184,12 @@ export default function KioskPage() {
                     alignItems: 'center',
                     justifyContent: 'space-between',
                     cursor: 'pointer',
-                    boxShadow: isSelected ? '0 4px 14px rgba(13, 148, 136, 0.2)' : 'var(--shadow-subtle)',
-                    transition: 'all 0.15s ease',
                   }}
                 >
                   <div style={{ textAlign: 'left' }}>
-                    <div style={{ fontSize: '0.9375rem', fontWeight: 800, color: isSelected ? 'var(--brand-teal)' : 'var(--text-primary)' }}>
-                      {sym.label}
+                    <div style={{ fontSize: '1rem', fontWeight: 800, color: isSelected ? 'var(--brand-teal)' : 'var(--text-primary)' }}>
+                      {lang === 'mr' ? sym.label_mr : sym.label}
                     </div>
-                    <div style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)', fontWeight: 600 }}>{sym.label_mr}</div>
                   </div>
                   {isSelected && <CheckCircle2 size={22} style={{ color: 'var(--brand-teal)' }} />}
                 </button>
@@ -193,10 +199,10 @@ export default function KioskPage() {
 
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid var(--border-subtle)', paddingTop: '20px' }}>
             <span style={{ fontSize: '0.875rem', fontWeight: 700, color: 'var(--text-tertiary)' }}>
-              {selectedSymptoms.length} symptom(s) selected
+              {selectedSymptoms.length} {lang === 'mr' ? 'लक्षणे निवडली' : 'symptom(s) selected'}
             </span>
             <button className="btn btn-primary btn-lg" onClick={handleSubmitKiosk} disabled={selectedSymptoms.length === 0}>
-              Submit Self-Check Assessment
+              {t('submit_assessment')}
             </button>
           </div>
         </div>

@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react';
 
 export default function Header() {
   const { logout } = useAuth();
-  const { lang, toggleLang } = useLang();
+  const { lang, toggleLang, t } = useLang();
   const navigate = useNavigate();
   const [isOnline, setIsOnline] = useState(navigator.onLine);
 
@@ -31,7 +31,7 @@ export default function Header() {
       <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
         <div className="sync-indicator">
           <div className={`sync-dot ${isOnline ? 'synced' : 'offline'}`} />
-          <span>{isOnline ? 'Connected' : 'Offline'}</span>
+          <span>{isOnline ? t('connected') : t('offline')}</span>
           {isOnline ? <Wifi size={14} /> : <WifiOff size={14} />}
         </div>
       </div>
@@ -44,7 +44,7 @@ export default function Header() {
 
         <button className="btn btn-ghost btn-sm" onClick={handleLogout}>
           <LogOut size={15} />
-          Logout
+          {t('logout')}
         </button>
       </div>
     </header>
