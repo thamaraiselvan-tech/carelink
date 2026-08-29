@@ -92,23 +92,23 @@ export default function CreateReferral() {
   }
 
   return (
-    <div style={{ maxWidth: '820px', margin: '0 auto' }}>
+    <div>
       <button className="btn btn-ghost mb-lg" onClick={() => navigate(`/asha/patient/${patientId}`)}>
-        <ArrowLeft size={16} /> Cancel Referral
+        <ArrowLeft size={16} /> {t('cancel_referral')}
       </button>
 
       <div className="glass-card mb-xl">
         <h1 className="page-title" style={{ fontSize: '1.5rem' }}>
-          Create Structured Referral
+          {t('create_structured_referral')}
         </h1>
         <p className="text-secondary text-sm">
-          Mandatory fields enforced to prevent single-word undiagnosable referrals.
+          {t('mandatory_fields_notice')}
         </p>
 
         <form onSubmit={handleSubmit} className="mt-xl">
           {/* Patient summary */}
           <div className="form-group mb-lg" style={{ background: 'var(--bg-tertiary)', padding: '14px', borderRadius: 'var(--radius-md)' }}>
-            <span className="text-xs text-tertiary font-bold uppercase tracking-wider">Target Patient:</span>
+            <span className="text-xs text-tertiary font-bold uppercase tracking-wider">{t('target_patient')}</span>
             <div className="font-bold text-base">
               {lang === 'mr' && patient?.full_name_mr ? patient.full_name_mr : patient?.full_name} ({patient?.age}y, {patient?.gender})
             </div>
@@ -116,7 +116,7 @@ export default function CreateReferral() {
 
           <div className="form-row mb-lg">
             <div className="form-group">
-              <label className="form-label">Destination Facility</label>
+              <label className="form-label">{t('destination_facility')}</label>
               <select
                 value={form.to_facility}
                 onChange={e => setForm({ ...form, to_facility: e.target.value })}
@@ -124,28 +124,27 @@ export default function CreateReferral() {
               >
                 {facilities.map(f => (
                   <option key={f.id} value={f.id}>
-                    {f.name} ({f.type.replace('_', ' ').toUpperCase()})
+                    {lang === 'mr' && f.name_mr ? f.name_mr : f.name} ({f.type.replace('_', ' ').toUpperCase()})
                   </option>
                 ))}
               </select>
             </div>
 
             <div className="form-group">
-              <label className="form-label">Urgency Level</label>
+              <label className="form-label">{t('urgency_level')}</label>
               <select
                 value={form.urgency}
                 onChange={e => setForm({ ...form, urgency: e.target.value })}
               >
-                <option value="routine">Routine</option>
-                <option value="moderate">Moderate</option>
-                <option value="urgent">Urgent</option>
-                <option value="emergency_review">Emergency Review</option>
+                <option value="routine">{t('urgency_routine')}</option>
+                <option value="urgent">{t('urgency_urgent')}</option>
+                <option value="emergency_review">{t('urgency_emergency_review')}</option>
               </select>
             </div>
           </div>
 
           <div className="form-group mb-lg">
-            <label className="form-label">Structured Clinical Reason (Min 10 characters)</label>
+            <label className="form-label">{t('structured_clinical_reason')}</label>
             <textarea
               rows={3}
               value={form.reason}
@@ -156,7 +155,7 @@ export default function CreateReferral() {
           </div>
 
           <button type="submit" className="btn btn-primary btn-block btn-lg" disabled={submitting}>
-            <Send size={18} /> Submit Referral to Receiving Facility
+            <Send size={18} /> {t('submit_referral_btn')}
           </button>
         </form>
       </div>

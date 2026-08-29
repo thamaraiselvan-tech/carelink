@@ -29,13 +29,13 @@ export default function ReferralTracker() {
 
   const renderProgressSteps = (status) => {
     const steps = [
-      { key: 'created', label: 'Issued' },
-      { key: 'confirmed', label: 'Accepted' },
-      { key: 'in_consultation', label: 'Consultation' },
-      { key: 'completed', label: 'Completed' },
+      { key: 'created', label: lang === 'mr' ? 'जारी केले' : 'Issued' },
+      { key: 'confirmed', label: lang === 'mr' ? 'स्वीकारले' : 'Accepted' },
+      { key: 'in_consultation', label: lang === 'mr' ? 'सल्लामसलत' : 'Consultation' },
+      { key: 'completed', label: t('status_completed') },
     ];
 
-    const getStepState = (stepKey, idx) => {
+    const getStepState = (stepKey) => {
       if (status === 'missed') return 'missed';
       if (status === 'closed' || status === 'completed') return 'completed';
       
@@ -51,7 +51,7 @@ export default function ReferralTracker() {
     return (
       <div className="referral-progress">
         {steps.map((s, idx) => {
-          const state = getStepState(s.key, idx);
+          const state = getStepState(s.key);
           return (
             <div key={s.key} className={`progress-step ${state}`}>
               <div className="progress-dot">
@@ -73,13 +73,13 @@ export default function ReferralTracker() {
     <div>
       <div className="page-header-box flex items-center justify-between">
         <div>
-          <h1 className="page-title">Referral Tracker</h1>
+          <h1 className="page-title">{t('referral_tracker')}</h1>
           <p className="page-subtitle">
-            End-to-end referral state machine tracking — closed loop with doctor feedback
+            {t('referral_tracker_subtitle')}
           </p>
         </div>
         <button className="btn btn-secondary btn-sm" onClick={loadReferrals}>
-          <RefreshCw size={14} /> Refresh Status
+          <RefreshCw size={14} /> {t('refresh_status')}
         </button>
       </div>
 
@@ -91,24 +91,24 @@ export default function ReferralTracker() {
                 <div className="flex items-center gap-sm" style={{ flexWrap: 'wrap' }}>
                   <span className="font-bold text-base">{ref.patient_name}</span>
                   <span className={`badge risk-${ref.patient_risk_level || 'normal'}`}>
-                    {ref.patient_risk_level || 'normal'} risk
+                    {t(`risk_${ref.patient_risk_level}`) || `${ref.patient_risk_level} risk`}
                   </span>
                   <span className={`badge ref-${ref.status}`}>
-                    {ref.status?.replace('_', ' ')}
+                    {t(`status_${ref.status}`) || ref.status?.replace('_', ' ')}
                   </span>
                 </div>
                 <div className="text-xs text-tertiary mt-xs">
-                  {ref.from_facility_name} ➔ <strong className="text-teal">{ref.to_facility_name}</strong> · Category: {ref.complaint_category}
+                  {ref.from_facility_name} ➔ <strong className="text-teal">{ref.to_facility_name}</strong> · {t('complaint_category')} {ref.complaint_category}
                 </div>
               </div>
 
               <div className="text-xs text-tertiary font-bold">
-                Issued: {new Date(ref.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
+                {lang === 'mr' ? 'जारी:' : 'Issued:'} {new Date(ref.created_at).toLocaleDateString(lang === 'mr' ? 'mr-IN' : 'en-IN', { day: 'numeric', month: 'short' })}
               </div>
             </div>
 
             <div style={{ background: 'var(--bg-tertiary)', padding: '12px 16px', borderRadius: 'var(--radius-md)', fontSize: 'var(--font-xs)', marginBottom: '16px' }}>
-              <strong>Structured Reason:</strong> {ref.reason}
+              <strong>{t('structured_reason')}</strong> {ref.reason}
             </div>
 
             {renderProgressSteps(ref.status)}
@@ -116,7 +116,7 @@ export default function ReferralTracker() {
             {ref.feedback_to_referrer && (
               <div style={{ marginTop: '16px', paddingTop: '12px', borderTop: '1px dashed var(--border-glass)', fontSize: 'var(--font-xs)' }}>
                 <div className="font-bold text-success flex items-center gap-xs">
-                  <CheckCircle2 size={16} /> Doctor Feedback-on-Record Received:
+                  <CheckCircle2 size={16} /> {t('doctor_feedback_received')}
                 </div>
                 <div className="text-secondary mt-xs" style={{ fontStyle: 'italic', background: '#ECFDF5', padding: '8px 12px', borderRadius: 'var(--radius-sm)' }}>
                   "{ref.feedback_to_referrer}"
@@ -129,7 +129,7 @@ export default function ReferralTracker() {
         {referrals.length === 0 && (
           <div className="empty-state">
             <ArrowRightLeft size={48} />
-            <p>No active referrals being tracked</p>
+            <p>{t('no_active_referrals')}</p>
           </div>
         )}
       </div>

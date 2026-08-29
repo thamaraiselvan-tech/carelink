@@ -25,7 +25,7 @@ export const translations = {
     // Sidebar & Navigation Links
     my_patients: 'My Patients',
     referral_tracker: 'Referral Tracker',
-    incoming_referrals: 'Incoming Referrals',
+    incoming_referrals: 'Incoming Referrals Queue',
     quality_dashboard: 'Quality Dashboard',
 
     // Buttons & Actions
@@ -41,6 +41,10 @@ export const translations = {
     start_session: 'Start Private Health Check',
     submit_assessment: 'Submit Self-Check Assessment',
     cancel_assessment: 'Cancel Assessment',
+    cancel_referral: 'Cancel Referral',
+    create_structured_referral: 'Create Structured Referral',
+    submit_referral_btn: 'Submit Referral to Receiving Facility',
+    refresh_status: 'Refresh Status',
 
     // Labels & Placeholders
     search_patient_placeholder: 'Search patient by name or village...',
@@ -52,6 +56,18 @@ export const translations = {
     vitals_title: 'Record Patient Vitals',
     longitudinal_patient_journey: 'Longitudinal Patient Journey Record Across Facilities',
     overdue_followup_count: 'overdue follow-up(s)',
+    mandatory_fields_notice: 'Mandatory fields enforced to prevent single-word undiagnosable referrals.',
+    target_patient: 'Target Patient:',
+    destination_facility: 'Destination Facility',
+    urgency_level: 'Urgency Level',
+    structured_clinical_reason: 'Structured Clinical Reason (Min 10 characters)',
+    referral_tracker_subtitle: 'End-to-end referral state machine tracking — closed loop with doctor feedback',
+    structured_reason: 'Structured Clinical Reason:',
+    doctor_feedback_received: 'Doctor Feedback-on-Record Received:',
+    pending_cases: 'Pending Cases',
+    referred_from: 'Referred from:',
+    complaint_category: 'Category:',
+    symptoms: 'Symptoms:',
 
     // Status Badges & Risk Levels
     risk_normal: 'Normal risk',
@@ -103,6 +119,7 @@ export const translations = {
     data_disclaimer: 'CareLink AI · SIH 2026 Problem Statement SIH26133 · Government of Maharashtra State Innovation Society',
     empty_patients: 'No patients found — tap "+ New Visit" to register a patient.',
     empty_referrals: 'No incoming referrals pending for review.',
+    no_active_referrals: 'No active referrals being tracked',
     patient_not_found: 'Patient record not found',
 
     // Filter Chips
@@ -138,7 +155,7 @@ export const translations = {
     // Sidebar & Navigation Links
     my_patients: 'माझे रुग्ण',
     referral_tracker: 'संदर्भ मागोवा',
-    incoming_referrals: 'येणारे संदर्भ',
+    incoming_referrals: 'येणारे संदर्भ रांग',
     quality_dashboard: 'गुणवत्ता डॅशबोर्ड',
 
     // Buttons & Actions
@@ -154,6 +171,10 @@ export const translations = {
     start_session: 'खाजगी आरोग्य तपासणी सुरू करा',
     submit_assessment: 'स्व-तपासणी सबमिट करा',
     cancel_assessment: 'मूल्यांकन रद्द करा',
+    cancel_referral: 'संदर्भ रद्द करा',
+    create_structured_referral: 'रचनात्मक संदर्भ तयार करा',
+    submit_referral_btn: 'आरोग्य केंद्राला संदर्भ सबमिट करा',
+    refresh_status: 'स्थिती रिफ्रेश करा',
 
     // Labels & Placeholders
     search_patient_placeholder: 'नाव किंवा गावावरून रुग्ण शोधा...',
@@ -165,6 +186,18 @@ export const translations = {
     vitals_title: 'रुग्णाचे व्हिटल्स नोंदवा',
     longitudinal_patient_journey: 'सुविधांमधील रुग्णाचा दीर्घकालीन आरोग्य प्रवास रेकॉर्ड',
     overdue_followup_count: 'अतिदेय पाठपुरावा',
+    mandatory_fields_notice: 'एक-शब्द संदर्भ रोखण्यासाठी आवश्यक फील्ड्स सक्तीचे आहेत.',
+    target_patient: 'लक्ष्यित रुग्ण:',
+    destination_facility: 'गंतव्य आरोग्य केंद्र',
+    urgency_level: 'तातडीची पातळी',
+    structured_clinical_reason: 'रचनात्मक वैद्यकीय कारण (किमान १० अक्षरे)',
+    referral_tracker_subtitle: 'डॉक्टर अभिप्रायासह संदर्भ स्थिती मागोवा प्रणाली',
+    structured_reason: 'रचनात्मक वैद्यकीय कारण:',
+    doctor_feedback_received: 'डॉक्टर कडून नोंदवलेला अभिप्राय प्राप्त झाला:',
+    pending_cases: 'प्रलंबित प्रकरणे',
+    referred_from: 'येथून संदर्भित:',
+    complaint_category: 'प्रवर्ग:',
+    symptoms: 'लक्षणे:',
 
     // Status Badges & Risk Levels
     risk_normal: 'सामान्य धोका',
@@ -216,6 +249,7 @@ export const translations = {
     data_disclaimer: 'केरलिंक AI · एसआयएच २०२६ समस्या विधान SIH26133 · महाराष्ट्र शासन',
     empty_patients: 'कोणतेही रुग्ण आढळले नाहीत — नवीन नोंदणीसाठी "+ नवीन भेट" वर टॅप करा.',
     empty_referrals: 'पुनरावलोकनासाठी कोणतेही येणारे संदर्भ नाहीत.',
+    no_active_referrals: 'ट्रॅक केलेले कोणतेही सक्रिय संदर्भ नाहीत',
     patient_not_found: 'रुग्ण रेकॉर्ड आढळले नाही',
 
     // Filter Chips

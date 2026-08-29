@@ -3,11 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { Stethoscope, ArrowRight } from 'lucide-react';
 import { getReferrals } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
+import { useLang } from '../../context/LanguageContext';
 import Loader from '../../components/ui/Loader';
 
 export default function DoctorDashboard() {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { lang, t } = useLang();
   const [referrals, setReferrals] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -33,14 +35,14 @@ export default function DoctorDashboard() {
     <div>
       <div className="page-header-box">
         <div>
-          <h1 className="page-title">Incoming Referrals Queue</h1>
+          <h1 className="page-title">{t('incoming_referrals')}</h1>
           <p className="page-subtitle">
-            {user?.facility_name} · {user?.full_name} ({user?.specialization || 'Physician'})
+            {user?.facility_name} · {user?.full_name} ({user?.specialization || (lang === 'mr' ? 'वैद्यकीय अधिकारी' : 'Physician')})
           </p>
         </div>
         <div>
           <span className="badge badge-teal" style={{ height: '32px', padding: '0 16px', fontSize: '0.8125rem' }}>
-            {referrals.length} Pending Cases
+            {referrals.length} {t('pending_cases')}
           </span>
         </div>
       </div>
@@ -65,21 +67,21 @@ export default function DoctorDashboard() {
                       <span style={{ fontWeight: 800, fontSize: '1rem', color: 'var(--text-primary)' }}>{ref.patient_name}</span>
                       <span style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)', fontWeight: 500 }}>({ref.patient_age}y · {ref.patient_gender})</span>
                       <span className={`badge risk-${ref.patient_risk_level}`}>
-                        {ref.patient_risk_level} risk
+                        {t(`risk_${ref.patient_risk_level}`) || `${ref.patient_risk_level} risk`}
                       </span>
                       <span className={`badge badge-${isEmergency ? 'danger' : ref.urgency === 'urgent' ? 'warning' : 'info'}`}>
-                        {ref.urgency?.replace('_', ' ')}
+                        {t(`urgency_${ref.urgency}`) || ref.urgency?.replace('_', ' ')}
                       </span>
                     </div>
                     <div style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)', marginTop: '4px' }}>
-                      Referred from: <strong style={{ color: 'var(--text-primary)' }}>{ref.from_facility_name}</strong> · Category: {ref.complaint_category}
+                      {t('referred_from')} <strong style={{ color: 'var(--text-primary)' }}>{ref.from_facility_name}</strong> · {t('complaint_category')} {ref.complaint_category}
                     </div>
                   </div>
                 </div>
 
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                   <span className={`badge ref-${ref.status}`}>
-                    {ref.status?.replace('_', ' ')}
+                    {t(`status_${ref.status}`) || ref.status?.replace('_', ' ')}
                   </span>
                   <ArrowRight size={18} style={{ color: 'var(--text-tertiary)' }} />
                 </div>
@@ -88,12 +90,12 @@ export default function DoctorDashboard() {
               {/* Structured Complaint Box */}
               <div style={{ background: 'var(--bg-tertiary)', padding: '14px 18px', borderRadius: 'var(--radius-md)' }}>
                 <div style={{ fontSize: '0.6875rem', color: 'var(--text-tertiary)', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '4px' }}>
-                  Structured Clinical Reason:
+                  {t('structured_reason')}
                 </div>
                 <div style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-primary)' }}>{ref.reason}</div>
                 {ref.symptoms_summary && (
                   <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '4px' }}>
-                    <strong>Symptoms:</strong> {ref.symptoms_summary}
+                    <strong>{t('symptoms')}</strong> {ref.symptoms_summary}
                   </div>
                 )}
               </div>
@@ -104,7 +106,7 @@ export default function DoctorDashboard() {
         {referrals.length === 0 && (
           <div className="empty-state">
             <Stethoscope size={48} />
-            <p>No incoming referrals pending for review</p>
+            <p>{t('empty_referrals')}</p>
           </div>
         )}
       </div>
