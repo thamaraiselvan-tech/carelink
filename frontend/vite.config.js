@@ -6,6 +6,7 @@ export default defineConfig({
   base: '/',
   build: {
     outDir: 'dist',
-    sourcemap: false
+    sourcemap: false,
+    chunkSizeWarningLimit: 1000
   }
 });
