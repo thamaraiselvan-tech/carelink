@@ -8,26 +8,24 @@ createRoot(document.getElementById('root')).render(
   </StrictMode>,
 );
 
-// Guarantee startup splash loader is visible for at least 1.2s to display the heartbeat pulse animation
+// Guarantee startup splash loader is visible for 3.5s with a smooth scale & fade transform transition
 window.addEventListener('load', () => {
   setTimeout(() => {
     const splash = document.getElementById('app-splash');
     if (splash) {
-      splash.style.opacity = '0';
-      splash.style.visibility = 'hidden';
+      splash.classList.add('fade-out');
       setTimeout(() => {
         splash.remove();
-      }, 500);
+      }, 850);
     }
-  }, 1200);
+  }, 3500);
 });
 
 // Fallback in case load event already fired
 setTimeout(() => {
   const splash = document.getElementById('app-splash');
-  if (splash) {
-    splash.style.opacity = '0';
-    splash.style.visibility = 'hidden';
-    setTimeout(() => splash.remove(), 500);
+  if (splash && !splash.classList.contains('fade-out')) {
+    splash.classList.add('fade-out');
+    setTimeout(() => splash.remove(), 850);
   }
-}, 1600);
+}, 4200);

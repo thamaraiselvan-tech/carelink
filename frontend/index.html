@@ -23,13 +23,22 @@
         justify-content: center;
         background: #F8FAFC;
         font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-        transition: opacity 0.4s ease, visibility 0.4s ease;
+        opacity: 1;
+        transform: scale(1);
+        transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.8s;
+      }
+
+      #app-splash.fade-out {
+        opacity: 0;
+        transform: scale(1.04);
+        visibility: hidden;
+        pointer-events: none;
       }
 
       .splash-orb-wrapper {
         position: relative;
-        width: 88px;
-        height: 88px;
+        width: 96px;
+        height: 96px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -37,18 +46,18 @@
 
       .splash-pulse-ring {
         position: absolute;
-        inset: -12px;
+        inset: -16px;
         border-radius: 50%;
-        background: radial-gradient(circle, rgba(13, 148, 136, 0.25) 0%, rgba(37, 99, 235, 0) 70%);
+        background: radial-gradient(circle, rgba(13, 148, 136, 0.28) 0%, rgba(37, 99, 235, 0) 70%);
         animation: ringPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
       }
 
       .splash-icon-box {
-        width: 80px;
-        height: 80px;
-        border-radius: 22px;
+        width: 88px;
+        height: 88px;
+        border-radius: 24px;
         background: linear-gradient(135deg, #0D9488 0%, #2563EB 100%);
-        box-shadow: 0 16px 36px rgba(13, 148, 136, 0.35);
+        box-shadow: 0 20px 40px rgba(13, 148, 136, 0.38);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -59,8 +68,8 @@
       }
 
       .splash-svg-heartbeat {
-        width: 44px;
-        height: 44px;
+        width: 48px;
+        height: 48px;
         stroke-dasharray: 200;
         stroke-dashoffset: 200;
         animation: drawPulse 2.2s cubic-bezier(0.65, 0, 0.35, 1) infinite;
@@ -68,7 +77,7 @@
 
       .splash-brand {
         margin-top: 24px;
-        font-size: 1.5rem;
+        font-size: 1.625rem;
         font-weight: 800;
         letter-spacing: -0.02em;
         background: linear-gradient(135deg, #0F172A 0%, #0D9488 100%);
@@ -77,9 +86,9 @@
       }
 
       .splash-line {
-        width: 48px;
-        height: 3px;
-        border-radius: 3px;
+        width: 56px;
+        height: 4px;
+        border-radius: 4px;
         background: linear-gradient(90deg, #0D9488, #2563EB);
         margin-top: 12px;
         animation: lineExpand 1.8s ease-in-out infinite alternate;
@@ -87,12 +96,12 @@
 
       @keyframes ringPulse {
         0% { transform: scale(0.85); opacity: 0.8; }
-        100% { transform: scale(1.4); opacity: 0; }
+        100% { transform: scale(1.45); opacity: 0; }
       }
 
       @keyframes orbGlow {
-        0% { transform: translateY(0) scale(1); box-shadow: 0 16px 36px rgba(13, 148, 136, 0.35); }
-        100% { transform: translateY(-4px) scale(1.03); box-shadow: 0 22px 48px rgba(37, 99, 235, 0.45); }
+        0% { transform: translateY(0) scale(1); box-shadow: 0 20px 40px rgba(13, 148, 136, 0.38); }
+        100% { transform: translateY(-5px) scale(1.04); box-shadow: 0 26px 52px rgba(37, 99, 235, 0.48); }
       }
 
       @keyframes drawPulse {
@@ -102,8 +111,8 @@
       }
 
       @keyframes lineExpand {
-        0% { width: 24px; opacity: 0.4; }
-        100% { width: 64px; opacity: 1; }
+        0% { width: 28px; opacity: 0.4; }
+        100% { width: 72px; opacity: 1; }
       }
     </style>
   </head>
