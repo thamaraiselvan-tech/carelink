@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Check, CheckCircle2, Stethoscope } from 'lucide-react';
+import { ArrowLeft, Check, CheckCircle2, Stethoscope, RefreshCw } from 'lucide-react';
 import { getReferrals, updateReferralStatus, getPatientTimeline, createFollowUp } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
+import { icd10Codes } from '../../data/icd10';
 import Loader from '../../components/ui/Loader';
 
 export default function ReferralDetail() {
@@ -15,10 +16,12 @@ export default function ReferralDetail() {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
 
+  const [icdCode, setIcdCode] = useState('O14.0');
   const [outcome, setOutcome] = useState('');
   const [feedback, setFeedback] = useState('');
   const [scheduleFollowup, setScheduleFollowup] = useState(true);
   const [followupDays, setFollowupDays] = useState(7);
+  const [rerouting, setRerouting] = useState(false);
 
   useEffect(() => {
     loadReferralDetail();
@@ -36,9 +39,11 @@ export default function ReferralDetail() {
       }
 
       if (ref?.patient_name?.includes('Sunita')) {
-        setOutcome('Mild pre-eclampsia diagnosed. Labetalol 100mg BD initiated. Bed rest advised.');
+        setIcdCode('O14.0');
+        setOutcome('Mild pre-eclampsia diagnosed (ICD-10: O14.0). Labetalol 100mg BD initiated. Bed rest advised.');
         setFeedback('Good early catch on BP trend and headache. Patient started on labetalol. Schedule weekly BP monitoring at PHC.');
       } else {
+        setIcdCode('E11.9');
         setOutcome('Consultation completed. Clinical evaluation normal.');
         setFeedback('Patient evaluated successfully. Maintain routine follow-up.');
       }
@@ -63,13 +68,29 @@ export default function ReferralDetail() {
     setSubmitting(false);
   };
 
+  const handleReroute = async () => {
+    setSubmitting(true);
+    try {
+      await updateReferralStatus(id, {
+        status: 're_referred',
+        reason: `${referral.reason} [RE-ROUTED by Dr. Kulkarni: Wrong specialty, re-routing to Cardiology]`,
+      });
+      setReferral(prev => ({ ...prev, status: 're_referred' }));
+      alert(`Referral ID ${referral.id} successfully re-routed without closing patient record.`);
+    } catch (err) {
+      console.error('Failed to re-route referral:', err);
+      setReferral(prev => ({ ...prev, status: 're_referred' }));
+    }
+    setSubmitting(false);
+  };
+
   const handleCompleteConsultation = async (e) => {
     e.preventDefault();
     setSubmitting(true);
     try {
       await updateReferralStatus(id, {
         status: 'completed',
-        consultation_outcome: outcome,
+        consultation_outcome: `[ICD-10 Code: ${icdCode}] ${outcome}`,
         feedback_to_referrer: feedback,
       });
 
@@ -130,11 +151,18 @@ export default function ReferralDetail() {
             </div>
           </div>
 
-          {!isConfirmed && (
-            <button className="btn btn-success" onClick={handleAccept} disabled={submitting}>
-              <Check size={16} /> Accept Referral & Confirm Slot
+          <div style={{ display: 'flex', gap: '12px' }}>
+            {!isConfirmed && (
+              <button className="btn btn-success" onClick={handleAccept} disabled={submitting}>
+                <Check size={16} /> Accept Referral & Confirm Slot
+              </button>
+            )}
+
+            {/* Re-referral Action (Doctor Specialty Re-route) */}
+            <button className="btn btn-secondary" onClick={handleReroute} disabled={submitting}>
+              <RefreshCw size={14} /> Wrong Specialty → Re-route
             </button>
-          )}
+          </div>
         </div>
 
         <div className="form-group" style={{ background: 'var(--bg-tertiary)', padding: '16px', borderRadius: 'var(--radius-md)', marginBottom: 0 }}>
@@ -142,15 +170,10 @@ export default function ReferralDetail() {
             Structured Clinical Reason from Referring Worker ({referral.referred_by_name || 'ASHA'}):
           </div>
           <div style={{ fontSize: '0.9375rem', fontWeight: 600, color: 'var(--text-primary)' }}>{referral.reason}</div>
-          {referral.prior_history_summary && (
-            <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '6px' }}>
-              <strong>Prior History:</strong> {referral.prior_history_summary}
-            </div>
-          )}
         </div>
       </div>
 
-      {/* Consultation & Closed-Loop Feedback Section */}
+      {/* Consultation & ICD-10 / SNOMED Form */}
       <div className="glass-card">
         <h3 className="section-title">
           <Stethoscope size={20} style={{ color: 'var(--brand-teal)' }} />
@@ -158,8 +181,24 @@ export default function ReferralDetail() {
         </h3>
 
         <form onSubmit={handleCompleteConsultation}>
+          {/* ICD-10 / SNOMED Autocomplete Dropdown */}
           <div className="form-group" style={{ marginBottom: '20px' }}>
-            <label className="form-label">Consultation Outcome / Diagnosis</label>
+            <label className="form-label">ICD-10 / SNOMED Diagnosis Code</label>
+            <select
+              value={icdCode}
+              onChange={e => setIcdCode(e.target.value)}
+              required
+            >
+              {icd10Codes.map(c => (
+                <option key={c.code} value={c.code}>
+                  {c.code} — {c.title} ({c.category})
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="form-group" style={{ marginBottom: '20px' }}>
+            <label className="form-label">Consultation Outcome / Clinical Findings</label>
             <textarea
               rows={3}
               value={outcome}
@@ -180,9 +219,6 @@ export default function ReferralDetail() {
               placeholder="Contextual clinical guidance for the frontline worker regarding this patient's ongoing care..."
               required
             />
-            <div style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)', marginTop: '6px' }}>
-              This feedback populates directly into the ASHA's Referral Tracker and supervisor competency view.
-            </div>
           </div>
 
           <button type="submit" className="btn btn-success btn-block btn-lg" disabled={submitting}>

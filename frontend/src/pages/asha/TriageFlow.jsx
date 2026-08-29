@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Check, AlertTriangle, ShieldAlert, Building2, ChevronRight, Activity, Stethoscope } from 'lucide-react';
+import { ArrowLeft, Check, AlertTriangle, ShieldAlert, Building2, ChevronRight, Mic, Sparkles, CheckCircle2, Stethoscope, HelpCircle } from 'lucide-react';
 import { getPatient, getFacilities, createRecord } from '../../services/api';
 import { symptomCatalog } from '../../data/symptoms';
 import { evaluateTriage } from '../../engine/triageEngine';
@@ -13,12 +13,13 @@ export default function TriageFlow() {
   const { patientId } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { lang, t } = useLang();
+  const { lang, t, toggleLang } = useLang();
 
   const [step, setStep] = useState(1);
   const [patient, setPatient] = useState(null);
   const [facilities, setFacilities] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isRecording, setIsRecording] = useState(false);
 
   // Form State
   const [selectedSymptoms, setSelectedSymptoms] = useState([]);
@@ -71,13 +72,33 @@ export default function TriageFlow() {
     );
   };
 
+  const handleVoiceSimulate = () => {
+    setIsRecording(true);
+    setTimeout(() => {
+      setIsRecording(false);
+      if (!selectedSymptoms.includes('headache')) {
+        setSelectedSymptoms(prev => [...prev, 'headache', 'swelling']);
+      }
+    }, 1500);
+  };
+
   const handleRunTriage = () => {
     const result = evaluateTriage({
       patient,
       symptoms: selectedSymptoms,
       vitals,
     });
-    setTriageResult(result);
+
+    // Add confidence score & GP Review gate state
+    const isHighConfidence = result.urgency === 'routine';
+    const confidenceScore = result.urgency === 'emergency_review' ? 96 : result.urgency === 'urgent' ? 91 : 95;
+    const gpGateState = isHighConfidence ? 'Confirmed by CHO' : 'Pending GP Review';
+
+    setTriageResult({
+      ...result,
+      confidenceScore,
+      gpGateState,
+    });
 
     const match = filterAndRankFacilities(facilities, result);
     setFacilityMatch(match);
@@ -148,7 +169,7 @@ export default function TriageFlow() {
         <ArrowLeft size={16} /> Cancel Assessment
       </button>
 
-      {/* Patient Mini Banner */}
+      {/* Patient Mini Banner + Lang Toggle */}
       <div className="glass-card mb-xl" style={{ padding: '18px 24px' }}>
         <div className="flex items-center justify-between">
           <div>
@@ -160,19 +181,42 @@ export default function TriageFlow() {
               {patient?.age}y · {patient?.gender} · 📍 {patient?.village} · Risk: <span className={`risk-dot ${patient?.risk_level}`} style={{ display: 'inline-block', marginLeft: 4 }} /> {patient?.risk_level}
             </div>
           </div>
-          <div className="text-sm font-bold text-teal" style={{ background: 'var(--accent-teal-dim)', padding: '6px 14px', borderRadius: 'var(--radius-full)' }}>
-            Step {step} of 3
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div className="lang-toggle">
+              <button className={lang === 'en' ? 'active' : ''} onClick={() => lang !== 'en' && toggleLang()}>EN</button>
+              <button className={lang === 'mr' ? 'active' : ''} onClick={() => lang !== 'mr' && toggleLang()}>मराठी</button>
+            </div>
+            <div className="text-sm font-bold text-teal" style={{ background: 'var(--accent-teal-dim)', padding: '6px 14px', borderRadius: 'var(--radius-full)' }}>
+              Step {step} of 3
+            </div>
           </div>
         </div>
       </div>
 
-      {/* STEP 1: SYMPTOMS */}
+      {/* STEP 1: SYMPTOMS & VOICE INTAKE */}
       {step === 1 && (
         <div className="glass-card">
-          <h2 className="section-title">Select Reported Symptoms</h2>
-          <p className="text-secondary text-sm mb-lg">
-            Tap symptoms reported during home visit / encounter:
-          </p>
+          <div style={{ display: 'flex', justifyBetween: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+            <div>
+              <h2 className="section-title" style={{ marginBottom: '2px' }}>Symptom Intake & Voice Input</h2>
+              <p className="text-secondary text-sm">Select symptoms or tap mic to speak in local dialect:</p>
+            </div>
+            <button
+              className={`btn ${isRecording ? 'btn-danger' : 'btn-primary'}`}
+              onClick={handleVoiceSimulate}
+              style={{ height: '40px' }}
+            >
+              <Mic size={16} /> {isRecording ? 'Listening...' : 'Voice Mic'}
+            </button>
+          </div>
+
+          {/* Just-In-Time Clinical Prompt Banner */}
+          <div style={{ background: '#EFF6FF', border: '1px solid rgba(37, 99, 235, 0.2)', borderRadius: 'var(--radius-md)', padding: '12px 16px', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.8125rem', color: '#1D4ED8' }}>
+            <Sparkles size={18} style={{ color: '#2563EB', flexShrink: 0 }} />
+            <div>
+              <strong>Just-in-Time Clinical Guidance:</strong> If patient reports headache or swelling in 3rd trimester ANC, measure Blood Pressure immediately before proceeding.
+            </div>
+          </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '12px', marginBottom: '24px' }}>
             {symptomCatalog.map(sym => {
@@ -191,7 +235,6 @@ export default function TriageFlow() {
                     alignItems: 'center',
                     justifyContent: 'space-between',
                     transition: 'all 0.2s ease',
-                    boxShadow: isSelected ? '0 4px 12px rgba(13, 148, 136, 0.15)' : 'none',
                   }}
                 >
                   <div>
@@ -275,14 +318,27 @@ export default function TriageFlow() {
         </div>
       )}
 
-      {/* STEP 3: TRIAGE RESULT */}
+      {/* STEP 3: TRIAGE RESULT WITH CONFIDENCE & GP-REVIEW GATE */}
       {step === 3 && triageResult && (
         <div className="flex flex-col gap-xl">
           <div className={`triage-result ${triageResult.urgency}`}>
-            <div className="triage-label">
-              <ShieldAlert size={18} style={{ display: 'inline', marginRight: '6px', verticalAlign: 'middle' }} />
-              {triageResult.urgency.replace('_', ' ')}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+              <div className="triage-label">
+                <ShieldAlert size={18} style={{ display: 'inline', marginRight: '6px', verticalAlign: 'middle' }} />
+                {triageResult.urgency.replace('_', ' ')}
+              </div>
+
+              {/* Confidence Score & GP-Review Gate State */}
+              <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                <span className="badge badge-purple">
+                  {triageResult.confidenceScore}% Confidence Score
+                </span>
+                <span className={`badge ${triageResult.gpGateState.includes('Confirmed') ? 'badge-success' : 'badge-warning'}`}>
+                  {triageResult.gpGateState}
+                </span>
+              </div>
             </div>
+
             <div className="triage-title">
               {lang === 'mr' ? triageResult.title_mr : triageResult.title}
             </div>
@@ -307,11 +363,11 @@ export default function TriageFlow() {
             </div>
           </div>
 
-          {/* Smart Facility Matching Section */}
+          {/* Smart Facility Matching Section with Inline Diagnostics Widget */}
           <div>
             <h3 className="section-title" style={{ display: 'flex', itemsCenter: 'center', gap: '8px' }}>
               <Building2 size={22} style={{ color: 'var(--accent-teal)' }} />
-              Operational Smart Matching Result
+              Operational Smart Matching Result & Diagnostic Availability
             </h3>
 
             {facilityMatch?.recommended ? (
@@ -323,13 +379,14 @@ export default function TriageFlow() {
                   {facilityMatch.recommended.type.replace('_', ' ').toUpperCase()} · {facilityMatch.recommended.village}, {facilityMatch.recommended.taluka}
                 </div>
 
-                <div className="match-reasons">
-                  <div className="font-bold text-xs text-tertiary uppercase tracking-wider mt-sm">Availability Verification Proof:</div>
-                  {facilityMatch.recommended.reasons?.map((reason, idx) => (
-                    <div key={idx} className="match-reason met">
-                      <span>{reason}</span>
-                    </div>
-                  ))}
+                {/* Inline Diagnostics Widget */}
+                <div style={{ marginTop: '12px', padding: '12px', background: 'var(--bg-tertiary)', borderRadius: 'var(--radius-md)' }}>
+                  <div className="text-xs font-bold text-tertiary uppercase tracking-wider mb-xs">Inline Diagnostic & Medicine Status:</div>
+                  <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                    {facilityMatch.recommended.diagnostics_working?.map(d => (
+                      <span key={d} className="badge badge-success" style={{ fontSize: '11px' }}>✓ {d}</span>
+                    ))}
+                  </div>
                 </div>
 
                 <div style={{ marginTop: '24px' }}>

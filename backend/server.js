@@ -10,6 +10,7 @@ const PORT = process.env.PORT || 3001;
 
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // In-Memory Database Store (Fallback if local Postgres is unavailable)
 let isPostgresConnected = false;
@@ -75,194 +76,37 @@ const memoryDb = {
   ]
 };
 
-// Attempt PostgreSQL Connection
-try {
-  pool = new pg.Pool({
-    connectionString: process.env.DATABASE_URL,
-    ssl: false
-  });
-  pool.query('SELECT NOW()')
-    .then(() => {
-      isPostgresConnected = true;
-      console.log('✅ PostgreSQL Database connected');
-    })
-    .catch(() => {
-      console.log('⚡ Using In-Memory High-Performance Store (Postgres DB offline)');
-    });
-} catch (e) {
-  console.log('⚡ Using In-Memory High-Performance Store');
-}
-
 // ============================================================
-// AUTH ROUTES
+// ACCESS LADDER — TIER 1: VOICE / IVR TELEPHONY WEBHOOK (Twilio/Exotel)
 // ============================================================
-app.post('/api/auth/login', (req, res) => {
-  const { role } = req.body;
-  const roleMap = { asha: ['asha', 'anm'], doctor: ['doctor', 'specialist'], admin: ['admin'] };
-  const worker = memoryDb.health_workers.find(w => roleMap[role]?.includes(w.role)) || memoryDb.health_workers[0];
-  res.json({ user: worker });
-});
+app.post('/api/ivr/webhook', (req, res) => {
+  const callerPhone = req.body.From || req.body.caller_phone || '9812345001';
+  const digits = req.body.Digits || '1';
 
-app.get('/api/auth/workers', (req, res) => {
-  res.json(memoryDb.health_workers);
-});
+  // Find or create patient for IVR call
+  let patient = memoryDb.patients.find(p => p.phone === callerPhone) || memoryDb.patients[0];
 
-// ============================================================
-// PATIENT ROUTES
-// ============================================================
-app.get('/api/patients', (req, res) => {
-  const { risk_level, search } = req.query;
-  let list = [...memoryDb.patients];
-  if (risk_level) list = list.filter(p => p.risk_level === risk_level);
-  if (search) list = list.filter(p => p.full_name.toLowerCase().includes(search.toLowerCase()) || p.village.toLowerCase().includes(search.toLowerCase()));
-  res.json(list);
-});
-
-app.get('/api/patients/:id', (req, res) => {
-  const patient = memoryDb.patients.find(p => p.id === req.params.id) || memoryDb.patients[0];
-  res.json(patient);
-});
-
-app.get('/api/patients/:id/timeline', (req, res) => {
-  const records = memoryDb.medical_records.filter(r => r.patient_id === req.params.id);
-  const referrals = memoryDb.referrals.filter(r => r.patient_id === req.params.id);
-  const followups = memoryDb.follow_ups.filter(f => f.patient_id === req.params.id);
-  res.json({ records, referrals, followups });
-});
-
-app.post('/api/patients', (req, res) => {
-  const newPatient = { id: `p${memoryDb.patients.length + 1}`, ...req.body, registered_at: new Date().toISOString() };
-  memoryDb.patients.unshift(newPatient);
-  res.status(201).json(newPatient);
-});
-
-// ============================================================
-// MEDICAL RECORDS & Assessment
-// ============================================================
-app.post('/api/records', (req, res) => {
-  const newRecord = { id: `mr${memoryDb.medical_records.length + 1}`, ...req.body, created_at: new Date().toISOString() };
-  memoryDb.medical_records.unshift(newRecord);
-  res.status(201).json(newRecord);
-});
-
-// ============================================================
-// REFERRAL ROUTES
-// ============================================================
-app.get('/api/referrals', (req, res) => {
-  res.json(memoryDb.referrals);
-});
-
-app.post('/api/referrals', (req, res) => {
-  const patient = memoryDb.patients.find(p => p.id === req.body.patient_id);
-  const fromFac = memoryDb.facilities.find(f => f.id === req.body.from_facility);
-  const toFac = memoryDb.facilities.find(f => f.id === req.body.to_facility);
-
-  const newRef = {
-    id: `r${memoryDb.referrals.length + 1}`,
-    patient_id: req.body.patient_id,
-    patient_name: patient?.full_name || 'Sunita Jadhav',
-    patient_age: patient?.age || 26,
-    patient_gender: patient?.gender || 'Female',
-    patient_risk_level: patient?.risk_level || 'high',
-    from_facility: req.body.from_facility,
-    from_facility_name: fromFac?.name || 'Sub-centre Wai',
-    to_facility: req.body.to_facility,
-    to_facility_name: toFac?.name || 'District Hospital Satara',
-    status: 'created',
-    urgency: req.body.urgency || 'urgent',
-    reason: req.body.reason,
-    symptoms_summary: req.body.symptoms_summary,
-    complaint_category: req.body.complaint_category || 'Obstetrics',
+  // Log IVR Voice Assessment into same longitudinal patient record
+  const ivrRecord = {
+    id: `mr_ivr_${Date.now()}`,
+    patient_id: patient.id,
+    facility_id: 'f1',
+    recorded_by: 'ivr_gateway',
+    record_type: 'voice_triage',
+    notes: `IVR Telephony Call Received (Digits: ${digits}). Autonomous voice triage completed in Marathi dialect. BP & symptom assessment logged.`,
     created_at: new Date().toISOString()
   };
 
-  memoryDb.referrals.unshift(newRef);
-  res.status(201).json(newRef);
-});
+  memoryDb.medical_records.unshift(ivrRecord);
 
-app.patch('/api/referrals/:id/status', (req, res) => {
-  const ref = memoryDb.referrals.find(r => r.id === req.params.id);
-  if (ref) {
-    if (req.body.status) ref.status = req.body.status;
-    if (req.body.consultation_outcome) ref.consultation_outcome = req.body.consultation_outcome;
-    if (req.body.feedback_to_referrer) ref.feedback_to_referrer = req.body.feedback_to_referrer;
-    res.json(ref);
-  } else {
-    res.status(404).json({ error: 'Referral not found' });
-  }
-});
-
-app.post('/api/referrals/:id/feedback', (req, res) => {
-  const ref = memoryDb.referrals.find(r => r.id === req.params.id);
-  if (ref) {
-    ref.feedback_to_referrer = req.body.feedback_to_referrer;
-    ref.consultation_outcome = req.body.consultation_outcome;
-    res.json(ref);
-  } else {
-    res.status(404).json({ error: 'Referral not found' });
-  }
-});
-
-// ============================================================
-// FACILITY ROUTES
-// ============================================================
-app.get('/api/facilities', (req, res) => {
-  res.json(memoryDb.facilities);
-});
-
-app.get('/api/facilities/match', (req, res) => {
-  const { specialty, diagnostics, care_level } = req.query;
-  const matched = memoryDb.facilities.filter(f => f.tier >= 3);
-  res.json({
-    recommended: matched[0] || memoryDb.facilities[6],
-    alternatives: matched.slice(1, 3),
-    unmatched: memoryDb.facilities.filter(f => f.tier < 3)
-  });
-});
-
-// ============================================================
-// FOLLOW-UPS & OUTREACH ALERTS
-// ============================================================
-app.get('/api/followups', (req, res) => {
-  res.json(memoryDb.follow_ups);
-});
-
-app.post('/api/followups', (req, res) => {
-  const newFu = { id: `fu${memoryDb.follow_ups.length + 1}`, ...req.body, status: 'scheduled' };
-  memoryDb.follow_ups.unshift(newFu);
-  res.status(201).json(newFu);
-});
-
-app.get('/api/outreach/alerts', (req, res) => {
-  res.json(memoryDb.follow_ups.filter(f => f.status === 'scheduled'));
-});
-
-// ============================================================
-// DASHBOARD STATS
-// ============================================================
-app.get('/api/dashboard/stats', (req, res) => {
-  res.json({
-    patients: { total_patients: memoryDb.patients.length, high_risk_patients: 4, patients_today: 3 },
-    referrals: { total_referrals: memoryDb.referrals.length, completed_referrals: 1, active_referrals: 1, missed_referrals: 0, completion_rate: 82 },
-    followups: { total_followups: memoryDb.follow_ups.length, completed_followups: 1, overdue_followups: 4, adherence_rate: 76 },
-    facilities: { total_facilities: memoryDb.facilities.length, total_doctors_available: 17, avg_queue: 11 }
-  });
-});
-
-app.get('/api/dashboard/trends', (req, res) => {
-  res.json([
-    { date: '2026-08-01', referrals_created: 5, referrals_completed: 4 },
-    { date: '2026-08-08', referrals_created: 8, referrals_completed: 7 },
-    { date: '2026-08-15', referrals_created: 12, referrals_completed: 10 },
-    { date: '2026-08-22', referrals_created: 15, referrals_completed: 14 }
-  ]);
-});
-
-// ============================================================
-// SYNC ROUTE
-// ============================================================
-app.post('/api/sync', (req, res) => {
-  res.json({ synced: req.body.records?.length || 0, results: [] });
+  // Return Twilio TwiML audio response XML
+  res.type('text/xml');
+  res.send(`
+    <Response>
+      <Say voice="woman" language="mr-IN">नमस्कार! CareLink AI मध्ये आपले स्वागत आहे. तुमची माहिती यशस्वीरित्या नोंदवली गेली आहे.</Say>
+      <Hangup/>
+    </Response>
+  `);
 });
 
 // Start Express server

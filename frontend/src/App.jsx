@@ -13,6 +13,8 @@ import ReferralTracker from './pages/asha/ReferralTracker';
 import DoctorDashboard from './pages/doctor/DoctorDashboard';
 import ReferralDetail from './pages/doctor/ReferralDetail';
 import AdminDashboard from './pages/admin/AdminDashboard';
+import KioskPage from './pages/kiosk/KioskPage';
+import PatientPortal from './pages/patient/PatientPortal';
 import './index.css';
 
 function ProtectedRoute({ children }) {
@@ -49,7 +51,7 @@ function AppLayout() {
           </Routes>
           
           <div className="data-disclaimer">
-            Prototype uses synthetic patient and facility data for demonstration purposes.
+            CareLink AI Prototype · Synthetic Patient & Facility Data for Demonstration Purposes.
           </div>
         </div>
       </div>
@@ -79,6 +81,13 @@ function App() {
                   <LoginPage />
                 </>
               } />
+              
+              {/* Dedicated Standalone Kiosk Route */}
+              <Route path="/kiosk" element={<KioskPage />} />
+
+              {/* Dedicated Standalone Minimal Patient OPD Portal Route */}
+              <Route path="/patient" element={<PatientPortal />} />
+
               <Route path="/*" element={
                 <ProtectedRoute>
                   <AppLayout />
