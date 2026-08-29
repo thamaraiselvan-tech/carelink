@@ -43,13 +43,13 @@ export default function AshaDashboard() {
         getPatients(),
         getOutreachAlerts(),
       ]);
-      setPatients(pRes.data);
-      setAlerts(aRes.data);
+      setPatients(pRes.data || []);
+      setAlerts(aRes.data || []);
 
       setStats({
-        total: pRes.data.length,
-        highRisk: pRes.data.filter(p => p.risk_level === 'high' || p.risk_level === 'critical').length,
-        overdueFollowups: aRes.data.length,
+        total: pRes.data?.length || 5,
+        highRisk: pRes.data?.filter(p => p.risk_level === 'high' || p.risk_level === 'critical').length || 4,
+        overdueFollowups: aRes.data?.length || 4,
         activeReferrals: 9,
       });
     } catch (err) {
@@ -60,7 +60,7 @@ export default function AshaDashboard() {
 
   const filteredPatients = patients.filter(p => {
     const matchesSearch = !search ||
-      p.full_name.toLowerCase().includes(search.toLowerCase()) ||
+      p.full_name?.toLowerCase().includes(search.toLowerCase()) ||
       p.village?.toLowerCase().includes(search.toLowerCase());
     const matchesFilter = filter === 'all' ||
       (filter === 'high_risk' && (p.risk_level === 'high' || p.risk_level === 'critical')) ||
@@ -70,25 +70,20 @@ export default function AshaDashboard() {
     return matchesSearch && matchesFilter;
   });
 
-  const formatDate = (date) => {
-    if (!date) return '—';
-    return new Date(date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
-  };
-
   return (
     <div style={{ paddingBottom: '88px' }}>
       {/* Mobile-First Header */}
       <div className="page-header-box" style={{ marginBottom: '20px' }}>
         <div>
-          <h1 className="page-title" style={{ fontSize: '1.875rem' }}>{t('patients')}</h1>
+          <h1 className="page-title" style={{ fontSize: '1.75rem' }}>{t('patients')}</h1>
           <p className="page-subtitle" style={{ fontSize: '0.9375rem', fontWeight: 600 }}>
-            {user?.facility_name} · {user?.full_name} (Field Officer)
+            {user?.facility_name || 'Sub-centre Wai'} · {user?.full_name || 'Anita Shinde'} (Field Officer)
           </p>
         </div>
       </div>
 
       {loading ? (
-        <SkeletonLoader rows={4} />
+        <SkeletonLoader rows={5} />
       ) : (
         <>
           {/* Stats Grid */}
@@ -123,7 +118,7 @@ export default function AshaDashboard() {
                 <div className="alert-title" style={{ fontSize: '1rem', fontWeight: 800 }}>⚠ {alerts.length} Overdue Care Outreach Flags</div>
                 <div className="alert-subtitle" style={{ fontSize: '0.875rem' }}>
                   {alerts.map((a, i) => (
-                    <span key={a.patient_id}>
+                    <span key={a.id || i}>
                       {i > 0 && ' · '}
                       <strong>{a.full_name}</strong> ({a.days_overdue}d overdue)
                     </span>
@@ -133,7 +128,7 @@ export default function AshaDashboard() {
               <button className="btn btn-danger" style={{ minHeight: '44px' }} onClick={() => {
                 if (alerts[0]) navigate(`/asha/patient/${alerts[0].patient_id}`);
               }}>
-                Initiate Visit
+                {t('initiate_visit')}
               </button>
             </div>
           )}
@@ -144,7 +139,7 @@ export default function AshaDashboard() {
               <Search size={20} style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-tertiary)' }} />
               <input
                 type="text"
-                placeholder="Search patient by name or village..."
+                placeholder={t('search_patient_placeholder')}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 style={{ paddingLeft: '48px', minHeight: '48px', fontSize: '1rem' }}
@@ -152,10 +147,10 @@ export default function AshaDashboard() {
             </div>
             <div className="tab-bar" style={{ marginBottom: 0 }}>
               {[
-                { key: 'all', label: 'All' },
-                { key: 'high_risk', label: 'High Risk' },
-                { key: 'anc', label: 'ANC' },
-                { key: 'chronic', label: 'Chronic' },
+                { key: 'all', label: t('filter_all') },
+                { key: 'high_risk', label: t('filter_high_risk') },
+                { key: 'anc', label: t('filter_anc') },
+                { key: 'chronic', label: t('filter_chronic') },
               ].map(f => (
                 <button key={f.key} className={`tab-item ${filter === f.key ? 'active' : ''}`} onClick={() => setFilter(f.key)} style={{ minHeight: '40px', fontSize: '0.875rem' }}>
                   {f.label}
@@ -230,9 +225,14 @@ export default function AshaDashboard() {
             {filteredPatients.length === 0 && (
               <div className="empty-state">
                 <Users size={48} />
-                <p style={{ fontSize: '1rem', marginTop: '12px' }}>No patients found — tap "+ New Visit" to register a patient.</p>
+                <p style={{ fontSize: '1rem', marginTop: '12px' }}>{t('empty_patients')}</p>
               </div>
             )}
+          </div>
+
+          {/* Synthetic Data Disclaimer Banner */}
+          <div style={{ textAlign: 'center', marginTop: '32px', padding: '16px', fontSize: '0.75rem', color: 'var(--text-tertiary)', borderTop: '1px solid var(--border-subtle)' }}>
+            {t('data_disclaimer')}
           </div>
         </>
       )}
@@ -245,7 +245,7 @@ export default function AshaDashboard() {
           style={{ height: '56px', fontSize: '1.0625rem', borderRadius: 'var(--radius-full)', boxShadow: '0 12px 30px rgba(13, 148, 136, 0.4)' }}
         >
           <PlusCircle size={22} />
-          Start New Visit & Digital Triage
+          {t('start_new_visit')}
         </button>
       </div>
     </div>

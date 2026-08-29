@@ -20,7 +20,7 @@ export default function DoctorDashboard() {
   const loadReferrals = async () => {
     try {
       const res = await getReferrals({ role: 'doctor', facility_id: user?.facility_id });
-      setReferrals(res.data);
+      setReferrals(res.data || []);
     } catch (err) {
       console.error('Failed to load doctor referrals:', err);
     }
@@ -37,7 +37,7 @@ export default function DoctorDashboard() {
         <div>
           <h1 className="page-title">{t('incoming_referrals')}</h1>
           <p className="page-subtitle">
-            {user?.facility_name} · {user?.full_name} ({user?.specialization || (lang === 'mr' ? 'वैद्यकीय अधिकारी' : 'Physician')})
+            {user?.facility_name || 'PHC Karjat'} · {user?.full_name || 'Dr. Suresh Kulkarni'} ({user?.specialization || (lang === 'mr' ? 'वैद्यकीय अधिकारी' : 'General Medicine')})
           </p>
         </div>
         <div>
@@ -109,6 +109,11 @@ export default function DoctorDashboard() {
             <p>{t('empty_referrals')}</p>
           </div>
         )}
+      </div>
+
+      {/* Synthetic Data Disclaimer Banner */}
+      <div style={{ textAlign: 'center', marginTop: '32px', padding: '16px', fontSize: '0.75rem', color: 'var(--text-tertiary)', borderTop: '1px solid var(--border-subtle)' }}>
+        {t('data_disclaimer')}
       </div>
     </div>
   );
