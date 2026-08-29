@@ -10,6 +10,24 @@ export const translations = {
     active_user: 'Active User',
     exit_portal: 'Exit Portal',
 
+    // Login & Authentication Copy
+    secure_healthcare_login: 'Secure Healthcare Gateway',
+    select_role_prompt: 'Select your operational role to access the CareLink AI platform:',
+    username_or_phone: 'Username or Phone Number',
+    password: 'Password / Security PIN',
+    forgot_password: 'Forgot Password / PIN?',
+    remember_me: 'Keep me signed in on this device',
+    secure_login_btn: 'Secure Login to Portal',
+    authenticating: 'Authenticating credentials...',
+    quick_demo_access: '⚡ Quick Demo Login Credentials',
+    demo_asha_user: 'ASHA Field Worker (Anita Shinde)',
+    demo_doctor_user: 'PHC Medical Officer (Dr. Suresh Kulkarni)',
+    demo_admin_user: 'District Health Officer (Manoj Thorat)',
+    demo_patient_user: 'Patient OPD Queue (Sunita Jadhav)',
+    kiosk_no_login_notice: 'Gram Panchayat Kiosk Mode does not require a password. Enter token or start public self-check.',
+    launch_kiosk_btn: 'Launch Public Kiosk Mode',
+    login_success: 'Authentication successful! Redirecting to workspace...',
+
     // Suites & Roles
     asha_suite: 'ASHA / ANM Suite',
     asha_badge: 'Frontline Field App',
@@ -139,6 +157,24 @@ export const translations = {
     launch_portal: 'पोर्टल सुरू करा',
     active_user: 'सक्रिय वापरकर्ता',
     exit_portal: 'पोर्टल बंद करा',
+
+    // Login & Authentication Copy
+    secure_healthcare_login: 'सुरक्षित आरोग्य गेटवे लॉगिन',
+    select_role_prompt: 'केरलिंक AI प्लॅटफॉर्मवर प्रवेश करण्यासाठी तुमची भूमिका निवडा:',
+    username_or_phone: 'वापरकर्ता नाव किंवा फोन नंबर',
+    password: 'पासवर्ड / सुरक्षा पिन',
+    forgot_password: 'पासवर्ड / पिन विसरलात?',
+    remember_me: 'या डिव्हाइसवर मला साइन इन ठेवा',
+    secure_login_btn: 'पोर्टलवर सुरक्षित लॉगिन करा',
+    authenticating: 'प्रमाणपत्रे पडताळत आहे...',
+    quick_demo_access: '⚡ जलद प्रात्यक्षिक लॉगिन क्रेडेन्शियल',
+    demo_asha_user: 'आशा आरोग्य सेविका (अनीता शिंदे)',
+    demo_doctor_user: 'वैद्यकीय अधिकारी (डॉ. सुरेश कुलकर्णी)',
+    demo_admin_user: 'जिल्हा आरोग्य अधिकारी (मनोज थोरात)',
+    demo_patient_user: 'रुग्ण ओपीडी (सुनीता जाधव)',
+    kiosk_no_login_notice: 'ग्रामपंचायत किऑस्क मोडसाठी पासवर्डची आवश्यकता नाही. टोकन प्रविष्ट करा किंवा स्व-तपासणी सुरू करा.',
+    launch_kiosk_btn: 'सार्वजनिक किऑस्क मोड सुरू करा',
+    login_success: 'प्रमाणिकरण यशस्वी! वर्कस्पेसवर पुनर्निर्देशित करत आहे...',
 
     // Suites & Roles
     asha_suite: 'आशा / एएनएम सूट',
