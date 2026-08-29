@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Heart, Stethoscope, LayoutDashboard, Store, User, Lock, Eye, EyeOff, Activity, ShieldCheck, CheckCircle2, PhoneCall, Volume2, X } from 'lucide-react';
+import { Heart, Stethoscope, LayoutDashboard, Store, User, Lock, Eye, EyeOff, Activity, ShieldCheck, CheckCircle2, PhoneCall, Volume2, X, Landmark, Database, WifiOff } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useLang } from '../context/LanguageContext';
 import { getWorkers } from '../services/api';
@@ -22,13 +22,12 @@ export default function LoginPage() {
 
   // IVR Telephony Simulation State
   const [showIvrModal, setShowIvrModal] = useState(false);
-  const [ivrStep, setIvrStep] = useState(0); // 0: Idle, 1: Calling, 2: Connected, 3: Completed
+  const [ivrStep, setIvrStep] = useState(0);
 
   useEffect(() => {
     getWorkers().then(res => setWorkers(res.data)).catch(() => {});
   }, []);
 
-  // Sync pre-filled demo username based on selected role
   useEffect(() => {
     if (selectedRole === 'asha') setUsername('9812345001');
     else if (selectedRole === 'doctor') setUsername('dr.kulkarni@carelink.gov.in');
@@ -37,7 +36,6 @@ export default function LoginPage() {
     else if (selectedRole === 'kiosk') setUsername('');
   }, [selectedRole]);
 
-  // Access Ladder Hierarchy Grouping
   const credentialedRoles = [
     { id: 'asha', key: 'asha_suite', badgeKey: 'asha_badge', icon: Heart, color: '#0D9488', gradient: 'linear-gradient(135deg, #0D9488, #0F766E)', route: '/asha' },
     { id: 'doctor', key: 'doctor_suite', badgeKey: 'doctor_badge', icon: Stethoscope, color: '#2563EB', gradient: 'linear-gradient(135deg, #2563EB, #1D4ED8)', route: '/doctor' },
@@ -110,6 +108,19 @@ export default function LoginPage() {
           </div>
         </div>
 
+        {/* Government Trust & Governance Badges Header Bar */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+          <span className="badge badge-teal" style={{ height: '28px', fontSize: '0.71875rem' }}>
+            <Landmark size={13} /> {t('gov_satara')}
+          </span>
+          <span className="badge badge-purple" style={{ height: '28px', fontSize: '0.71875rem' }}>
+            <Database size={13} /> {t('abdm_aligned')}
+          </span>
+          <span className="badge badge-info" style={{ height: '28px', fontSize: '0.71875rem' }}>
+            <WifiOff size={13} /> {t('offline_first')}
+          </span>
+        </div>
+
         <div className="lang-toggle">
           <button className={lang === 'en' ? 'active' : ''} onClick={() => lang !== 'en' && toggleLang()}>EN</button>
           <button className={lang === 'mr' ? 'active' : ''} onClick={() => lang !== 'mr' && toggleLang()}>मराठी</button>
@@ -117,8 +128,10 @@ export default function LoginPage() {
       </header>
 
       {/* Main Container — 2-COLUMN DESKTOP LAYOUT (Above The Fold on 1366x768) */}
-      <main style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px 20px 28px', zIndex: 10, width: '100%' }}>
-        <div style={{ width: '100%', maxWidth: '1080px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '24px', alignItems: 'start' }}>
+      <main style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '16px 20px 24px', zIndex: 10, width: '100%' }}>
+        
+        {/* 2-Column Grid */}
+        <div style={{ width: '100%', maxWidth: '1080px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '24px', alignItems: 'start', marginBottom: '24px' }}>
 
           {/* LEFT COLUMN: PRIMARY CREDENTIAL GATEWAY CARD */}
           <div
@@ -393,6 +406,57 @@ export default function LoginPage() {
           </div>
 
         </div>
+
+        {/* FULL 4-TIER ACCESS LADDER ARCHITECTURE STRIP (Fills bottom desktop viewport frame) */}
+        <div style={{ width: '100%', maxWidth: '1080px', background: 'rgba(255, 255, 255, 0.9)', backdropFilter: 'blur(12px)', border: '1px solid rgba(226, 232, 240, 0.9)', borderRadius: '20px', padding: '18px 24px', boxShadow: '0 12px 30px rgba(15, 23, 42, 0.04)' }}>
+          <div style={{ fontSize: '0.6875rem', fontWeight: 800, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '14px', textAlign: 'center' }}>
+            {t('access_ladder_heading')}
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '14px' }}>
+            
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', background: '#F8FAFC', padding: '10px 12px', borderRadius: '12px', border: '1px solid var(--border-subtle)' }}>
+              <div style={{ width: 34, height: 34, borderRadius: '10px', background: 'rgba(13, 148, 136, 0.12)', color: '#0D9488', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <PhoneCall size={18} />
+              </div>
+              <div style={{ minWidth: 0 }}>
+                <div style={{ fontSize: '0.78125rem', fontWeight: 800, color: 'var(--text-primary)' }}>{t('tier1_title')}</div>
+                <div style={{ fontSize: '0.6875rem', color: 'var(--text-tertiary)', marginTop: '1px' }}>{t('tier1_sub')}</div>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', background: '#F8FAFC', padding: '10px 12px', borderRadius: '12px', border: '1px solid var(--border-subtle)' }}>
+              <div style={{ width: 34, height: 34, borderRadius: '10px', background: 'rgba(217, 119, 6, 0.12)', color: '#D97706', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <Store size={18} />
+              </div>
+              <div style={{ minWidth: 0 }}>
+                <div style={{ fontSize: '0.78125rem', fontWeight: 800, color: 'var(--text-primary)' }}>{t('tier2_title')}</div>
+                <div style={{ fontSize: '0.6875rem', color: 'var(--text-tertiary)', marginTop: '1px' }}>{t('tier2_sub')}</div>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', background: '#F8FAFC', padding: '10px 12px', borderRadius: '12px', border: '1px solid var(--border-subtle)' }}>
+              <div style={{ width: 34, height: 34, borderRadius: '10px', background: 'rgba(37, 99, 235, 0.12)', color: '#2563EB', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <Heart size={18} />
+              </div>
+              <div style={{ minWidth: 0 }}>
+                <div style={{ fontSize: '0.78125rem', fontWeight: 800, color: 'var(--text-primary)' }}>{t('tier3_title')}</div>
+                <div style={{ fontSize: '0.6875rem', color: 'var(--text-tertiary)', marginTop: '1px' }}>{t('tier3_sub')}</div>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', background: '#F8FAFC', padding: '10px 12px', borderRadius: '12px', border: '1px solid var(--border-subtle)' }}>
+              <div style={{ width: 34, height: 34, borderRadius: '10px', background: 'rgba(124, 58, 237, 0.12)', color: '#7C3AED', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <Stethoscope size={18} />
+              </div>
+              <div style={{ minWidth: 0 }}>
+                <div style={{ fontSize: '0.78125rem', fontWeight: 800, color: 'var(--text-primary)' }}>{t('tier4_title')}</div>
+                <div style={{ fontSize: '0.6875rem', color: 'var(--text-tertiary)', marginTop: '1px' }}>{t('tier4_sub')}</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
       </main>
 
       {/* IVR TELEPHONY SIMULATOR MODAL */}

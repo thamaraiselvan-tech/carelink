@@ -10,6 +10,20 @@ export const translations = {
     active_user: 'Active User',
     exit_portal: 'Exit Portal',
 
+    // Trust & Architecture Badges
+    access_ladder_heading: 'Four-Tier Healthcare Access Ladder Architecture (SIH26133)',
+    tier1_title: 'Tier 1: Voice / IVR Telephony',
+    tier1_sub: 'No smartphone required · Dial 1800-CareLink',
+    tier2_title: 'Tier 2: Village Kiosk Mode',
+    tier2_sub: 'Public self-check · Privacy routing',
+    tier3_title: 'Tier 3: ASHA Mobile Suite',
+    tier3_sub: 'Frontline intake & offline-sync triage',
+    tier4_title: 'Tier 4: Physician Facility Suite',
+    tier4_sub: 'Clinical decision support & closed-loop queue',
+    gov_satara: 'Govt of Maharashtra · SIH26133',
+    abdm_aligned: 'ABDM Stack Aligned',
+    offline_first: 'Offline-First Engine',
+
     // Key-Value Table Field Headers
     source_facility: 'Source Facility',
     specialty_category: 'Specialty Category',
@@ -186,6 +200,20 @@ export const translations = {
     launch_portal: 'पोर्टल सुरू करा',
     active_user: 'सक्रिय वापरकर्ता',
     exit_portal: 'पोर्टल बंद करा',
+
+    // Trust & Architecture Badges
+    access_ladder_heading: 'चार-स्तरीय आरोग्य सेवा प्रवेश शिडी (SIH26133 आर्किटेक्चर)',
+    tier1_title: 'स्तर १: व्हॉइस / IVR टेलिफोनी',
+    tier1_sub: 'स्मार्टफोनची गरज नाही · १८००-केरलिंक वर कॉल करा',
+    tier2_title: 'स्तर २: ग्रामपंचायत किऑस्क',
+    tier2_sub: 'सार्वजनिक स्व-तपासणी · खाजगी निवृत्ती',
+    tier3_title: 'स्तर ३: आशा मोबाईल ॲप',
+    tier3_sub: 'फ्रंटलाइन नोंदणी आणि ऑफलाइन ट्रियाज',
+    tier4_title: 'स्तर ४: डॉक्टर आणि आरोग्य केंद्र',
+    tier4_sub: 'वैद्यकीय निर्णय समर्थन आणि संदर्भ रांग',
+    gov_satara: 'महाराष्ट्र शासन · SIH26133',
+    abdm_aligned: 'ABDM स्टॅक सुसंगत',
+    offline_first: 'ऑफलाइन-फर्स्ट इंजिन',
 
     // Key-Value Table Field Headers
     source_facility: 'स्रोत आरोग्य केंद्र',
