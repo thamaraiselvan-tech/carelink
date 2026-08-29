@@ -4,6 +4,7 @@ import { LanguageProvider } from './context/LanguageContext';
 import LoginPage from './pages/LoginPage';
 import Sidebar from './components/layout/Sidebar';
 import Header from './components/layout/Header';
+import Background3D from './components/layout/Background3D';
 import AshaDashboard from './pages/asha/AshaDashboard';
 import PatientProfile from './pages/asha/PatientProfile';
 import TriageFlow from './pages/asha/TriageFlow';
@@ -23,6 +24,7 @@ function ProtectedRoute({ children }) {
 function AppLayout() {
   return (
     <div className="app-layout">
+      <Background3D />
       <Sidebar />
       <div className="app-main">
         <Header />
@@ -69,14 +71,21 @@ function App() {
     <BrowserRouter>
       <AuthProvider>
         <LanguageProvider>
-          <Routes>
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/*" element={
-              <ProtectedRoute>
-                <AppLayout />
-              </ProtectedRoute>
-            } />
-          </Routes>
+          <div style={{ position: 'relative', minHeight: '100vh' }}>
+            <Routes>
+              <Route path="/login" element={
+                <>
+                  <Background3D />
+                  <LoginPage />
+                </>
+              } />
+              <Route path="/*" element={
+                <ProtectedRoute>
+                  <AppLayout />
+                </ProtectedRoute>
+              } />
+            </Routes>
+          </div>
         </LanguageProvider>
       </AuthProvider>
     </BrowserRouter>
