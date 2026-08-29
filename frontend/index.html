@@ -5,8 +5,123 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CareLink AI — Digital Care-Coordination Layer</title>
+
+    {/* Google Fonts Preconnect */}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    {/* Critical First-Paint Splash Styles */}
+    <style>
+      #app-splash {
+        position: fixed;
+        inset: 0;
+        z-index: 99999;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: #F8FAFC;
+        font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+        transition: opacity 0.4s ease, visibility 0.4s ease;
+      }
+
+      .splash-orb-wrapper {
+        position: relative;
+        width: 88px;
+        height: 88px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .splash-pulse-ring {
+        position: absolute;
+        inset: -12px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(13, 148, 136, 0.25) 0%, rgba(37, 99, 235, 0) 70%);
+        animation: ringPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+      }
+
+      .splash-icon-box {
+        width: 80px;
+        height: 80px;
+        border-radius: 22px;
+        background: linear-gradient(135deg, #0D9488 0%, #2563EB 100%);
+        box-shadow: 0 16px 36px rgba(13, 148, 136, 0.35);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #FFFFFF;
+        position: relative;
+        z-index: 2;
+        animation: orbGlow 2.4s ease-in-out infinite alternate;
+      }
+
+      .splash-svg-heartbeat {
+        width: 44px;
+        height: 44px;
+        stroke-dasharray: 200;
+        stroke-dashoffset: 200;
+        animation: drawPulse 2.2s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+      }
+
+      .splash-brand {
+        margin-top: 24px;
+        font-size: 1.5rem;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        background: linear-gradient(135deg, #0F172A 0%, #0D9488 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .splash-line {
+        width: 48px;
+        height: 3px;
+        border-radius: 3px;
+        background: linear-gradient(90deg, #0D9488, #2563EB);
+        margin-top: 12px;
+        animation: lineExpand 1.8s ease-in-out infinite alternate;
+      }
+
+      @keyframes ringPulse {
+        0% { transform: scale(0.85); opacity: 0.8; }
+        100% { transform: scale(1.4); opacity: 0; }
+      }
+
+      @keyframes orbGlow {
+        0% { transform: translateY(0) scale(1); box-shadow: 0 16px 36px rgba(13, 148, 136, 0.35); }
+        100% { transform: translateY(-4px) scale(1.03); box-shadow: 0 22px 48px rgba(37, 99, 235, 0.45); }
+      }
+
+      @keyframes drawPulse {
+        0% { stroke-dashoffset: 200; opacity: 0.2; }
+        50% { stroke-dashoffset: 0; opacity: 1; }
+        100% { stroke-dashoffset: -200; opacity: 0.4; }
+      }
+
+      @keyframes lineExpand {
+        0% { width: 24px; opacity: 0.4; }
+        100% { width: 64px; opacity: 1; }
+      }
+    </style>
   </head>
   <body>
+    {/* STATIC SPLASH SCREEN — Renders on Frame 1 before any JS downloads */}
+    <div id="app-splash">
+      <div className="splash-orb-wrapper">
+        <div className="splash-pulse-ring"></div>
+        <div className="splash-icon-box">
+          <svg className="splash-svg-heartbeat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+          </svg>
+        </div>
+      </div>
+      <div className="splash-brand">CareLink AI</div>
+      <div className="splash-line"></div>
+    </div>
+
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
