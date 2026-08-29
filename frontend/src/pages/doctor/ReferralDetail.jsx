@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Check, CheckCircle2, Stethoscope, AlertTriangle, Building2, Calendar, FileText } from 'lucide-react';
+import { ArrowLeft, Check, CheckCircle2, Stethoscope, Building2 } from 'lucide-react';
 import { getReferrals, updateReferralStatus, getPatientTimeline, createFollowUp } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
+import Loader from '../../components/ui/Loader';
 
 export default function ReferralDetail() {
   const { id } = useParams();
@@ -14,7 +15,6 @@ export default function ReferralDetail() {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
 
-  // Form for completing consultation
   const [outcome, setOutcome] = useState('');
   const [feedback, setFeedback] = useState('');
   const [scheduleFollowup, setScheduleFollowup] = useState(true);
@@ -35,7 +35,6 @@ export default function ReferralDetail() {
         setTimeline(tRes.data);
       }
 
-      // Pre-fill demo values for doctor consultation demo
       if (ref?.patient_name?.includes('Sunita')) {
         setOutcome('Mild pre-eclampsia diagnosed. Labetalol 100mg BD initiated. Bed rest advised.');
         setFeedback('Good early catch on BP trend and headache. Patient started on labetalol. Schedule weekly BP monitoring at PHC.');
@@ -96,7 +95,7 @@ export default function ReferralDetail() {
   };
 
   if (loading) {
-    return <div className="text-center p-xl">Loading referral record...</div>;
+    return <Loader text="CareLink AI Physician Referral Detail Loading..." />;
   }
 
   if (!referral) {
@@ -106,7 +105,7 @@ export default function ReferralDetail() {
   const isConfirmed = referral.status === 'confirmed' || referral.status === 'in_consultation' || referral.status === 'completed';
 
   return (
-    <div style={{ maxWidth: '900px', margin: '0 auto' }}>
+    <div style={{ maxWidth: '880px', margin: '0 auto' }}>
       <button className="btn btn-ghost mb-lg" onClick={() => navigate('/doctor')}>
         <ArrowLeft size={16} /> Back to Doctor Queue
       </button>
@@ -115,8 +114,8 @@ export default function ReferralDetail() {
       <div className="glass-card mb-xl">
         <div className="flex justify-between items-start mb-md" style={{ flexWrap: 'wrap', gap: '12px' }}>
           <div>
-            <div className="flex items-center gap-sm">
-              <h2 style={{ fontSize: 'var(--font-xl)', fontWeight: 800 }}>
+            <div className="flex items-center gap-sm" style={{ flexWrap: 'wrap' }}>
+              <h2 style={{ fontSize: '1.5rem', fontWeight: 800 }}>
                 {referral.patient_name}
               </h2>
               <span className={`badge risk-${referral.patient_risk_level}`}>
@@ -139,7 +138,7 @@ export default function ReferralDetail() {
         </div>
 
         <div className="form-group mt-md" style={{ background: 'var(--bg-tertiary)', padding: '16px', borderRadius: 'var(--radius-md)' }}>
-          <div className="text-xs font-semibold text-tertiary uppercase tracking-wider mb-xs">
+          <div className="text-xs font-bold text-tertiary uppercase tracking-wider mb-xs">
             Structured Clinical Reason from Referring Worker ({referral.referred_by_name || 'ASHA'}):
           </div>
           <div className="text-sm font-semibold">{referral.reason}</div>
@@ -151,34 +150,10 @@ export default function ReferralDetail() {
         </div>
       </div>
 
-      {/* Longitudinal Patient Record History (Context for Doctor) */}
-      <div className="mb-xl">
-        <h3 className="section-title">Longitudinal Patient Record History Across Tiers</h3>
-        <div className="flex flex-col gap-sm">
-          {timeline.records?.map(rec => (
-            <div key={rec.id} className="glass-card" style={{ padding: '12px 16px' }}>
-              <div className="flex justify-between text-xs text-tertiary mb-xs">
-                <span>{new Date(rec.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })} · {rec.facility_name}</span>
-                <span className="badge badge-teal">{rec.record_type}</span>
-              </div>
-              <div className="text-sm font-semibold">{rec.diagnosis || rec.notes}</div>
-              {rec.vitals && (
-                <div className="text-xs text-secondary mt-xs">
-                  Vitals: {typeof rec.vitals === 'string' ? rec.vitals : JSON.stringify(rec.vitals)}
-                </div>
-              )}
-            </div>
-          ))}
-          {(!timeline.records || timeline.records.length === 0) && (
-            <div className="text-xs text-tertiary">First recorded visit for this patient across facilities.</div>
-          )}
-        </div>
-      </div>
-
       {/* Consultation & Closed-Loop Feedback Section */}
       <div className="glass-card">
-        <h3 className="section-title" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <Stethoscope size={20} style={{ color: 'var(--accent-teal)' }} />
+        <h3 className="section-title" style={{ display: 'flex', itemsCenter: 'center', gap: '8px' }}>
+          <Stethoscope size={22} style={{ color: 'var(--accent-teal)' }} />
           Doctor Consultation & Closed-Loop Feedback
         </h3>
 
@@ -194,8 +169,8 @@ export default function ReferralDetail() {
             />
           </div>
 
-          <div className="form-group mb-lg" style={{ border: '1px solid var(--accent-teal-dim)', padding: '16px', borderRadius: 'var(--radius-md)', background: 'var(--accent-teal-dim)' }}>
-            <label className="form-label" style={{ color: 'var(--accent-teal)' }}>
+          <div className="form-group mb-lg" style={{ border: '1px solid rgba(13, 148, 136, 0.3)', padding: '18px', borderRadius: 'var(--radius-md)', background: 'rgba(13, 148, 136, 0.05)' }}>
+            <label className="form-label" style={{ color: '#0F766E' }}>
               Feedback-on-Record Back to Referring ASHA/ANM ({referral.referred_by_name || 'Frontline Worker'})
             </label>
             <textarea
@@ -208,33 +183,6 @@ export default function ReferralDetail() {
             <div className="text-xs text-tertiary mt-xs">
               This feedback populates directly into the ASHA's Referral Tracker and supervisor competency view.
             </div>
-          </div>
-
-          <div className="form-group mb-xl">
-            <label className="flex items-center gap-sm cursor-pointer" style={{ fontSize: 'var(--font-sm)', color: 'var(--text-primary)' }}>
-              <input
-                type="checkbox"
-                checked={scheduleFollowup}
-                onChange={e => setScheduleFollowup(e.target.checked)}
-                style={{ width: 'auto' }}
-              />
-              Automatically schedule follow-up alert for frontline worker
-            </label>
-
-            {scheduleFollowup && (
-              <div className="flex items-center gap-md mt-sm">
-                <span className="text-xs text-secondary">Follow-up due in:</span>
-                <select
-                  value={followupDays}
-                  onChange={e => setFollowupDays(e.target.value)}
-                  style={{ width: '180px' }}
-                >
-                  <option value={7}>7 days (1 week)</option>
-                  <option value={14}>14 days (2 weeks)</option>
-                  <option value={30}>30 days (1 month)</option>
-                </select>
-              </div>
-            )}
           </div>
 
           <button type="submit" className="btn btn-success btn-block btn-lg" disabled={submitting}>

@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Activity, ClipboardList, ArrowRightLeft, Calendar, AlertTriangle, Stethoscope, Building2 } from 'lucide-react';
 import { getPatient, getPatientTimeline } from '../../services/api';
 import { useLang } from '../../context/LanguageContext';
+import Loader from '../../components/ui/Loader';
 
 export default function PatientProfile() {
   const { id } = useParams();
@@ -44,7 +45,6 @@ export default function PatientProfile() {
     return parts.join(' · ');
   };
 
-  // Build unified timeline events
   const buildTimeline = () => {
     const events = [];
     
@@ -54,7 +54,6 @@ export default function PatientProfile() {
         date: r.created_at,
         title: r.record_type === 'vitals' ? 'Vitals Recorded' : r.record_type === 'consultation' ? 'Consultation' : r.record_type === 'assessment' ? 'Assessment' : r.record_type,
         facility: r.facility_name,
-        facilityType: r.facility_type,
         recordedBy: r.recorded_by_name,
         detail: r.notes,
         vitals: formatVitals(r.vitals),
@@ -100,11 +99,11 @@ export default function PatientProfile() {
   };
 
   if (loading) {
-    return <div className="flex items-center" style={{ justifyContent: 'center', minHeight: '400px' }}><Activity size={32} style={{ animation: 'pulse-badge 1.5s infinite', color: 'var(--text-tertiary)' }} /></div>;
+    return <Loader text="CareLink AI Longitudinal Journey Engine..." />;
   }
 
   if (!patient) {
-    return <div className="empty-state"><p>Patient not found</p></div>;
+    return <div className="empty-state"><p>Patient record not found</p></div>;
   }
 
   const events = buildTimeline();
@@ -112,7 +111,6 @@ export default function PatientProfile() {
 
   return (
     <div>
-      {/* Back button */}
       <button className="btn btn-ghost mb-lg" onClick={() => navigate('/asha')}>
         <ArrowLeft size={16} /> Back to patients
       </button>
@@ -120,14 +118,14 @@ export default function PatientProfile() {
       {/* Patient Header */}
       <div className="glass-card mb-xl">
         <div className="flex items-center gap-lg" style={{ flexWrap: 'wrap' }}>
-          <div className="patient-avatar" style={{ width: 60, height: 60, fontSize: 'var(--font-xl)' }}>
+          <div className="patient-avatar" style={{ width: 64, height: 64, fontSize: 'var(--font-2xl)' }}>
             {patient.full_name?.charAt(0)}
           </div>
           <div style={{ flex: 1 }}>
             <h2 style={{ fontSize: 'var(--font-2xl)', fontWeight: 800 }}>
               {lang === 'mr' && patient.full_name_mr ? patient.full_name_mr : patient.full_name}
             </h2>
-            <div className="text-secondary text-sm mt-sm" style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
+            <div className="text-secondary text-sm mt-xs flex gap-lg" style={{ flexWrap: 'wrap' }}>
               <span>{patient.age}y · {patient.gender}</span>
               <span>📍 {patient.village}, {patient.taluka}</span>
               {patient.blood_group && <span>🩸 {patient.blood_group}</span>}
@@ -140,9 +138,9 @@ export default function PatientProfile() {
               ))}
             </div>
           </div>
-          <div className="flex gap-sm">
+          <div>
             <button className="btn btn-primary" onClick={() => navigate(`/asha/triage/${patient.id}`)}>
-              <ClipboardList size={16} /> Start Assessment
+              <ClipboardList size={16} /> Start Triage Assessment
             </button>
           </div>
         </div>
@@ -151,7 +149,7 @@ export default function PatientProfile() {
       {/* Overdue Follow-ups Warning */}
       {overdueFollowups.length > 0 && (
         <div className="alert-banner emergency mb-xl">
-          <div className="alert-icon"><AlertTriangle size={20} /></div>
+          <div className="alert-icon"><AlertTriangle size={22} /></div>
           <div className="alert-content">
             <div className="alert-title">{overdueFollowups.length} overdue follow-up(s)</div>
             <div className="alert-subtitle">
@@ -167,8 +165,8 @@ export default function PatientProfile() {
 
       {/* Timeline */}
       <h3 className="section-title">
-        <Activity size={18} style={{ display: 'inline', marginRight: '8px', verticalAlign: 'middle' }} />
-        Patient Journey Timeline
+        <Activity size={20} style={{ display: 'inline', marginRight: '8px', verticalAlign: 'middle', color: 'var(--accent-teal)' }} />
+        Longitudinal Patient Journey Record Across Facilities
       </h3>
 
       <div className="timeline">
@@ -185,39 +183,18 @@ export default function PatientProfile() {
                     {event.urgency}
                   </span>
                 )}
-                {event.status && event.type === 'followup' && (
-                  <span className={`badge badge-${event.status === 'overdue' ? 'danger' : event.status === 'completed' ? 'success' : 'info'}`} style={{ marginLeft: '8px', fontSize: '10px' }}>
-                    {event.status}
-                  </span>
-                )}
-                {event.status && event.type === 'referral' && (
-                  <span className={`badge ref-${event.status}`} style={{ marginLeft: '8px', fontSize: '10px' }}>
-                    {event.status.replace('_', ' ')}
-                  </span>
-                )}
               </div>
               {event.vitals && <div className="event-detail">📊 {event.vitals}</div>}
               {event.diagnosis && <div className="event-detail">🏥 {event.diagnosis}</div>}
               {event.detail && <div className="event-detail">{event.detail}</div>}
               {event.feedback && (
-                <div className="event-detail" style={{ color: 'var(--status-success)', marginTop: '4px' }}>
+                <div className="event-detail" style={{ color: '#047857', marginTop: '4px', fontWeight: 600 }}>
                   ✅ Doctor feedback: {event.feedback}
-                </div>
-              )}
-              {event.outcome && (
-                <div className="event-detail" style={{ marginTop: '4px' }}>
-                  📋 Outcome: {event.outcome}
                 </div>
               )}
             </div>
           </div>
         ))}
-
-        {events.length === 0 && (
-          <div className="empty-state">
-            <p>No records yet for this patient</p>
-          </div>
-        )}
       </div>
     </div>
   );

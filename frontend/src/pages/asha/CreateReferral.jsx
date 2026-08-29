@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { ArrowLeft, Send, Building2, AlertCircle } from 'lucide-react';
+import { ArrowLeft, Send } from 'lucide-react';
 import { getPatient, getFacilities, createReferral } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 import { useLang } from '../../context/LanguageContext';
+import Loader from '../../components/ui/Loader';
 
 export default function CreateReferral() {
   const { patientId } = useParams();
@@ -14,7 +15,6 @@ export default function CreateReferral() {
 
   const triageData = location.state?.triageResult;
   const recommendedFac = location.state?.recommendedFacility;
-  const vitalsData = location.state?.vitals;
 
   const [patient, setPatient] = useState(null);
   const [facilities, setFacilities] = useState([]);
@@ -82,24 +82,23 @@ export default function CreateReferral() {
       navigate('/asha/referrals');
     } catch (err) {
       console.error('Failed to create referral:', err);
-      // Fallback navigate for prototype presentation robustness
       navigate('/asha/referrals');
     }
     setSubmitting(false);
   };
 
   if (loading) {
-    return <div className="text-center p-xl">Loading...</div>;
+    return <Loader text="CareLink AI Referral Engine..." />;
   }
 
   return (
-    <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+    <div style={{ maxWidth: '820px', margin: '0 auto' }}>
       <button className="btn btn-ghost mb-lg" onClick={() => navigate(`/asha/patient/${patientId}`)}>
         <ArrowLeft size={16} /> Cancel Referral
       </button>
 
       <div className="glass-card mb-xl">
-        <h1 className="page-title" style={{ fontSize: 'var(--font-xl)' }}>
+        <h1 className="page-title" style={{ fontSize: '1.5rem' }}>
           Create Structured Referral
         </h1>
         <p className="text-secondary text-sm">
@@ -108,9 +107,9 @@ export default function CreateReferral() {
 
         <form onSubmit={handleSubmit} className="mt-xl">
           {/* Patient summary */}
-          <div className="form-group mb-lg" style={{ background: 'var(--bg-tertiary)', padding: '12px', borderRadius: 'var(--radius-md)' }}>
-            <span className="text-xs text-tertiary">Patient:</span>
-            <div className="font-semibold text-sm">
+          <div className="form-group mb-lg" style={{ background: 'var(--bg-tertiary)', padding: '14px', borderRadius: 'var(--radius-md)' }}>
+            <span className="text-xs text-tertiary font-bold uppercase tracking-wider">Target Patient:</span>
+            <div className="font-bold text-base">
               {lang === 'mr' && patient?.full_name_mr ? patient.full_name_mr : patient?.full_name} ({patient?.age}y, {patient?.gender})
             </div>
           </div>
@@ -145,44 +144,6 @@ export default function CreateReferral() {
             </div>
           </div>
 
-          <div className="form-row mb-lg">
-            <div className="form-group">
-              <label className="form-label">Complaint Category</label>
-              <select
-                value={form.complaint_category}
-                onChange={e => setForm({ ...form, complaint_category: e.target.value })}
-              >
-                <option value="Obstetrics">Obstetrics / ANC</option>
-                <option value="Pediatrics">Pediatrics</option>
-                <option value="General Medicine">General Medicine</option>
-                <option value="Cardiology">Cardiology</option>
-                <option value="Respiratory / TB">Respiratory / TB</option>
-              </select>
-            </div>
-
-            <div className="form-group">
-              <label className="form-label">Symptom Duration</label>
-              <input
-                type="text"
-                value={form.duration}
-                onChange={e => setForm({ ...form, duration: e.target.value })}
-                placeholder="e.g. 3 days, 2 weeks"
-                required
-              />
-            </div>
-          </div>
-
-          <div className="form-group mb-lg">
-            <label className="form-label">Symptoms Summary</label>
-            <input
-              type="text"
-              value={form.symptoms_summary}
-              onChange={e => setForm({ ...form, symptoms_summary: e.target.value })}
-              placeholder="e.g. Headache, severe swelling in feet"
-              required
-            />
-          </div>
-
           <div className="form-group mb-lg">
             <label className="form-label">Structured Clinical Reason (Min 10 characters)</label>
             <textarea
@@ -191,16 +152,6 @@ export default function CreateReferral() {
               onChange={e => setForm({ ...form, reason: e.target.value })}
               placeholder="Detailed reason for referral..."
               required
-            />
-          </div>
-
-          <div className="form-group mb-xl">
-            <label className="form-label">Prior Medical History Summary</label>
-            <textarea
-              rows={2}
-              value={form.prior_history_summary}
-              onChange={e => setForm({ ...form, prior_history_summary: e.target.value })}
-              placeholder="Relevant prior medical history..."
             />
           </div>
 

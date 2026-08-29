@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
 import { 
-  Users, CheckCircle2, AlertTriangle, ArrowRightLeft, 
-  Building2, TrendingUp, ShieldCheck, Activity, Award
+  CheckCircle2, ArrowRightLeft, Building2, Activity, Award
 } from 'lucide-react';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, PointElement, LineElement, BarElement } from 'chart.js';
 import { Doughnut, Bar, Line } from 'react-chartjs-2';
 import { getDashboardStats, getFacilities } from '../../services/api';
 import AccessLadder from '../../components/mock/AccessLadder';
 import ESanjeevaniPosition from '../../components/mock/ESanjeevaniPosition';
+import Loader from '../../components/ui/Loader';
 
 ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, PointElement, LineElement, BarElement);
 
@@ -31,7 +31,6 @@ export default function AdminDashboard() {
       setFacilities(fRes.data);
     } catch (err) {
       console.error('Failed to load admin stats:', err);
-      // Fallback synthetic stats if needed
       setStats({
         patients: { total_patients: 20, high_risk_patients: 6, patients_today: 4 },
         referrals: { total_referrals: 12, completed_referrals: 9, active_referrals: 3, missed_referrals: 1, completion_rate: 75 },
@@ -43,47 +42,47 @@ export default function AdminDashboard() {
   };
 
   if (loading) {
-    return <div className="text-center p-xl">Loading Executive Dashboard...</div>;
+    return <Loader text="CareLink AI Executive Dashboard Loading..." />;
   }
 
-  // Chart Data: Referral Completion Rate (Quality-over-volume)
+  // Chart Data: Referral Completion Rate
   const referralChartData = {
     labels: ['Completed & Closed', 'Active In-Progress', 'Missed'],
     datasets: [{
       data: [stats?.referrals?.completed_referrals || 9, stats?.referrals?.active_referrals || 3, stats?.referrals?.missed_referrals || 1],
-      backgroundColor: ['#10B981', '#00B4D8', '#EF4444'],
-      borderColor: '#0F1D32',
+      backgroundColor: ['#059669', '#0D9488', '#E11D48'],
+      borderColor: '#FFFFFF',
       borderWidth: 2,
     }]
   };
 
-  // Chart Data: Follow-up Adherence by Category
+  // Chart Data: Follow-up Adherence
   const followupChartData = {
     labels: ['ANC Checkup', 'Child Immunization', 'TB / Chronic', 'Post-Referral'],
     datasets: [{
       label: 'Completed %',
       data: [85, 90, 72, 78],
-      backgroundColor: 'rgba(0, 180, 216, 0.7)',
+      backgroundColor: 'rgba(13, 148, 136, 0.75)',
       borderRadius: 6,
     }]
   };
 
   // Trend Chart Data
   const trendChartData = {
-    labels: ['W1', 'W2', 'W3', 'W4'],
+    labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
     datasets: [
       {
         label: 'Referrals Completed',
         data: [12, 19, 24, 31],
-        borderColor: '#10B981',
-        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+        borderColor: '#059669',
+        backgroundColor: 'rgba(5, 150, 105, 0.1)',
         fill: true,
         tension: 0.4,
       },
       {
         label: 'High-Risk Follow-ups Met',
         data: [15, 22, 28, 36],
-        borderColor: '#00B4D8',
+        borderColor: '#0D9488',
         backgroundColor: 'transparent',
         tension: 0.4,
       }
@@ -93,11 +92,11 @@ export default function AdminDashboard() {
   return (
     <div>
       {/* Header & Tabs */}
-      <div className="flex items-center justify-between mb-xl" style={{ flexWrap: 'wrap', gap: '16px' }}>
+      <div className="page-header-box flex items-center justify-between" style={{ flexWrap: 'wrap', gap: '16px' }}>
         <div>
           <h1 className="page-title">Quality & Coordination Dashboard</h1>
-          <p className="text-secondary text-sm">
-            Government of Maharashtra · Health Department Quality Monitoring
+          <p className="page-subtitle">
+            Government of Maharashtra · CareLink AI Executive Monitoring
           </p>
         </div>
 
@@ -118,10 +117,10 @@ export default function AdminDashboard() {
       {activeTab === 'overview' && (
         <div className="flex flex-col gap-xl">
           {/* Quality Principle Banner */}
-          <div className="alert-banner warning" style={{ background: 'var(--accent-teal-dim)', borderColor: 'var(--accent-teal)' }}>
-            <Award size={24} style={{ color: 'var(--accent-teal)' }} />
+          <div className="alert-banner" style={{ background: 'rgba(13, 148, 136, 0.08)', borderColor: 'rgba(13, 148, 136, 0.3)', borderLeft: '5px solid #0D9488' }}>
+            <Award size={26} style={{ color: '#0D9488', flexShrink: 0 }} />
             <div>
-              <div className="alert-title" style={{ color: 'var(--accent-teal)' }}>
+              <div className="alert-title" style={{ color: '#0F766E' }}>
                 Design Principle: Quality Over Volume Metrics
               </div>
               <div className="alert-subtitle">
@@ -133,28 +132,28 @@ export default function AdminDashboard() {
           {/* Stat Cards */}
           <div className="stats-grid">
             <div className="stat-card">
-              <div className="stat-icon" style={{ background: 'rgba(16, 185, 129, 0.15)', color: '#10B981' }}><CheckCircle2 size={20} /></div>
+              <div className="stat-icon" style={{ background: 'rgba(5, 150, 105, 0.12)', color: '#059669' }}><CheckCircle2 size={20} /></div>
               <span className="stat-label">Referral Completion Rate</span>
               <span className="stat-value">{stats?.referrals?.completion_rate || 75}%</span>
               <span className="stat-detail">Target: &gt;70% (State Avg: 42%)</span>
             </div>
 
             <div className="stat-card">
-              <div className="stat-icon" style={{ background: 'rgba(0, 180, 216, 0.15)', color: '#00B4D8' }}><Activity size={20} /></div>
+              <div className="stat-icon" style={{ background: 'rgba(13, 148, 136, 0.12)', color: '#0D9488' }}><Activity size={20} /></div>
               <span className="stat-label">Follow-Up Adherence Rate</span>
               <span className="stat-value">{stats?.followups?.adherence_rate || 73}%</span>
               <span className="stat-detail">High-Risk ANC & Chronic</span>
             </div>
 
             <div className="stat-card">
-              <div className="stat-icon" style={{ background: 'rgba(124, 58, 237, 0.15)', color: '#7C3AED' }}><ArrowRightLeft size={20} /></div>
+              <div className="stat-icon" style={{ background: 'rgba(124, 58, 237, 0.12)', color: '#7C3AED' }}><ArrowRightLeft size={20} /></div>
               <span className="stat-label">Tracked Referrals</span>
               <span className="stat-value">{stats?.referrals?.total_referrals || 12}</span>
               <span className="stat-detail">Zero un-tracked handoffs</span>
             </div>
 
             <div className="stat-card">
-              <div className="stat-icon" style={{ background: 'rgba(245, 158, 11, 0.15)', color: '#F59E0B' }}><Building2 size={20} /></div>
+              <div className="stat-icon" style={{ background: 'rgba(217, 119, 6, 0.12)', color: '#D97706' }}><Building2 size={20} /></div>
               <span className="stat-label">Doctors Available On-Duty</span>
               <span className="stat-value">{stats?.facilities?.total_doctors_available || 18}</span>
               <span className="stat-detail">Across 8 Tier Facilities</span>
@@ -213,8 +212,8 @@ export default function AdminDashboard() {
                   <div>👥 Current Queue: <strong>{fac.queue_length} patients</strong></div>
                 </div>
 
-                <div className="mt-md" style={{ borderTop: '1px solid var(--border-glass)', paddingTop: '8px' }}>
-                  <div className="text-xs font-semibold text-tertiary mb-xs">Operational Diagnostics:</div>
+                <div className="mt-md" style={{ borderTop: '1px solid var(--border-glass)', paddingTop: '10px' }}>
+                  <div className="text-xs font-bold text-tertiary mb-xs uppercase tracking-wider">Operational Diagnostics:</div>
                   <div className="flex gap-xs" style={{ flexWrap: 'wrap' }}>
                     {fac.diagnostics_working?.map(d => (
                       <span key={d} className="badge badge-success" style={{ fontSize: '10px' }}>✓ {d}</span>

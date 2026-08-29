@@ -267,5 +267,5 @@ app.post('/api/sync', (req, res) => {
 
 // Start Express server
 app.listen(PORT, () => {
-  console.log(`🏥 SETU Backend running on port ${PORT}`);
+  console.log(`🏥 CareLink AI Backend running on port ${PORT}`);
 });

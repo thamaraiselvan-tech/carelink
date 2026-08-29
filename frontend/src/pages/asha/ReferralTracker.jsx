@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRightLeft, CheckCircle2, Clock, AlertCircle, RefreshCw, ChevronRight } from 'lucide-react';
+import { ArrowRightLeft, CheckCircle2, RefreshCw } from 'lucide-react';
 import { getReferrals } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 import { useLang } from '../../context/LanguageContext';
+import Loader from '../../components/ui/Loader';
 
 export default function ReferralTracker() {
   const navigate = useNavigate();
@@ -65,15 +66,15 @@ export default function ReferralTracker() {
   };
 
   if (loading) {
-    return <div className="text-center p-xl">Loading referral lifecycle tracker...</div>;
+    return <Loader text="CareLink AI Referral Tracker Engine..." />;
   }
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-xl">
+      <div className="page-header-box flex items-center justify-between">
         <div>
           <h1 className="page-title">Referral Tracker</h1>
-          <p className="text-secondary text-sm">
+          <p className="page-subtitle">
             End-to-end referral state machine tracking — closed loop with doctor feedback
           </p>
         </div>
@@ -87,10 +88,10 @@ export default function ReferralTracker() {
           <div key={ref.id} className="glass-card">
             <div className="flex justify-between items-start mb-md" style={{ flexWrap: 'wrap', gap: '8px' }}>
               <div>
-                <div className="flex items-center gap-sm">
+                <div className="flex items-center gap-sm" style={{ flexWrap: 'wrap' }}>
                   <span className="font-bold text-base">{ref.patient_name}</span>
                   <span className={`badge risk-${ref.patient_risk_level || 'normal'}`}>
-                    {ref.patient_risk_level || 'normal'}
+                    {ref.patient_risk_level || 'normal'} risk
                   </span>
                   <span className={`badge ref-${ref.status}`}>
                     {ref.status?.replace('_', ' ')}
@@ -101,26 +102,23 @@ export default function ReferralTracker() {
                 </div>
               </div>
 
-              <div className="text-xs text-tertiary">
+              <div className="text-xs text-tertiary font-bold">
                 Issued: {new Date(ref.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
               </div>
             </div>
 
-            {/* Structured Reason */}
-            <div style={{ background: 'var(--bg-tertiary)', padding: '10px 14px', borderRadius: 'var(--radius-md)', fontSize: 'var(--font-xs)', color: 'var(--text-secondary)', marginBottom: '16px' }}>
+            <div style={{ background: 'var(--bg-tertiary)', padding: '12px 16px', borderRadius: 'var(--radius-md)', fontSize: 'var(--font-xs)', marginBottom: '16px' }}>
               <strong>Structured Reason:</strong> {ref.reason}
             </div>
 
-            {/* State Machine Progress Bar */}
             {renderProgressSteps(ref.status)}
 
-            {/* Closed-loop feedback from Doctor */}
             {ref.feedback_to_referrer && (
               <div style={{ marginTop: '16px', paddingTop: '12px', borderTop: '1px dashed var(--border-glass)', fontSize: 'var(--font-xs)' }}>
-                <div className="font-semibold text-success flex items-center gap-xs">
-                  <CheckCircle2 size={14} /> Doctor Feedback-on-Record Received:
+                <div className="font-bold text-success flex items-center gap-xs">
+                  <CheckCircle2 size={16} /> Doctor Feedback-on-Record Received:
                 </div>
-                <div className="text-secondary mt-xs" style={{ fontStyle: 'italic' }}>
+                <div className="text-secondary mt-xs" style={{ fontStyle: 'italic', background: '#ECFDF5', padding: '8px 12px', borderRadius: 'var(--radius-sm)' }}>
                   "{ref.feedback_to_referrer}"
                 </div>
               </div>

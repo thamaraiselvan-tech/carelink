@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Check, AlertTriangle, ShieldAlert, Building2, ChevronRight, Activity, Stethoscope } from 'lucide-react';
-import { getPatient, getFacilities, matchFacility, createRecord } from '../../services/api';
+import { getPatient, getFacilities, createRecord } from '../../services/api';
 import { symptomCatalog } from '../../data/symptoms';
 import { evaluateTriage } from '../../engine/triageEngine';
 import { filterAndRankFacilities } from '../../engine/facilityMatcher';
 import { useAuth } from '../../context/AuthContext';
 import { useLang } from '../../context/LanguageContext';
+import Loader from '../../components/ui/Loader';
 
 export default function TriageFlow() {
   const { patientId } = useParams();
@@ -47,7 +48,6 @@ export default function TriageFlow() {
       setPatient(pRes.data);
       setFacilities(fRes.data);
 
-      // Pre-fill vitals/symptoms based on patient condition (Sunita pre-eclampsia demo scenario)
       if (pRes.data.full_name?.includes('Sunita')) {
         setSelectedSymptoms(['headache', 'swelling']);
         setVitals({
@@ -79,7 +79,6 @@ export default function TriageFlow() {
     });
     setTriageResult(result);
 
-    // Filter/match facilities
     const match = filterAndRankFacilities(facilities, result);
     setFacilityMatch(match);
 
@@ -89,7 +88,7 @@ export default function TriageFlow() {
   const handleSaveAssessment = async (proceedToReferral = false) => {
     setSubmitting(true);
     try {
-      const rec = await createRecord({
+      await createRecord({
         patient_id: patient.id,
         facility_id: user?.facility_id || facilities[0]?.id,
         recorded_by: user?.id,
@@ -123,7 +122,6 @@ export default function TriageFlow() {
       }
     } catch (err) {
       console.error('Failed to save assessment:', err);
-      // Fallback redirect if backend issue
       if (proceedToReferral) {
         navigate(`/asha/referral/create/${patient.id}`, {
           state: {
@@ -141,28 +139,28 @@ export default function TriageFlow() {
   };
 
   if (loading) {
-    return <div className="flex items-center justify-between" style={{ minHeight: '300px', justifyContent: 'center' }}><Activity size={32} className="text-secondary" style={{ animation: 'pulse-badge 1.5s infinite' }} /></div>;
+    return <Loader text="CareLink AI Protocol Triage Engine Loading..." />;
   }
 
   return (
-    <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+    <div style={{ maxWidth: '820px', margin: '0 auto' }}>
       <button className="btn btn-ghost mb-lg" onClick={() => navigate(`/asha/patient/${patientId}`)}>
         <ArrowLeft size={16} /> Cancel Assessment
       </button>
 
       {/* Patient Mini Banner */}
-      <div className="glass-card mb-xl" style={{ padding: '16px 24px' }}>
+      <div className="glass-card mb-xl" style={{ padding: '18px 24px' }}>
         <div className="flex items-center justify-between">
           <div>
-            <span className="text-xs text-tertiary">Patient Assessment for</span>
-            <h3 style={{ fontSize: 'var(--font-lg)', fontWeight: 700 }}>
+            <span className="text-xs text-tertiary font-bold uppercase tracking-wider">Patient Triage Assessment</span>
+            <h3 style={{ fontSize: 'var(--font-lg)', fontWeight: 800 }}>
               {lang === 'mr' && patient?.full_name_mr ? patient.full_name_mr : patient?.full_name}
             </h3>
             <div className="text-xs text-secondary mt-xs">
               {patient?.age}y · {patient?.gender} · 📍 {patient?.village} · Risk: <span className={`risk-dot ${patient?.risk_level}`} style={{ display: 'inline-block', marginLeft: 4 }} /> {patient?.risk_level}
             </div>
           </div>
-          <div className="text-sm font-semibold text-teal">
+          <div className="text-sm font-bold text-teal" style={{ background: 'var(--accent-teal-dim)', padding: '6px 14px', borderRadius: 'var(--radius-full)' }}>
             Step {step} of 3
           </div>
         </div>
@@ -184,31 +182,32 @@ export default function TriageFlow() {
                   key={sym.id}
                   onClick={() => toggleSymptom(sym.id)}
                   style={{
-                    padding: '12px 16px',
+                    padding: '14px 18px',
                     borderRadius: 'var(--radius-md)',
-                    background: isSelected ? 'var(--accent-teal-dim)' : 'var(--bg-tertiary)',
-                    border: `1px solid ${isSelected ? 'var(--accent-teal)' : 'var(--border-glass)'}`,
+                    background: isSelected ? 'rgba(13, 148, 136, 0.12)' : '#FFFFFF',
+                    border: `1px solid ${isSelected ? 'var(--accent-teal)' : 'rgba(15, 23, 42, 0.1)'}`,
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
                     transition: 'all 0.2s ease',
+                    boxShadow: isSelected ? '0 4px 12px rgba(13, 148, 136, 0.15)' : 'none',
                   }}
                 >
                   <div>
-                    <div style={{ fontSize: 'var(--font-sm)', fontWeight: 600, color: isSelected ? 'var(--accent-teal)' : 'var(--text-primary)' }}>
+                    <div style={{ fontSize: 'var(--font-sm)', fontWeight: 700, color: isSelected ? 'var(--accent-teal)' : 'var(--text-primary)' }}>
                       {lang === 'mr' ? sym.label_mr : sym.label}
                     </div>
                     <div className="text-xs text-tertiary">{sym.category}</div>
                   </div>
-                  {isSelected && <Check size={16} style={{ color: 'var(--accent-teal)' }} />}
+                  {isSelected && <Check size={18} style={{ color: 'var(--accent-teal)' }} />}
                 </div>
               );
             })}
           </div>
 
-          <div className="flex justify-between items-center" style={{ borderTop: '1px solid var(--border-glass)', paddingTop: '16px' }}>
-            <span className="text-xs text-tertiary">{selectedSymptoms.length} symptom(s) selected</span>
+          <div className="flex justify-between items-center" style={{ borderTop: '1px solid var(--border-glass)', paddingTop: '18px' }}>
+            <span className="text-xs text-tertiary font-bold">{selectedSymptoms.length} symptom(s) selected</span>
             <button className="btn btn-primary" onClick={() => setStep(2)}>
               Next: Enter Vitals <ChevronRight size={16} />
             </button>
@@ -232,7 +231,6 @@ export default function TriageFlow() {
                 value={vitals.bp_systolic}
                 onChange={e => setVitals({ ...vitals, bp_systolic: parseFloat(e.target.value) || 0 })}
               />
-              <span className={`vital-status ${vitals.bp_systolic >= 140 ? 'critical' : vitals.bp_systolic >= 130 ? 'elevated' : 'normal'}`} />
             </div>
 
             <div className="form-group vital-input">
@@ -242,7 +240,6 @@ export default function TriageFlow() {
                 value={vitals.bp_diastolic}
                 onChange={e => setVitals({ ...vitals, bp_diastolic: parseFloat(e.target.value) || 0 })}
               />
-              <span className={`vital-status ${vitals.bp_diastolic >= 90 ? 'critical' : 'normal'}`} />
             </div>
           </div>
 
@@ -255,7 +252,6 @@ export default function TriageFlow() {
                 value={vitals.temperature}
                 onChange={e => setVitals({ ...vitals, temperature: parseFloat(e.target.value) || 98.4 })}
               />
-              <span className={`vital-status ${vitals.temperature >= 102 ? 'critical' : vitals.temperature >= 99.5 ? 'elevated' : 'normal'}`} />
             </div>
 
             <div className="form-group vital-input">
@@ -265,11 +261,10 @@ export default function TriageFlow() {
                 value={vitals.pulse}
                 onChange={e => setVitals({ ...vitals, pulse: parseFloat(e.target.value) || 72 })}
               />
-              <span className="vital-status normal" />
             </div>
           </div>
 
-          <div className="flex justify-between items-center" style={{ borderTop: '1px solid var(--border-glass)', paddingTop: '16px' }}>
+          <div className="flex justify-between items-center" style={{ borderTop: '1px solid var(--border-glass)', paddingTop: '18px' }}>
             <button className="btn btn-secondary" onClick={() => setStep(1)}>
               Back
             </button>
@@ -280,13 +275,12 @@ export default function TriageFlow() {
         </div>
       )}
 
-      {/* STEP 3: TRIAGE RESULT & SMART FACILITY MATCHING */}
+      {/* STEP 3: TRIAGE RESULT */}
       {step === 3 && triageResult && (
         <div className="flex flex-col gap-xl">
-          {/* Triage Assessment Card */}
           <div className={`triage-result ${triageResult.urgency}`}>
             <div className="triage-label">
-              <ShieldAlert size={16} style={{ display: 'inline', marginRight: '6px', verticalAlign: 'middle' }} />
+              <ShieldAlert size={18} style={{ display: 'inline', marginRight: '6px', verticalAlign: 'middle' }} />
               {triageResult.urgency.replace('_', ' ')}
             </div>
             <div className="triage-title">
@@ -298,7 +292,7 @@ export default function TriageFlow() {
 
             {triageResult.redFlags?.length > 0 && (
               <div className="mt-md flex gap-xs" style={{ flexWrap: 'wrap' }}>
-                <span className="text-xs font-semibold text-secondary">Red flags triggered:</span>
+                <span className="text-xs font-bold text-secondary">Red flags triggered:</span>
                 {triageResult.redFlags.map(rf => (
                   <span key={rf} className="badge badge-danger">{rf}</span>
                 ))}
@@ -306,7 +300,7 @@ export default function TriageFlow() {
             )}
 
             <div className="safety-disclaimer">
-              <AlertTriangle size={16} />
+              <AlertTriangle size={18} />
               <span>
                 {t('decision_support_disclaimer')}
               </span>
@@ -315,8 +309,8 @@ export default function TriageFlow() {
 
           {/* Smart Facility Matching Section */}
           <div>
-            <h3 className="section-title" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <Building2 size={20} style={{ color: 'var(--accent-teal)' }} />
+            <h3 className="section-title" style={{ display: 'flex', itemsCenter: 'center', gap: '8px' }}>
+              <Building2 size={22} style={{ color: 'var(--accent-teal)' }} />
               Operational Smart Matching Result
             </h3>
 
@@ -330,7 +324,7 @@ export default function TriageFlow() {
                 </div>
 
                 <div className="match-reasons">
-                  <div className="font-semibold text-xs text-tertiary uppercase tracking-wider mt-sm">Availability Verification Proof:</div>
+                  <div className="font-bold text-xs text-tertiary uppercase tracking-wider mt-sm">Availability Verification Proof:</div>
                   {facilityMatch.recommended.reasons?.map((reason, idx) => (
                     <div key={idx} className="match-reason met">
                       <span>{reason}</span>
@@ -338,13 +332,13 @@ export default function TriageFlow() {
                   ))}
                 </div>
 
-                <div style={{ marginTop: '20px' }}>
+                <div style={{ marginTop: '24px' }}>
                   <button
-                    className="btn btn-primary btn-block"
+                    className="btn btn-primary btn-block btn-lg"
                     onClick={() => handleSaveAssessment(true)}
                     disabled={submitting}
                   >
-                    <Stethoscope size={16} />
+                    <Stethoscope size={18} />
                     Issue Structured Referral to {facilityMatch.recommended.name}
                   </button>
                 </div>
@@ -354,41 +348,6 @@ export default function TriageFlow() {
                 <p>No tier facilities matching required equipment today.</p>
               </div>
             )}
-
-            {/* Unmatched / Alternative Facilities */}
-            {facilityMatch?.unmatched?.length > 0 && (
-              <div className="mt-lg">
-                <div className="text-xs font-semibold text-tertiary mb-sm uppercase tracking-wider">
-                  Facilities Checked & Filtered Out (Wasted Trip Prevented):
-                </div>
-                <div className="flex flex-col gap-sm">
-                  {facilityMatch.unmatched.map(unm => (
-                    <div key={unm.id} className="facility-unmatched">
-                      <div className="flex justify-between items-center">
-                        <span className="font-semibold text-sm">{unm.name} ({unm.type})</span>
-                        <span className="text-xs text-danger font-semibold">Unmatched</span>
-                      </div>
-                      <div className="text-xs text-secondary mt-xs">
-                        {unm.unmetReasons?.join(' · ')}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-
-          <div className="flex justify-between items-center mt-lg">
-            <button className="btn btn-secondary" onClick={() => setStep(2)}>
-              Adjust Vitals
-            </button>
-            <button
-              className="btn btn-ghost"
-              onClick={() => handleSaveAssessment(false)}
-              disabled={submitting}
-            >
-              Save Record & Return
-            </button>
           </div>
         </div>
       )}

@@ -42,8 +42,8 @@ export default function Header() {
           <button className={lang === 'mr' ? 'active' : ''} onClick={() => lang !== 'mr' && toggleLang()}>मराठी</button>
         </div>
 
-        <button className="btn btn-ghost" onClick={handleLogout}>
-          <LogOut size={16} />
+        <button className="btn btn-ghost btn-sm" onClick={handleLogout}>
+          <LogOut size={15} />
           Logout
         </button>
       </div>
