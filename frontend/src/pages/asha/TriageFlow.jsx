@@ -345,6 +345,11 @@ export default function TriageFlow() {
             <div className="triage-rationale">
               {lang === 'mr' ? triageResult.rationale_mr : triageResult.rationale}
             </div>
+            {triageResult.source && (
+              <div style={{ marginTop: '8px', fontSize: '0.75rem', color: 'var(--brand-teal)', fontWeight: 700 }}>
+                📜 Protocol Reference: {triageResult.source}
+              </div>
+            )}
 
             {triageResult.redFlags?.length > 0 && (
               <div className="mt-md flex gap-xs" style={{ flexWrap: 'wrap' }}>
@@ -365,9 +370,9 @@ export default function TriageFlow() {
 
           {/* Smart Facility Matching Section with Inline Diagnostics Widget */}
           <div>
-            <h3 className="section-title" style={{ display: 'flex', itemsCenter: 'center', gap: '8px' }}>
+            <h3 className="section-title" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <Building2 size={22} style={{ color: 'var(--accent-teal)' }} />
-              Operational Smart Matching Result & Diagnostic Availability
+              Deterministic Facility Matching & Availability Assessment
             </h3>
 
             {facilityMatch?.recommended ? (
@@ -379,12 +384,12 @@ export default function TriageFlow() {
                   {facilityMatch.recommended.type.replace('_', ' ').toUpperCase()} · {facilityMatch.recommended.village}, {facilityMatch.recommended.taluka}
                 </div>
 
-                {/* Inline Diagnostics Widget */}
-                <div style={{ marginTop: '12px', padding: '12px', background: 'var(--bg-tertiary)', borderRadius: 'var(--radius-md)' }}>
-                  <div className="text-xs font-bold text-tertiary uppercase tracking-wider mb-xs">Inline Diagnostic & Medicine Status:</div>
-                  <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                    {facilityMatch.recommended.diagnostics_working?.map(d => (
-                      <span key={d} className="badge badge-success" style={{ fontSize: '11px' }}>✓ {d}</span>
+                {/* Visible "Why Recommended?" Rationale Breakdown Box */}
+                <div style={{ marginTop: '14px', padding: '14px', background: '#ECFDF5', border: '1px solid rgba(16, 185, 129, 0.3)', borderRadius: 'var(--radius-md)' }}>
+                  <div className="text-xs font-bold text-teal uppercase tracking-wider mb-xs" style={{ color: '#047857' }}>Why Recommended for Referral?</div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '0.8125rem', color: '#065F46', fontWeight: 600 }}>
+                    {facilityMatch.recommended.reasons?.map((reason, idx) => (
+                      <div key={idx}>• {reason}</div>
                     ))}
                   </div>
                 </div>

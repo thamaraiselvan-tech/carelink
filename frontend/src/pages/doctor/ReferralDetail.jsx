@@ -183,7 +183,7 @@ export default function ReferralDetail() {
         <form onSubmit={handleCompleteConsultation}>
           {/* ICD-10 / SNOMED Autocomplete Dropdown */}
           <div className="form-group" style={{ marginBottom: '20px' }}>
-            <label className="form-label">ICD-10 / SNOMED Diagnosis Code</label>
+            <label className="form-label" style={{ fontWeight: 800 }}>Doctor Clinical Diagnosis (ICD-10 / SNOMED) — Recorded by Physician</label>
             <select
               value={icdCode}
               onChange={e => setIcdCode(e.target.value)}
@@ -198,12 +198,12 @@ export default function ReferralDetail() {
           </div>
 
           <div className="form-group" style={{ marginBottom: '20px' }}>
-            <label className="form-label">Consultation Outcome / Clinical Findings</label>
+            <label className="form-label" style={{ fontWeight: 800 }}>Treatment / Clinical Findings (Recorded by Physician)</label>
             <textarea
               rows={3}
               value={outcome}
               onChange={e => setOutcome(e.target.value)}
-              placeholder="Enter clinical findings, diagnosis, and prescription..."
+              placeholder="Enter clinical findings, physician evaluation, and prescription..."
               required
             />
           </div>

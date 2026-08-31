@@ -102,9 +102,9 @@ export default function AshaDashboard() {
             </div>
             <div className="stat-card">
               <div className="stat-icon" style={{ background: 'rgba(225, 29, 72, 0.12)', color: '#E11D48' }}><CalendarX size={20} /></div>
-              <span className="stat-label">Overdue Outreach</span>
+              <span className="stat-label">Missed Care Alerts</span>
               <span className="stat-value" style={{ background: 'linear-gradient(135deg, #E11D48, #DC2626)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>{stats.overdueFollowups}</span>
-              <span className="stat-detail">Proactive Flags</span>
+              <span className="stat-detail">Proactive Action Triggers</span>
             </div>
           </div>
 
@@ -115,7 +115,7 @@ export default function AshaDashboard() {
                 <AlertTriangle size={22} />
               </div>
               <div className="alert-content">
-                <div className="alert-title" style={{ fontSize: '1rem', fontWeight: 800 }}>⚠ {alerts.length} Overdue Care Outreach Flags</div>
+                <div className="alert-title" style={{ fontSize: '1rem', fontWeight: 800 }}>⚠ {alerts.length} Missed Care Action Alerts</div>
                 <div className="alert-subtitle" style={{ fontSize: '0.875rem' }}>
                   {alerts.map((a, i) => (
                     <span key={a.id || i}>
