@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Check, CheckCircle2, Stethoscope, RefreshCw } from 'lucide-react';
+import { ArrowLeft, Check, CheckCircle2, Stethoscope, RefreshCw, Video } from 'lucide-react';
 import { getReferrals, updateReferralStatus, getPatientTimeline, createFollowUp } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 import { icd10Codes } from '../../data/icd10';
@@ -151,16 +151,20 @@ export default function ReferralDetail() {
             </div>
           </div>
 
-          <div style={{ display: 'flex', gap: '12px' }}>
+          <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+            <button className="btn btn-primary" onClick={() => navigate('/teleconsultation', { state: { patient: { full_name: referral.patient_name, age: referral.patient_age, gender: referral.patient_gender, phone: '8428705251', abha_id: '91-8428-7052-5101' }, referral } })}>
+              <Video size={16} /> eSanjeevani Video Call
+            </button>
+
             {!isConfirmed && (
               <button className="btn btn-success" onClick={handleAccept} disabled={submitting}>
-                <Check size={16} /> Accept Referral & Confirm Slot
+                <Check size={16} /> Accept Referral
               </button>
             )}
 
             {/* Re-referral Action (Doctor Specialty Re-route) */}
             <button className="btn btn-secondary" onClick={handleReroute} disabled={submitting}>
-              <RefreshCw size={14} /> Wrong Specialty → Re-route
+              <RefreshCw size={14} /> Re-route
             </button>
           </div>
         </div>

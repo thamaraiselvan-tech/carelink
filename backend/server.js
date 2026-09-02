@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { initDatabase, saveDatabase } from './dbPersistence.js';
+import { initiatePhoneCall, sendSMSAlert } from './telephonyService.js';
 
 dotenv.config();
 
@@ -212,6 +213,28 @@ app.post('/api/ivr/webhook', (req, res) => {
       <Hangup/>
     </Response>
   `);
+});
+
+// Telephony Call Dispatch Endpoint
+app.post('/api/telephony/call', async (req, res) => {
+  const { phone, reason } = req.body;
+  try {
+    const result = await initiatePhoneCall(phone || '8428705251', reason);
+    res.json({ success: true, result });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// Telephony SMS Dispatch Endpoint
+app.post('/api/telephony/sms', async (req, res) => {
+  const { phone, message } = req.body;
+  try {
+    const result = await sendSMSAlert(phone || '8428705251', message);
+    res.json({ success: true, result });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
 });
 
 // Start Express server

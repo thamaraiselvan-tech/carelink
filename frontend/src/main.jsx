@@ -8,24 +8,13 @@ createRoot(document.getElementById('root')).render(
   </StrictMode>,
 );
 
-// Guarantee startup splash loader is visible for 3.5s with a smooth scale & fade transform transition
-window.addEventListener('load', () => {
-  setTimeout(() => {
-    const splash = document.getElementById('app-splash');
-    if (splash) {
-      splash.classList.add('fade-out');
-      setTimeout(() => {
-        splash.remove();
-      }, 850);
-    }
-  }, 3500);
-});
-
-// Fallback in case load event already fired
+// Immediately fade out splash screen when React mounts
 setTimeout(() => {
   const splash = document.getElementById('app-splash');
-  if (splash && !splash.classList.contains('fade-out')) {
+  if (splash) {
     splash.classList.add('fade-out');
-    setTimeout(() => splash.remove(), 850);
+    setTimeout(() => {
+      if (splash.parentNode) splash.parentNode.removeChild(splash);
+    }, 400);
   }
-}, 4200);
+}, 400);

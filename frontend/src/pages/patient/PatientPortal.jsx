@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User, Activity, Clock, Calendar, LogOut, ShieldCheck, Stethoscope, Building2 } from 'lucide-react';
+import { Clock, Calendar, AlertTriangle, Activity, LogOut, Video, FileText, Smartphone, Building2, User, PhoneCall, CheckCircle2, Stethoscope, ShieldCheck, Heart } from 'lucide-react';
+import AbhaCard from '../../components/teleconsultation/AbhaCard';
+import TelephonyDispatcher from '../../components/teleconsultation/TelephonyDispatcher';
+import AadhaarVerificationModal from '../../components/common/AadhaarVerificationModal';
 import { getPatient, getPatientTimeline } from '../../services/api';
 import { useLang } from '../../context/LanguageContext';
 
@@ -31,8 +34,15 @@ export default function PatientPortal() {
 
   const formatDate = (d) => d ? new Date(d).toLocaleDateString(lang === 'mr' ? 'mr-IN' : 'en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '—';
 
+  const [showAadhaarModal, setShowAadhaarModal] = useState(false);
+
   return (
     <div style={{ minHeight: '100vh', background: 'var(--bg-primary)', padding: '24px 16px 60px' }}>
+      <AadhaarVerificationModal
+        isOpen={showAadhaarModal}
+        onClose={() => setShowAadhaarModal(false)}
+        defaultAadhaar="842870525101"
+      />
       {/* Top Patient Header */}
       <header style={{ maxWidth: '800px', margin: '0 auto 24px', background: '#FFFFFF', border: '1px solid var(--border-card)', borderRadius: 'var(--radius-lg)', padding: '16px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', boxShadow: 'var(--shadow-card)', flexWrap: 'wrap', gap: '12px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -62,33 +72,71 @@ export default function PatientPortal() {
 
       <main style={{ maxWidth: '800px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '20px' }}>
         
-        {/* STRUCTURED PATIENT BIO SUMMARY GRID (Replaces paragraph text line) */}
-        <div className="glass-card" style={{ padding: '18px 24px' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '14px' }}>
-            <div>
-              <div style={{ fontSize: '0.6875rem', fontWeight: 800, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                {t('patient_id')}
+        {/* eSanjeevani OPD Live Video Consultation Card */}
+        <div className="glass-card" style={{ borderLeft: '4px solid var(--brand-purple)', background: 'linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 100%)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px', flexWrap: 'wrap', gap: '10px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <div style={{ width: '38px', height: '38px', borderRadius: '12px', background: 'var(--brand-purple-bg)', color: 'var(--brand-purple)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Video size={20} />
               </div>
-              <div style={{ fontSize: '0.9375rem', fontWeight: 800, color: 'var(--brand-teal)' }}>
-                {patient?.id || 'p1'}
-              </div>
-            </div>
-            <div>
-              <div style={{ fontSize: '0.6875rem', fontWeight: 800, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                {t('age_gender')}
-              </div>
-              <div style={{ fontSize: '0.9375rem', fontWeight: 700, color: 'var(--text-primary)' }}>
-                {patient?.age}y · {patient?.gender}
+              <div>
+                <h2 style={{ fontSize: '1.125rem', fontWeight: 800 }}>eSanjeevani OPD Video Teleconsultation</h2>
+                <div style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)' }}>Direct Doctor Video Call · Free MoHFW Telemedicine Service</div>
               </div>
             </div>
-            <div>
-              <div style={{ fontSize: '0.6875rem', fontWeight: 800, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                {t('location')}
-              </div>
-              <div style={{ fontSize: '0.9375rem', fontWeight: 700, color: 'var(--text-primary)' }}>
-                📍 {patient?.village || 'Wai'}, Satara
-              </div>
+
+            <button
+              className="btn btn-primary"
+              onClick={() => navigate('/teleconsultation', { state: { patient } })}
+            >
+              <Video size={16} /> Launch Live Video Consultation Call
+            </button>
+          </div>
+
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '12px', borderTop: '1px solid var(--border-subtle)', flexWrap: 'wrap', gap: '10px' }}>
+            <div style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)' }}>
+              Target Mobile Contact: <strong style={{ color: 'var(--brand-teal)' }}>+91 8428705251</strong>
             </div>
+            <TelephonyDispatcher phone={patient?.phone || '8428705251'} patientName={patient?.full_name || 'Sunita Jadhav'} />
+          </div>
+        </div>
+
+        {/* ABHA DIGITAL HEALTH CARD DISPLAY */}
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
+          <AbhaCard patient={patient} />
+          <button className="btn btn-secondary btn-sm" onClick={() => setShowAadhaarModal(true)} style={{ background: '#FFFFFF', borderColor: 'var(--brand-teal)', color: 'var(--brand-teal)', fontWeight: 800 }}>
+            <ShieldCheck size={16} /> Verify 12-Digit Aadhaar e-KYC Identity
+          </button>
+        </div>
+
+        {/* STEP 7: BEFORE THE JOURNEY — QUEUE & AVAILABILITY VISIBILITY CARD */}
+        <div style={{ background: '#EFF6FF', border: '1px solid #BFDBFE', borderRadius: '18px', padding: '18px 22px', borderLeft: '5px solid #2563EB' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+            <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#1E40AF', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <Building2 size={16} /> Step 7: Before The Journey — Live Queue & Doctor Visibility
+            </div>
+            <span style={{ background: '#DCFCE7', color: '#166534', padding: '2px 10px', borderRadius: '9999px', fontSize: '0.6875rem', fontWeight: 800 }}>
+              Specialist Available ✓
+            </span>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '12px', marginTop: '10px' }}>
+            <div>
+              <div style={{ fontSize: '0.6875rem', color: '#64748B', fontWeight: 700 }}>Target Facility</div>
+              <div style={{ fontSize: '0.9375rem', fontWeight: 800, color: '#0F172A' }}>District Hospital Satara</div>
+            </div>
+            <div>
+              <div style={{ fontSize: '0.6875rem', color: '#64748B', fontWeight: 700 }}>Current Patients in Queue</div>
+              <div style={{ fontSize: '1rem', fontWeight: 800, color: '#2563EB' }}>4 Patients Ahead</div>
+            </div>
+            <div>
+              <div style={{ fontSize: '0.6875rem', color: '#64748B', fontWeight: 700 }}>Estimated Wait Time</div>
+              <div style={{ fontSize: '1rem', fontWeight: 800, color: '#0D9488' }}>~ 35 Minutes</div>
+            </div>
+          </div>
+
+          <div style={{ fontSize: '0.71875rem', color: '#475569', marginTop: '10px', fontWeight: 600 }}>
+            💡 <strong>CareLink AI Value:</strong> Sunita Patil doesn't travel blindly. Live queue & specialist availability are verified <em>before</em> setting out from Village Wai.
           </div>
         </div>
 

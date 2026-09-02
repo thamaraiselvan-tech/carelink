@@ -15,6 +15,9 @@ import ReferralDetail from './pages/doctor/ReferralDetail';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import KioskPage from './pages/kiosk/KioskPage';
 import PatientPortal from './pages/patient/PatientPortal';
+import TeleconsultationRoom from './pages/teleconsultation/TeleconsultationRoom';
+import VoiceAssistantWidget from './components/common/VoiceAssistantWidget';
+import SihJudgeDemoBar from './components/common/SihJudgeDemoBar';
 import './index.css';
 
 function ProtectedRoute({ children }) {
@@ -65,6 +68,8 @@ function RoleRedirect() {
   if (user.role === 'asha' || user.role === 'anm') return <Navigate to="/asha" replace />;
   if (user.role === 'doctor' || user.role === 'specialist') return <Navigate to="/doctor" replace />;
   if (user.role === 'admin') return <Navigate to="/admin" replace />;
+  if (user.role === 'patient') return <Navigate to="/patient" replace />;
+  if (user.role === 'kiosk') return <Navigate to="/kiosk" replace />;
   return <Navigate to="/asha" replace />;
 }
 
@@ -88,12 +93,18 @@ function App() {
               {/* Dedicated Standalone Minimal Patient OPD Portal Route */}
               <Route path="/patient" element={<PatientPortal />} />
 
+              {/* Dedicated Standalone eSanjeevani Teleconsultation Room Routes */}
+              <Route path="/teleconsultation" element={<TeleconsultationRoom />} />
+              <Route path="/teleconsultation/:sessionId" element={<TeleconsultationRoom />} />
+
               <Route path="/*" element={
                 <ProtectedRoute>
                   <AppLayout />
                 </ProtectedRoute>
               } />
             </Routes>
+            <SihJudgeDemoBar />
+            <VoiceAssistantWidget />
           </div>
         </LanguageProvider>
       </AuthProvider>

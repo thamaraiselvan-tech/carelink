@@ -189,6 +189,14 @@ export const translations = {
     filter_anc: 'ANC',
     filter_chronic: 'Chronic',
     filter_children: 'Children',
+
+    // eSanjeevani Teleconsultation & e-Prescription Copy
+    esanjeevani_hub: 'eSanjeevani Teleconsultation Hub',
+    esanjeevani_opd: 'eSanjeevani OPD Video Teleconsultation',
+    video_consultation: 'Live Video Consultation Call',
+    issue_eprescription: 'Issue CareLink AI e-Prescription',
+    abha_card_title: 'ABHA Digital Health Card',
+    digital_signature: 'Digitally Signed & Verified via eSanjeevani Protocol',
   },
   mr: {
     // General App & Navigation
@@ -380,5 +388,13 @@ export const translations = {
     filter_anc: 'गर्भवती (ANC)',
     filter_chronic: 'दीर्घकालीन आजार',
     filter_children: 'लहान मुले',
+
+    // eSanjeevani Teleconsultation & e-Prescription Copy
+    esanjeevani_hub: 'ई-संजीवनी टेलिकॉन्सल्टेशन हब',
+    esanjeevani_opd: 'ई-संजीवनी ओपीडी व्हिडिओ सल्लामसलत',
+    video_consultation: 'थेट व्हिडिओ सल्लामसलत कॉल',
+    issue_eprescription: 'केरलिंक AI ई-प्रिस्क्रिप्शन जारी करा',
+    abha_card_title: 'आभा डिजिटल हेल्थ कार्ड',
+    digital_signature: 'ई-संजीवनी प्रोटोकॉलद्वारे डिजिटल स्वाक्षरी आणि पडताळणीकृत',
   }
 };

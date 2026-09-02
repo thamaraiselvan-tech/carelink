@@ -60,8 +60,10 @@ export default function LoginPage() {
 
       setTimeout(() => {
         if (selectedRole === 'kiosk') {
+          login({ id: 'demo_kiosk', full_name: 'Sub-centre Wai Kiosk', role: 'kiosk', facility_name: 'Sub-centre Wai' });
           navigate('/kiosk');
         } else if (selectedRole === 'patient') {
+          login({ id: 'demo_patient', full_name: 'Sunita Jadhav', role: 'patient', phone: '8428705251', abha_id: '91-8428-7052-5101' });
           navigate('/patient');
         } else {
           const roleMap = {
@@ -121,7 +123,26 @@ export default function LoginPage() {
           </span>
         </div>
 
-        <div className="lang-toggle">
+        <div className="lang-toggle" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <button
+            onClick={() => navigate('/patient')}
+            style={{
+              background: 'linear-gradient(135deg, #0D9488 0%, #2563EB 100%)',
+              color: '#FFFFFF',
+              border: 'none',
+              borderRadius: '9999px',
+              padding: '6px 14px',
+              fontSize: '0.75rem',
+              fontWeight: 800,
+              cursor: 'pointer',
+              boxShadow: '0 4px 14px rgba(13, 148, 136, 0.4)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px'
+            }}
+          >
+            <Sparkles size={14} /> 🚀 Launch SIH Judge Live Demo (Sunita Patil)
+          </button>
           <button className={lang === 'en' ? 'active' : ''} onClick={() => lang !== 'en' && toggleLang()}>EN</button>
           <button className={lang === 'mr' ? 'active' : ''} onClick={() => lang !== 'mr' && toggleLang()}>मराठी</button>
         </div>
@@ -293,6 +314,9 @@ export default function LoginPage() {
                 {t('quick_demo_access')}
               </div>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', justifyContent: 'center' }}>
+                <button type="button" className="btn btn-ghost btn-sm" onClick={() => { setSelectedRole('patient'); setUsername('9812345001'); }} style={{ fontSize: '0.71875rem', height: '30px', color: '#059669', background: '#ECFDF5' }}>
+                  <User size={13} /> Sunita (Patient)
+                </button>
                 <button type="button" className="btn btn-ghost btn-sm" onClick={() => { setSelectedRole('asha'); setUsername('9812345001'); }} style={{ fontSize: '0.71875rem', height: '30px' }}>
                   <Heart size={13} /> Anita Shinde
                 </button>
@@ -333,7 +357,7 @@ export default function LoginPage() {
                     📞 {t('ivr_banner_title')}
                   </div>
                   <span className="badge badge-teal" style={{ height: '22px', fontSize: '0.6875rem', marginTop: '4px' }}>
-                    1800-CareLink (Toll-Free)
+                    1800-CareLink · +91 8428705251
                   </span>
                 </div>
               </div>
@@ -342,13 +366,23 @@ export default function LoginPage() {
                 {t('ivr_banner_desc')}
               </div>
 
-              <button
-                onClick={startIvrSimulation}
-                className="btn btn-primary btn-block"
-                style={{ height: '42px', fontSize: '0.8125rem', fontWeight: 800, borderRadius: '12px', background: 'linear-gradient(135deg, #0D9488, #2563EB)' }}
-              >
-                {t('simulate_ivr_btn')}
-              </button>
+              <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                <button
+                  onClick={startIvrSimulation}
+                  className="btn btn-primary"
+                  style={{ flex: 1, height: '42px', fontSize: '0.8125rem', fontWeight: 800, borderRadius: '12px', background: 'linear-gradient(135deg, #0D9488, #2563EB)' }}
+                >
+                  {t('simulate_ivr_btn')}
+                </button>
+                <a
+                  href="tel:+918428705251"
+                  className="btn btn-secondary"
+                  style={{ height: '42px', padding: '0 12px', color: '#F8FAFC', background: 'rgba(255, 255, 255, 0.12)', border: '1px solid rgba(255, 255, 255, 0.2)', textDecoration: 'none', display: 'inline-flex', alignItems: 'center' }}
+                  title="Call +91 8428705251"
+                >
+                  📞 Call
+                </a>
+              </div>
             </div>
 
             {/* GRAM PANCHAYAT KIOSK PUBLIC CARD */}
