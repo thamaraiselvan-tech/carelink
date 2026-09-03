@@ -5,6 +5,7 @@ import { getReferrals, updateReferralStatus, getPatientTimeline, createFollowUp 
 import { useAuth } from '../../context/AuthContext';
 import { icd10Codes } from '../../data/icd10';
 import Loader from '../../components/ui/Loader';
+import EPrescriptionModal from '../../components/teleconsultation/EPrescriptionModal';
 
 export default function ReferralDetail() {
   const { id } = useParams();
@@ -15,6 +16,7 @@ export default function ReferralDetail() {
   const [timeline, setTimeline] = useState({ records: [], referrals: [], followups: [] });
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  const [showRxModal, setShowRxModal] = useState(false);
 
   const [icdCode, setIcdCode] = useState('O14.0');
   const [outcome, setOutcome] = useState('');
@@ -156,8 +158,12 @@ export default function ReferralDetail() {
               <Video size={16} /> eSanjeevani Video Call
             </button>
 
+            <button className="btn btn-success" onClick={() => setShowRxModal(true)}>
+              <Stethoscope size={16} /> Generate e-Prescription
+            </button>
+
             {!isConfirmed && (
-              <button className="btn btn-success" onClick={handleAccept} disabled={submitting}>
+              <button className="btn btn-outline" onClick={handleAccept} disabled={submitting}>
                 <Check size={16} /> Accept Referral
               </button>
             )}
@@ -230,6 +236,24 @@ export default function ReferralDetail() {
           </button>
         </form>
       </div>
+
+      {/* Real-time Doctor e-Prescription Modal */}
+      <EPrescriptionModal
+        isOpen={showRxModal}
+        onClose={() => setShowRxModal(false)}
+        patient={{
+          full_name: referral.patient_name,
+          age: referral.patient_age,
+          gender: referral.patient_gender,
+          phone: '9342222160',
+          abha_id: '91-8428-7052-5101'
+        }}
+        referral={{
+          referred_by_name: 'Dr. S Saindhavi, MD (OB-GYN & Maternal-Fetal Specialist)',
+          to_facility_name: referral.to_facility_name || 'District Hospital Satara',
+          reason: outcome || referral.reason
+        }}
+      />
     </div>
   );
 }

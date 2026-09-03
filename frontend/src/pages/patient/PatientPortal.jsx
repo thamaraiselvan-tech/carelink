@@ -4,7 +4,7 @@ import { Clock, Calendar, AlertTriangle, Activity, LogOut, Video, FileText, Smar
 import AbhaCard from '../../components/teleconsultation/AbhaCard';
 import TelephonyDispatcher from '../../components/teleconsultation/TelephonyDispatcher';
 import AadhaarVerificationModal from '../../components/common/AadhaarVerificationModal';
-import { getPatient, getPatientTimeline } from '../../services/api';
+import { getPatient, getPatientTimeline, initiateTelephonyCall } from '../../services/api';
 import { useLang } from '../../context/LanguageContext';
 
 export default function PatientPortal() {
@@ -117,7 +117,8 @@ export default function PatientPortal() {
             <button
               className="btn btn-primary"
               onClick={() => {
-                // Trigger auto dial to doctor phone when switching to video call
+                // Dispatch real-time dual SMS alerts to both Doctor & Frontline Worker
+                initiateTelephonyCall('9677563417', 'Patient Video Call Toggle').catch(() => {});
                 window.location.href = 'tel:+919677563417';
                 setTimeout(() => navigate('/teleconsultation'), 800);
               }}
@@ -127,6 +128,7 @@ export default function PatientPortal() {
             </button>
             <a
               href="tel:+919677563417"
+              onClick={() => initiateTelephonyCall('9677563417', 'Direct Phone Call Toggle').catch(() => {})}
               className="btn btn-ghost"
               style={{ background: 'rgba(255, 255, 255, 0.12)', color: '#FFFFFF', height: '42px', padding: '0 16px', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 700, fontSize: '0.8125rem' }}
               title="Call Doctor Dr. S Saindhavi, MD on +91 9677563417"

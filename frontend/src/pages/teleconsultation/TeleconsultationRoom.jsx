@@ -6,6 +6,7 @@ import { useLang } from '../../context/LanguageContext';
 import EPrescriptionModal from '../../components/teleconsultation/EPrescriptionModal';
 import TelephonyDispatcher from '../../components/teleconsultation/TelephonyDispatcher';
 import RealtimeCallNetwork from '../../components/teleconsultation/RealtimeCallNetwork';
+import { initiateTelephonyCall } from '../../services/api';
 
 export default function TeleconsultationRoom() {
   const { sessionId } = useParams();
@@ -167,6 +168,7 @@ export default function TeleconsultationRoom() {
           {/* Direct Cellular Phone Call Trigger to Doctor +91 9677563417 */}
           <a
             href="tel:+919677563417"
+            onClick={() => initiateTelephonyCall('9677563417', 'Doctor Call Toggle').catch(() => {})}
             className="btn btn-primary btn-sm"
             style={{ background: 'linear-gradient(135deg, #0D9488 0%, #2563EB 100%)', textDecoration: 'none', color: '#FFFFFF', fontWeight: 800, fontSize: '0.75rem', height: '32px', padding: '0 10px' }}
             title="Call Doctor Dr. S Saindhavi, MD on +91 9677563417"
@@ -174,7 +176,15 @@ export default function TeleconsultationRoom() {
             <PhoneCall size={13} /> Call Doctor
           </a>
 
-          <button className="btn btn-secondary btn-sm" onClick={triggerIncomingCallSimulation} style={{ height: '32px', fontSize: '0.75rem', padding: '0 8px' }} title={`Ring patient ${patientData.phone}`}>
+          <button
+            className="btn btn-secondary btn-sm"
+            onClick={() => {
+              initiateTelephonyCall(patientData.phone, 'Ring Patient Toggle').catch(() => {});
+              triggerIncomingCallSimulation();
+            }}
+            style={{ height: '32px', fontSize: '0.75rem', padding: '0 8px' }}
+            title={`Ring patient ${patientData.phone}`}
+          >
             <PhoneCall size={13} style={{ color: '#10B981' }} /> Ring Patient
           </button>
           

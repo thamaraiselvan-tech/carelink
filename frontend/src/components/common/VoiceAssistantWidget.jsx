@@ -300,9 +300,43 @@ export default function VoiceAssistantWidget() {
       setAssistantResponse(reply);
       speakText(reply);
     }
+    // 17. QUESTIONS ABOUT DOCTOR
+    else if (cmd.includes('who is doctor') || cmd.includes('doctor name') || cmd.includes('डॉक्टर कोण') || cmd.includes('डॉक्टरांचे नाव')) {
+      const reply = lang === 'mr' 
+        ? 'विशेषज्ञ डॉक्टर: डॉ. एस सेंधवी, MD (स्त्रीरोग व प्रसूती तज्ज्ञ), जिल्हा रुग्णालय सातारा.' 
+        : 'Specialist Physician: Dr. S Saindhavi, MD (OB-GYN & Maternal-Fetal Specialist) at District Hospital Satara.';
+      setAssistantResponse(reply);
+      speakText(reply);
+    }
+    // 18. QUESTIONS ABOUT FRONTLINE WORKER / ASHA
+    else if (cmd.includes('who is asha') || cmd.includes('who is frontline') || cmd.includes('asha name') || cmd.includes('आशा कोण') || cmd.includes('आशा नाव')) {
+      const reply = lang === 'mr' 
+        ? 'फ्रंटलाईन आशा अधिकारी: पूजा जी, उपकेंद्र वाई, सातारा.' 
+        : 'Frontline Field Officer: Poojha G, Sub-centre Wai, Satara.';
+      setAssistantResponse(reply);
+      speakText(reply);
+    }
+    // 19. QUESTIONS ABOUT PATIENT VITALS / BP
+    else if (cmd.includes('patient bp') || cmd.includes('blood pressure') || cmd.includes('vitals info') || cmd.includes('बीपी किती') || cmd.includes('व्हिटल्स')) {
+      const reply = lang === 'mr' 
+        ? 'रुग्ण सुनीता जाधव: बीपी १५२/९६ mmHg, नाडी ८४, तिसरी तिमाही - उच्च धोका!' 
+        : 'Patient Sunita Jadhav: BP 152/96 mmHg, Pulse 84 bpm, 3rd Trimester ANC — Urgent High Risk!';
+      setAssistantResponse(reply);
+      speakText(reply);
+    }
+    // 20. QUESTIONS ABOUT CARELINK PLATFORM
+    else if (cmd.includes('what is carelink') || cmd.includes('about carelink') || cmd.includes('carelink info') || cmd.includes('केरलिंक काय आहे')) {
+      const reply = lang === 'mr' 
+        ? 'केरलिंक एआय ही ग्रामीण आरोग्य सुविधांना तज्ज्ञ डॉक्टरांशी जोडणारी एक प्रगत डिजिटल सिस्टीम आहे.' 
+        : 'CareLink AI is a modern healthcare coordination platform connecting rural hamlets to specialist hospitals.';
+      setAssistantResponse(reply);
+      speakText(reply);
+    }
     // DEFAULT GENERIC ACTION WITH FEEDBACK
     else {
-      const reply = `Executing CareLink action for command: "${commandText}"`;
+      const reply = lang === 'mr'
+        ? `कमांड प्राप्त झाली: "${commandText}". क्रिया पूर्ण झाली आहे.`
+        : `CareLink Voice AI executing action for command: "${commandText}"`;
       setAssistantResponse(reply);
       speakText(reply);
     }
