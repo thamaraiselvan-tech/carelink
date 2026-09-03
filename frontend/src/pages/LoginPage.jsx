@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Heart, Stethoscope, LayoutDashboard, Store, User, Lock, Eye, EyeOff, Activity, ShieldCheck, CheckCircle2, PhoneCall, Volume2, X, Landmark, Database, WifiOff } from 'lucide-react';
+import { Heart, Stethoscope, LayoutDashboard, Store, User, Lock, Eye, EyeOff, Activity, ShieldCheck, CheckCircle2, PhoneCall, Volume2, X, Landmark, Database, WifiOff, Sparkles } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useLang } from '../context/LanguageContext';
 import { getWorkers } from '../services/api';
@@ -314,7 +314,7 @@ export default function LoginPage() {
                 {t('quick_demo_access')}
               </div>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', justifyContent: 'center' }}>
-                <button type="button" className="btn btn-ghost btn-sm" onClick={() => { setSelectedRole('patient'); setUsername('9812345001'); }} style={{ fontSize: '0.71875rem', height: '30px', color: '#059669', background: '#ECFDF5' }}>
+                <button type="button" className="btn btn-ghost btn-sm" onClick={() => { setSelectedRole('patient'); setUsername('8428705251'); }} style={{ fontSize: '0.71875rem', height: '30px', color: '#059669', background: '#ECFDF5' }}>
                   <User size={13} /> Sunita (Patient)
                 </button>
                 <button type="button" className="btn btn-ghost btn-sm" onClick={() => { setSelectedRole('asha'); setUsername('9812345001'); }} style={{ fontSize: '0.71875rem', height: '30px' }}>

@@ -115,8 +115,8 @@ export default function PatientPortal() {
             <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#1E40AF', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'flex', alignItems: 'center', gap: '6px' }}>
               <Building2 size={16} /> Step 7: Before The Journey — Live Queue & Doctor Visibility
             </div>
-            <span style={{ background: '#DCFCE7', color: '#166534', padding: '2px 10px', borderRadius: '9999px', fontSize: '0.6875rem', fontWeight: 800 }}>
-              Specialist Available ✓
+            <span style={{ background: '#DCFCE7', color: '#166534', padding: '3px 12px', borderRadius: '9999px', fontSize: '0.6875rem', fontWeight: 800 }}>
+              Specialist Available ✓ (Last verified 4 min ago)
             </span>
           </div>
 

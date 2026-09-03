@@ -70,24 +70,24 @@ export default function SihJudgeDemoBar() {
         onClick={() => setIsMinimized(false)}
         style={{
           position: 'fixed',
-          top: '12px',
-          right: '12px',
+          bottom: '24px',
+          right: '24px',
           zIndex: 999999,
-          background: '#0D9488',
+          background: 'linear-gradient(135deg, #0D9488 0%, #2563EB 100%)',
           color: '#FFFFFF',
-          border: 'none',
+          border: '2px solid #FFFFFF',
           borderRadius: '9999px',
-          padding: '8px 16px',
-          fontSize: '0.75rem',
+          padding: '10px 18px',
+          fontSize: '0.78125rem',
           fontWeight: 800,
-          boxShadow: '0 8px 24px rgba(13, 148, 136, 0.4)',
+          boxShadow: '0 12px 30px rgba(13, 148, 136, 0.4)',
           cursor: 'pointer',
           display: 'flex',
           alignItems: 'center',
           gap: '6px'
         }}
       >
-        <Sparkles size={14} /> SIH Live Demo Mode (Step {activeStep}/16)
+        <Sparkles size={16} /> SIH Live Demo Mode (Step {activeStep}/16)
       </button>
     );
   }
