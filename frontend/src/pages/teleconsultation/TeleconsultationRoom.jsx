@@ -19,6 +19,7 @@ export default function TeleconsultationRoom() {
   const [stream, setStream] = useState(null);
   const [micActive, setMicActive] = useState(true);
   const [videoActive, setVideoActive] = useState(true);
+  const [isCameraMirrored, setIsCameraMirrored] = useState(true); // Default true for natural un-inverted self view
   const [mainView, setMainView] = useState('doctor'); // 'doctor' | 'local'
   const [showChat, setShowChat] = useState(false);
   const [showVitals, setShowVitals] = useState(true);
@@ -242,7 +243,13 @@ export default function TeleconsultationRoom() {
                     autoPlay
                     playsInline
                     muted
-                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                      transform: isCameraMirrored ? 'scaleX(-1)' : 'none',
+                      transition: 'transform 0.3s ease'
+                    }}
                   />
                 ) : (
                   <div style={{ textAlign: 'center', color: '#94A3B8' }}>
@@ -276,7 +283,13 @@ export default function TeleconsultationRoom() {
                   autoPlay
                   playsInline
                   muted
-                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    transform: isCameraMirrored ? 'scaleX(-1)' : 'none',
+                    transition: 'transform 0.3s ease'
+                  }}
                 />
               ) : (
                 <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: '#94A3B8', background: '#0F172A' }}>
@@ -413,6 +426,27 @@ export default function TeleconsultationRoom() {
               title={videoActive ? 'Turn Off Video Camera' : 'Turn On Video Camera'}
             >
               {videoActive ? <Video size={22} /> : <VideoOff size={22} />}
+            </button>
+
+            {/* Flip / Mirror Camera (Uninvert) Button */}
+            <button
+              onClick={() => setIsCameraMirrored(!isCameraMirrored)}
+              style={{
+                width: '48px',
+                height: '48px',
+                borderRadius: '50%',
+                background: isCameraMirrored ? '#0D9488' : 'rgba(255, 255, 255, 0.12)',
+                color: '#FFFFFF',
+                border: 'none',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                transition: 'all 0.2s ease'
+              }}
+              title={isCameraMirrored ? 'Camera Mirrored (Click to Un-invert / Flip)' : 'Camera Normal (Click to Mirror)'}
+            >
+              <RefreshCw size={20} />
             </button>
 
             {/* Chat Toggle Button */}
