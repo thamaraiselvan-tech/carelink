@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Mic, MicOff, Volume2, Sparkles, X, CheckCircle2, Move } from 'lucide-react';
+import { Mic, MicOff, Volume2, Sparkles, X, CheckCircle2, Move, FileText, Download } from 'lucide-react';
 import { useLang } from '../../context/LanguageContext';
+import EPrescriptionModal from '../teleconsultation/EPrescriptionModal';
 
 export default function VoiceAssistantWidget() {
   const navigate = useNavigate();
@@ -10,6 +11,7 @@ export default function VoiceAssistantWidget() {
   const [transcript, setTranscript] = useState('');
   const [assistantResponse, setAssistantResponse] = useState('');
   const [showWidget, setShowWidget] = useState(false);
+  const [showRxModal, setShowRxModal] = useState(false);
   const [recognition, setRecognition] = useState(null);
 
   // Draggable Position State (default bottom area clearing mobile CTAs)
@@ -134,62 +136,161 @@ export default function VoiceAssistantWidget() {
     }
   };
 
-  const processVoiceCommand = (commandText) => {
-    const cmd = commandText.toLowerCase();
+  const triggerPDFDownload = () => {
+    setShowRxModal(true);
+    setTimeout(() => {
+      const printElement = document.getElementById('printable-prescription');
+      if (printElement) {
+        const printWindow = window.open('', '_blank', 'width=900,height=1200');
+        if (printWindow) {
+          printWindow.document.write(`
+            <!DOCTYPE html>
+            <html>
+              <head>
+                <title>CareLink AI — e-Prescription (Sunita Jadhav)</title>
+                <style>
+                  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Noto+Sans+Devanagari:wght@400;600;700;800&display=swap');
+                  * { box-sizing: border-box; }
+                  body { font-family: 'Inter', 'Noto Sans Devanagari', sans-serif; margin: 0; padding: 24px 32px; color: #0F172A; background: #FFFFFF; }
+                  @page { size: A4 portrait; margin: 8mm 10mm; }
+                  table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+                  th, td { text-align: left; vertical-align: top; padding: 10px 12px !important; }
+                </style>
+              </head>
+              <body>
+                ${printElement.innerHTML}
+                <script>
+                  window.onload = function() {
+                    setTimeout(function() { window.print(); }, 300);
+                  };
+                </script>
+              </body>
+            </html>
+          `);
+          printWindow.document.close();
+        } else {
+          window.print();
+        }
+      }
+    }, 600);
+  };
 
-    // 1. TELECONSULTATION / VIDEO CALL
-    if (cmd.includes('video') || cmd.includes('call') || cmd.includes('कॉल') || cmd.includes('teleconsultation') || cmd.includes('eSanjeevani')) {
+  const processVoiceCommand = (commandText) => {
+    const cmd = commandText.toLowerCase().trim();
+
+    // 1. VOICE-ACTIVATED REAL-TIME PRESCRIPTION GENERATION
+    if (cmd.includes('generate prescription') || cmd.includes('create prescription') || cmd.includes('write prescription') || cmd.includes('issue prescription') || cmd.includes('dawa') || cmd.includes('औषध') || cmd.includes('प्रिस्क्रिप्शन') || (cmd.includes('prescription') && !cmd.includes('download'))) {
+      const reply = lang === 'mr' 
+        ? 'सुनीता जाधव यांच्यासाठी रिअल-टाईम ई-प्रिस्क्रिप्शन (डॉ. एस सेंधवी, MD) तयार केले आहे.' 
+        : 'Real-time Dual Bilingual e-Prescription generated for Sunita Jadhav by Dr. S Saindhavi, MD.';
+      setAssistantResponse(reply);
+      speakText(reply);
+      setShowRxModal(true);
+    }
+    // 2. VOICE-ACTIVATED DOWNLOADABLE PRESCRIPTION PDF OPTION
+    else if (cmd.includes('download') || cmd.includes('download pdf') || cmd.includes('download prescription') || cmd.includes('save pdf') || cmd.includes('save prescription') || cmd.includes('डाउनलोड') || cmd.includes('पीडीएफ')) {
+      const reply = lang === 'mr' 
+        ? 'केरलिंक एआय ए४ पीडीएफ ई-प्रिस्क्रिप्शन डाउनलोड केले जात आहे.' 
+        : 'Downloading CareLink AI Dual Bilingual A4 PDF e-Prescription for Sunita Jadhav...';
+      setAssistantResponse(reply);
+      speakText(reply);
+      triggerPDFDownload();
+    }
+    // 3. DIGITAL TRIAGE & VITAL SAFETY ASSESSMENT
+    else if (cmd.includes('triage') || cmd.includes('vitals') || cmd.includes('risk') || cmd.includes('तपासणी') || cmd.includes('assessment')) {
+      const reply = lang === 'mr' ? 'सुनीता जाधव यांच्या डिजिटल ट्रायज आणि बीपी व्हिटल्स तपासणी कडे जात आहे.' : 'Opening Digital Triage & ANC Safety Assessment for Sunita Jadhav.';
+      setAssistantResponse(reply);
+      speakText(reply);
+      setTimeout(() => navigate('/asha/triage/p1'), 800);
+    }
+    // 4. CREATE DIGITAL REFERRAL
+    else if (cmd.includes('create referral') || cmd.includes('refer patient') || cmd.includes('referral form') || cmd.includes('संदर्भ') || cmd.includes('नवीन संदर्भ')) {
+      const reply = lang === 'mr' ? 'नवीन डिजिटल संदर्भ (Referral CL-REF-00124) तयार करत आहे.' : 'Opening Digital Referral Creation Form CL-REF-00124.';
+      setAssistantResponse(reply);
+      speakText(reply);
+      setTimeout(() => navigate('/asha/referral/create/p1'), 800);
+    }
+    // 5. REFERRAL TRACKER & MISSED CARE ALERTS
+    else if (cmd.includes('referral tracker') || cmd.includes('tracker') || cmd.includes('overdue') || cmd.includes('missed') || cmd.includes('संदर्भांची यादी')) {
+      const reply = lang === 'mr' ? 'डिजिटल संदर्भ ट्रॅकर आणि प्रलंबित केअर अलर्ट उघडत आहे.' : 'Opening Digital Referral Tracker & Overdue Care Alerts.';
+      setAssistantResponse(reply);
+      speakText(reply);
+      setTimeout(() => navigate('/asha/referrals'), 800);
+    }
+    // 6. TELECONSULTATION / VIDEO CALL
+    else if (cmd.includes('video') || cmd.includes('video call') || cmd.includes('कॉल') || cmd.includes('teleconsultation') || cmd.includes('esanjeevani')) {
       const reply = lang === 'mr' ? 'ई-संजीवनी व्हिडिओ कॉल कक्ष उघडत आहे.' : 'Launching eSanjeevani Teleconsultation Room now.';
       setAssistantResponse(reply);
       speakText(reply);
       setTimeout(() => navigate('/teleconsultation'), 800);
     }
-    // 2. PATIENT PORTAL
-    else if (cmd.includes('patient') || cmd.includes('पेशंट') || cmd.includes('portal') || cmd.includes('abha')) {
-      const reply = lang === 'mr' ? 'केरलिंक पेशंट ओपीडी पोर्टल उघडत आहे.' : 'Opening CareLink AI Patient OPD Portal now.';
+    // 7. CALL DOCTOR CELLULAR PHONE (+91 9677563417)
+    else if (cmd.includes('call doctor') || cmd.includes('doctor phone') || cmd.includes('doctor mobile') || cmd.includes('डॉक्टर कॉल')) {
+      const reply = lang === 'mr' ? 'डॉ. एस सेंधवी यांना +91 9677563417 वर डायरेक्ट कॉल करत आहे.' : 'Dialing Specialist Physician Dr. S Saindhavi, MD on +91 9677563417.';
+      setAssistantResponse(reply);
+      speakText(reply);
+      window.location.href = 'tel:+919677563417';
+    }
+    // 8. CALL FRONTLINE WORKER CELLULAR PHONE (+91 9342222160)
+    else if (cmd.includes('call asha') || cmd.includes('call frontline') || cmd.includes('poojha') || cmd.includes('आशा कॉल')) {
+      const reply = lang === 'mr' ? 'आशा अधिकारी पूजा जी यांना +91 9342222160 वर कॉल करत आहे.' : 'Dialing Frontline Field Officer Poojha G on +91 9342222160.';
+      setAssistantResponse(reply);
+      speakText(reply);
+      window.location.href = 'tel:+919342222160';
+    }
+    // 9. PATIENT PORTAL & ABHA CARD
+    else if (cmd.includes('patient') || cmd.includes('पेशंट') || cmd.includes('portal') || cmd.includes('abha') || cmd.includes('timeline')) {
+      const reply = lang === 'mr' ? 'केरलिंक पेशंट ओपीडी पोर्टल आणि आभा कार्ड उघडत आहे.' : 'Opening CareLink AI Patient OPD Portal & ABHA Profile.';
       setAssistantResponse(reply);
       speakText(reply);
       setTimeout(() => navigate('/patient'), 800);
     }
-    // 3. ASHA SUITE & TRIAGE
-    else if (cmd.includes('asha') || cmd.includes('triage') || cmd.includes('आशा') || cmd.includes('vitals')) {
+    // 10. PATIENT PROFILE DETAILS
+    else if (cmd.includes('profile') || cmd.includes('sunita') || cmd.includes('सुनीता')) {
+      const reply = lang === 'mr' ? 'सुनीता जाधव यांची पेशंट प्रोफाइल उघडत आहे.' : 'Opening Sunita Jadhav Detailed Patient Profile.';
+      setAssistantResponse(reply);
+      speakText(reply);
+      setTimeout(() => navigate('/asha/patient/p1'), 800);
+    }
+    // 11. ASHA DASHBOARD / HOME
+    else if (cmd.includes('asha') || cmd.includes(' आशा') || cmd.includes('home')) {
       const reply = lang === 'mr' ? 'आशा केअर कोऑर्डिनेटर डॅशबोर्ड उघडत आहे.' : 'Opening ASHA Care Coordinator Suite.';
       setAssistantResponse(reply);
       speakText(reply);
       setTimeout(() => navigate('/asha'), 800);
     }
-    // 4. DOCTOR DASHBOARD
+    // 12. DOCTOR DASHBOARD
     else if (cmd.includes('doctor') || cmd.includes('डॉक्टर') || cmd.includes('worklist')) {
       const reply = lang === 'mr' ? 'डॉक्टर तज्ज्ञ कार्यसूची उघडत आहे.' : 'Navigating to Doctor Specialist Worklist.';
       setAssistantResponse(reply);
       speakText(reply);
       setTimeout(() => navigate('/doctor'), 800);
     }
-    // 5. ADMIN ANALYTICAL DASHBOARD
+    // 13. ADMIN ANALYTICAL DASHBOARD
     else if (cmd.includes('admin') || cmd.includes('analytics') || cmd.includes('एडमिन') || cmd.includes('dashboard')) {
       const reply = lang === 'mr' ? 'सार्वजनिक आरोग्य डॅशबोर्ड उघडत आहे.' : 'Opening Public Health Executive Analytics Dashboard.';
       setAssistantResponse(reply);
       speakText(reply);
       setTimeout(() => navigate('/admin'), 800);
     }
-    // 6. VILLAGE KIOSK
+    // 14. VILLAGE KIOSK
     else if (cmd.includes('kiosk') || cmd.includes('किओस्क')) {
       const reply = lang === 'mr' ? 'ग्राम विकास किओस्क पोर्टल उघडत आहे.' : 'Opening Village Health Kiosk Portal.';
       setAssistantResponse(reply);
       speakText(reply);
       setTimeout(() => navigate('/kiosk'), 800);
     }
-    // 7. LOGIN GATEWAY
+    // 15. LOGIN GATEWAY / LOGOUT
     else if (cmd.includes('login') || cmd.includes('लॉगिन') || cmd.includes('logout')) {
       const reply = lang === 'mr' ? 'लॉगिन गेटवे कडे जात आहे.' : 'Returning to Login Gateway.';
       setAssistantResponse(reply);
       speakText(reply);
       setTimeout(() => navigate('/login'), 800);
     }
-    // 8. LANGUAGE SWITCHING
+    // 16. LANGUAGE SWITCHING
     else if (cmd.includes('marathi') || cmd.includes('मराठी')) {
       setLang('mr');
-      const reply = 'भाषा मराठी केली आहे.';
+      const reply = 'भाषा यशस्वीपणे मराठी केली आहे.';
       setAssistantResponse(reply);
       speakText(reply);
     }
@@ -199,16 +300,9 @@ export default function VoiceAssistantWidget() {
       setAssistantResponse(reply);
       speakText(reply);
     }
-    // 9. TELEPHONY PHONE CALL ALERT
-    else if (cmd.includes('phone') || cmd.includes('mobile') || cmd.includes('सेल')) {
-      const reply = lang === 'mr' ? '+91 9677563417 वर टेलिफोनी कॉल ट्रिगर केला आहे.' : 'Triggered telephony phone call alert to +91 9677563417.';
-      setAssistantResponse(reply);
-      speakText(reply);
-      window.location.href = 'tel:+919677563417';
-    }
-    // DEFAULT GENERIC ACTION
+    // DEFAULT GENERIC ACTION WITH FEEDBACK
     else {
-      const reply = `Received command: "${commandText}". Automated action executed successfully.`;
+      const reply = `Executing CareLink action for command: "${commandText}"`;
       setAssistantResponse(reply);
       speakText(reply);
     }
@@ -288,6 +382,12 @@ export default function VoiceAssistantWidget() {
 
           <div style={{ fontSize: '11px', color: '#94A3B8', fontWeight: 700, marginBottom: '8px' }}>Direct Voice Shortcuts:</div>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+            <button className="btn btn-ghost btn-sm" style={{ background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)', color: '#FFFFFF', fontSize: '11px', fontWeight: 800 }} onClick={() => processVoiceCommand('generate prescription')}>
+              📄 Generate Prescription
+            </button>
+            <button className="btn btn-ghost btn-sm" style={{ background: 'linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%)', color: '#FFFFFF', fontSize: '11px', fontWeight: 800 }} onClick={() => processVoiceCommand('download pdf')}>
+              📥 Download PDF
+            </button>
             <button className="btn btn-ghost btn-sm" style={{ background: 'rgba(255, 255, 255, 0.1)', color: '#FFFFFF', fontSize: '11px' }} onClick={() => processVoiceCommand('start video call')}>
               📹 Video Call
             </button>
@@ -300,15 +400,31 @@ export default function VoiceAssistantWidget() {
             <button className="btn btn-ghost btn-sm" style={{ background: 'rgba(255, 255, 255, 0.1)', color: '#FFFFFF', fontSize: '11px' }} onClick={() => processVoiceCommand('doctor dashboard')}>
               🩺 Doctor Suite
             </button>
-            <button className="btn btn-ghost btn-sm" style={{ background: 'rgba(255, 255, 255, 0.1)', color: '#FFFFFF', fontSize: '11px' }} onClick={() => processVoiceCommand('admin dashboard')}>
-              📊 Admin Suite
-            </button>
             <button className="btn btn-ghost btn-sm" style={{ background: 'rgba(13, 148, 136, 0.3)', color: '#38BDF8', fontSize: '11px' }} onClick={() => processVoiceCommand(lang === 'mr' ? 'english' : 'marathi')}>
               🌐 {lang === 'mr' ? 'Switch to EN' : 'मराठी करा'}
             </button>
           </div>
         </div>
       )}
+
+      {/* Voice-Activated Real-Time e-Prescription Modal */}
+      <EPrescriptionModal
+        isOpen={showRxModal}
+        onClose={() => setShowRxModal(false)}
+        patient={{
+          full_name: 'Sunita Jadhav',
+          full_name_mr: 'सुनीता जाधव',
+          age: 26,
+          gender: 'Female',
+          phone: '9342222160',
+          abha_id: '91-8428-7052-5101'
+        }}
+        referral={{
+          referred_by_name: 'Dr. S Saindhavi, MD (OB-GYN & Maternal-Fetal Specialist)',
+          to_facility_name: 'District Hospital Satara',
+          reason: 'O14.0 — Mild Pre-eclampsia evaluation & BP monitoring'
+        }}
+      />
     </div>
   );
 }
