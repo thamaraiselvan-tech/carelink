@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Play, RotateCcw, ChevronRight, ChevronLeft, BookOpen, Layers, X, Sparkles, ShieldCheck, Activity } from 'lucide-react';
+import { Play, RotateCcw, ChevronRight, ChevronLeft, BookOpen, Layers, X, Sparkles, ShieldCheck, Activity, Power } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useLang } from '../../context/LanguageContext';
 
@@ -10,11 +10,29 @@ export default function SihJudgeDemoBar() {
   const { login } = useAuth();
   const { lang, setLang } = useLang();
 
+  // Separate ON / OFF Feature Toggle (persisted in localStorage, default OFF unless explicitly enabled)
+  const [demoModeEnabled, setDemoModeEnabled] = useState(() => {
+    return typeof window !== 'undefined' && localStorage.getItem('carelink_sih_demo_enabled') === 'true';
+  });
+
   const [activeStep, setActiveStep] = useState(1);
   const [showNotes, setShowNotes] = useState(false);
-  const [activeScenario, setActiveScenario] = useState('maternal'); // 'maternal' | 'fever' | 'reroute'
-  // Default to minimized on mobile screens (<768px) to prevent layout blocking
+  const [activeScenario, setActiveScenario] = useState('maternal');
   const [isMinimized, setIsMinimized] = useState(() => typeof window !== 'undefined' && window.innerWidth < 768);
+
+  useEffect(() => {
+    const handleToggleEvent = (e) => {
+      const isEnabled = e.detail?.enabled ?? (localStorage.getItem('carelink_sih_demo_enabled') === 'true');
+      setDemoModeEnabled(isEnabled);
+    };
+
+    window.addEventListener('carelink_sih_demo_toggle', handleToggleEvent);
+    return () => window.removeEventListener('carelink_sih_demo_toggle', handleToggleEvent);
+  }, []);
+
+  if (!demoModeEnabled) {
+    return null; // Completely unmounted when SIH Demo Mode is turned OFF
+  }
 
   const steps = [
     { num: 1, title: 'Village Entry', route: '/login', role: null, notes: 'Imagine I am Sunita, a patient from a rural village in Maharashtra. This is my first time using CareLink AI. I choose Marathi language.' },
@@ -172,11 +190,15 @@ export default function SihJudgeDemoBar() {
         </button>
 
         <button
-          onClick={() => setIsMinimized(true)}
-          style={{ background: 'transparent', color: '#94A3B8', border: 'none', cursor: 'pointer', padding: '4px' }}
-          title="Minimize Stepper Bar"
+          onClick={() => {
+            localStorage.setItem('carelink_sih_demo_enabled', 'false');
+            setDemoModeEnabled(false);
+            window.dispatchEvent(new CustomEvent('carelink_sih_demo_toggle', { detail: { enabled: false } }));
+          }}
+          style={{ background: 'rgba(239, 68, 68, 0.25)', color: '#F87171', border: '1px solid rgba(239, 68, 68, 0.4)', borderRadius: '6px', cursor: 'pointer', padding: '4px 8px', fontSize: '0.71875rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '4px' }}
+          title="Turn OFF SIH Demo Mode"
         >
-          <X size={16} />
+          <Power size={13} /> Turn OFF Demo
         </button>
       </div>
 

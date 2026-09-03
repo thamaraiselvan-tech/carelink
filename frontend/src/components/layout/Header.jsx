@@ -36,7 +36,29 @@ export default function Header() {
         </div>
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+        <button
+          onClick={() => {
+            const current = localStorage.getItem('carelink_sih_demo_enabled') === 'true';
+            const next = !current;
+            localStorage.setItem('carelink_sih_demo_enabled', String(next));
+            window.dispatchEvent(new CustomEvent('carelink_sih_demo_toggle', { detail: { enabled: next } }));
+          }}
+          style={{
+            background: localStorage.getItem('carelink_sih_demo_enabled') === 'true' ? 'linear-gradient(135deg, #0D9488, #2563EB)' : 'var(--bg-tertiary)',
+            color: localStorage.getItem('carelink_sih_demo_enabled') === 'true' ? '#FFFFFF' : 'var(--text-secondary)',
+            border: '1px solid var(--border-subtle)',
+            borderRadius: '6px',
+            padding: '4px 10px',
+            fontSize: '0.71875rem',
+            fontWeight: 800,
+            cursor: 'pointer'
+          }}
+          title="Toggle SIH Demo Stepper Bar ON/OFF"
+        >
+          SIH Demo: {localStorage.getItem('carelink_sih_demo_enabled') === 'true' ? 'ON' : 'OFF'}
+        </button>
+
         <div className="lang-toggle">
           <button className={lang === 'en' ? 'active' : ''} onClick={() => lang !== 'en' && toggleLang()}>EN</button>
           <button className={lang === 'mr' ? 'active' : ''} onClick={() => lang !== 'mr' && toggleLang()}>मराठी</button>

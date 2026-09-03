@@ -123,26 +123,36 @@ export default function LoginPage() {
           </span>
         </div>
 
-        <div className="lang-toggle" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <div className="lang-toggle" style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+          {/* Separate ON / OFF SIH Demo Stepper Feature Toggle Switch */}
           <button
-            onClick={() => navigate('/patient')}
+            onClick={() => {
+              const current = localStorage.getItem('carelink_sih_demo_enabled') === 'true';
+              const next = !current;
+              localStorage.setItem('carelink_sih_demo_enabled', String(next));
+              window.dispatchEvent(new CustomEvent('carelink_sih_demo_toggle', { detail: { enabled: next } }));
+            }}
             style={{
-              background: 'linear-gradient(135deg, #0D9488 0%, #2563EB 100%)',
-              color: '#FFFFFF',
-              border: 'none',
+              background: localStorage.getItem('carelink_sih_demo_enabled') === 'true'
+                ? 'linear-gradient(135deg, #0D9488 0%, #2563EB 100%)'
+                : 'rgba(255, 255, 255, 0.8)',
+              color: localStorage.getItem('carelink_sih_demo_enabled') === 'true' ? '#FFFFFF' : 'var(--text-secondary)',
+              border: '1px solid var(--border-card)',
               borderRadius: '9999px',
               padding: '6px 14px',
               fontSize: '0.75rem',
               fontWeight: 800,
               cursor: 'pointer',
-              boxShadow: '0 4px 14px rgba(13, 148, 136, 0.4)',
+              boxShadow: 'var(--shadow-card)',
               display: 'flex',
               alignItems: 'center',
               gap: '6px'
             }}
+            title="Toggle SIH Demo Stepper Navigation Bar ON/OFF"
           >
-            <Sparkles size={14} /> 🚀 Launch SIH Judge Live Demo (Sunita Patil)
+            <Sparkles size={14} /> SIH Demo Mode: <strong>{localStorage.getItem('carelink_sih_demo_enabled') === 'true' ? 'ON' : 'OFF'}</strong>
           </button>
+
           <button className={lang === 'en' ? 'active' : ''} onClick={() => lang !== 'en' && toggleLang()}>EN</button>
           <button className={lang === 'mr' ? 'active' : ''} onClick={() => lang !== 'mr' && toggleLang()}>मराठी</button>
         </div>
