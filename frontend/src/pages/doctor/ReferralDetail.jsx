@@ -152,7 +152,7 @@ export default function ReferralDetail() {
           </div>
 
           <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-            <button className="btn btn-primary" onClick={() => navigate('/teleconsultation', { state: { patient: { full_name: referral.patient_name, age: referral.patient_age, gender: referral.patient_gender, phone: '8428705251', abha_id: '91-8428-7052-5101' }, referral } })}>
+            <button className="btn btn-primary" onClick={() => navigate('/teleconsultation', { state: { patient: { full_name: referral.patient_name, age: referral.patient_age, gender: referral.patient_gender, phone: '9342222160', abha_id: '91-8428-7052-5101' }, referral } })}>
               <Video size={16} /> eSanjeevani Video Call
             </button>
 

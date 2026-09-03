@@ -121,7 +121,7 @@ export default function TelephonyDispatcher({ phone = '9342222160', patientName 
 
                 <div style={{ display: 'flex', gap: '10px' }}>
                   <button className="btn btn-primary btn-block" onClick={handleSimulatedDispatch} disabled={dispatchStatus === 'sending'}>
-                    {dispatchStatus === 'sending' ? 'Dispatching SMS...' : 'Dispatch SMS Alert to 8428705251'}
+                    {dispatchStatus === 'sending' ? 'Dispatching SMS...' : `Dispatch SMS Alert to ${phone}`}
                   </button>
                 </div>
               </div>
@@ -155,7 +155,7 @@ export default function TelephonyDispatcher({ phone = '9342222160', patientName 
                 )}
 
                 <button className="btn btn-primary btn-block mt-lg" onClick={handleSimulatedDispatch} disabled={dispatchStatus === 'sending'}>
-                  {dispatchStatus === 'sending' ? 'Dialing Target Phone...' : 'Initiate Voice Call to 8428705251'}
+                  {dispatchStatus === 'sending' ? 'Dialing Target Phone...' : `Initiate Voice Call to ${phone}`}
                 </button>
               </div>
             )}

@@ -44,31 +44,94 @@ export default function PatientPortal() {
         defaultAadhaar="842870525101"
       />
       {/* Top Patient Header */}
-      <header style={{ maxWidth: '800px', margin: '0 auto 24px', background: '#FFFFFF', border: '1px solid var(--border-card)', borderRadius: 'var(--radius-lg)', padding: '16px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', boxShadow: 'var(--shadow-card)', flexWrap: 'wrap', gap: '12px' }}>
+      <header style={{ maxWidth: '800px', margin: '0 auto 16px', background: '#FFFFFF', border: '1px solid var(--border-card)', borderRadius: 'var(--radius-lg)', padding: '16px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', boxShadow: 'var(--shadow-card)', flexWrap: 'wrap', gap: '12px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <div style={{ width: 44, height: 44, borderRadius: 'var(--radius-md)', background: 'var(--gradient-brand)', color: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '1.25rem' }}>
             {patient?.full_name?.charAt(0) || 'S'}
           </div>
           <div>
-            <h1 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-primary)' }}>
+            <h1 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>
               {lang === 'mr' && patient?.full_name_mr ? patient.full_name_mr : patient?.full_name || 'Sunita Jadhav'}
             </h1>
             <div style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)', fontWeight: 600 }}>
-              {t('opd_portal_title')}
+              CareLink Patient ID: <strong style={{ color: 'var(--brand-teal)' }}>CL-MH-0001</strong> · {patient?.village || 'Wai'}, Satara
             </div>
           </div>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <div className="lang-toggle">
-            <button className={lang === 'en' ? 'active' : ''} onClick={() => lang !== 'en' && toggleLang()}>EN</button>
-            <button className={lang === 'mr' ? 'active' : ''} onClick={() => lang !== 'mr' && toggleLang()}>मराठी</button>
-          </div>
-          <button className="btn btn-secondary btn-sm" onClick={() => navigate('/login')}>
-            <LogOut size={14} /> {t('exit_portal')}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <button className="btn btn-ghost btn-sm" onClick={toggleLang} style={{ fontWeight: 800, fontSize: '0.8125rem' }}>
+            {lang === 'mr' ? 'EN' : 'मराठी'}
+          </button>
+          <button className="btn btn-ghost btn-sm" onClick={() => navigate('/login')} style={{ color: '#E11D48' }} title="Logout">
+            <LogOut size={16} />
           </button>
         </div>
       </header>
+
+      {/* PROMINENT INCOMING DOCTOR TELECONSULTATION CALL BANNER */}
+      <div style={{ maxWidth: '800px', margin: '0 auto 24px' }}>
+        <div style={{
+          background: 'linear-gradient(135deg, #0F172A 0%, #1E293B 100%)',
+          color: '#FFFFFF',
+          borderRadius: '20px',
+          padding: '18px 22px',
+          boxShadow: '0 16px 36px rgba(15, 23, 42, 0.2)',
+          border: '2px solid rgba(13, 148, 136, 0.6)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          flexWrap: 'wrap',
+          gap: '16px'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+            <div style={{
+              width: '48px',
+              height: '48px',
+              borderRadius: '50%',
+              background: 'linear-gradient(135deg, #0D9488 0%, #2563EB 100%)',
+              color: '#FFFFFF',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              boxShadow: '0 0 20px rgba(13, 148, 136, 0.8)',
+              animation: 'pulse 1.2s infinite',
+              flexShrink: 0
+            }}>
+              <Video size={24} />
+            </div>
+            <div>
+              <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#38BDF8', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                📞 INCOMING DOCTOR TELECONSULTATION CALL
+              </div>
+              <div style={{ fontSize: '1.125rem', fontWeight: 800, color: '#FFFFFF', marginTop: '2px' }}>
+                Dr. S Saindhavi, MD (OB-GYN Specialist)
+              </div>
+              <div style={{ fontSize: '0.75rem', color: '#94A3B8', marginTop: '2px' }}>
+                District Hospital Satara · Contact Mobile: <strong style={{ color: '#34D399' }}>+91 9342222160</strong>
+              </div>
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+            <button
+              className="btn btn-primary"
+              onClick={() => navigate('/teleconsultation')}
+              style={{ background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)', border: 'none', height: '42px', padding: '0 20px', fontWeight: 800, fontSize: '0.875rem' }}
+            >
+              <Video size={18} /> Accept & Join Video Call
+            </button>
+            <a
+              href="tel:+919342222160"
+              className="btn btn-ghost"
+              style={{ background: 'rgba(255, 255, 255, 0.12)', color: '#FFFFFF', height: '42px', padding: '0 16px', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 700, fontSize: '0.8125rem' }}
+              title="Call +91 9342222160"
+            >
+              <PhoneCall size={16} /> Dial Phone (+91 9342222160)
+            </a>
+          </div>
+        </div>
+      </div>
 
       <main style={{ maxWidth: '800px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '20px' }}>
         
