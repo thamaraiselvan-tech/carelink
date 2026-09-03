@@ -13,7 +13,8 @@ export default function SihJudgeDemoBar() {
   const [activeStep, setActiveStep] = useState(1);
   const [showNotes, setShowNotes] = useState(false);
   const [activeScenario, setActiveScenario] = useState('maternal'); // 'maternal' | 'fever' | 'reroute'
-  const [isMinimized, setIsMinimized] = useState(false);
+  // Default to minimized on mobile screens (<768px) to prevent layout blocking
+  const [isMinimized, setIsMinimized] = useState(() => typeof window !== 'undefined' && window.innerWidth < 768);
 
   const steps = [
     { num: 1, title: 'Village Entry', route: '/login', role: null, notes: 'Imagine I am Sunita, a patient from a rural village in Maharashtra. This is my first time using CareLink AI. I choose Marathi language.' },
@@ -70,24 +71,25 @@ export default function SihJudgeDemoBar() {
         onClick={() => setIsMinimized(false)}
         style={{
           position: 'fixed',
-          bottom: '24px',
-          right: '24px',
-          zIndex: 999999,
+          bottom: '80px',
+          right: '16px',
+          zIndex: 99999,
           background: 'linear-gradient(135deg, #0D9488 0%, #2563EB 100%)',
           color: '#FFFFFF',
           border: '2px solid #FFFFFF',
           borderRadius: '9999px',
-          padding: '10px 18px',
-          fontSize: '0.78125rem',
+          padding: '8px 14px',
+          fontSize: '0.71875rem',
           fontWeight: 800,
-          boxShadow: '0 12px 30px rgba(13, 148, 136, 0.4)',
+          boxShadow: '0 8px 24px rgba(13, 148, 136, 0.4)',
           cursor: 'pointer',
           display: 'flex',
           alignItems: 'center',
           gap: '6px'
         }}
+        title="Expand SIH Live Demo Stepper Bar"
       >
-        <Sparkles size={16} /> SIH Live Demo Mode (Step {activeStep}/16)
+        <Sparkles size={14} /> Step {activeStep}/16
       </button>
     );
   }

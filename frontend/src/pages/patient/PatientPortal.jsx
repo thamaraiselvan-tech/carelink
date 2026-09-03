@@ -310,7 +310,7 @@ export default function PatientPortal() {
                   2nd Trimester OPD Consultation
                 </div>
                 <div className="event-detail">🏥 Diagnosis: Normal pregnancy progression</div>
-                <div className="event-detail">Consultation completed by Dr. Suresh Kulkarni. Fetal heart rate normal.</div>
+                <div className="event-detail">Consultation completed by Dr. S Saindhavi, MD. Fetal heart rate normal.</div>
               </div>
             </div>
 

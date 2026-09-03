@@ -12,10 +12,10 @@ export default function VoiceAssistantWidget() {
   const [showWidget, setShowWidget] = useState(false);
   const [recognition, setRecognition] = useState(null);
 
-  // Draggable Position State (default bottom left area clearing sidebar)
+  // Draggable Position State (default bottom area clearing mobile CTAs)
   const [pos, setPos] = useState(() => ({
-    x: 260,
-    y: Math.max(100, window.innerHeight - 90)
+    x: typeof window !== 'undefined' && window.innerWidth < 768 ? Math.max(16, window.innerWidth - 72) : 260,
+    y: typeof window !== 'undefined' && window.innerWidth < 768 ? Math.max(100, window.innerHeight - 150) : Math.max(100, window.innerHeight - 90)
   }));
   const isDraggingRef = useRef(false);
   const dragStartRef = useRef({ x: 0, y: 0 });

@@ -37,7 +37,7 @@ export default function DoctorDashboard() {
         <div>
           <h1 className="page-title">{t('incoming_referrals')}</h1>
           <p className="page-subtitle">
-            {user?.facility_name || 'PHC Karjat'} · {user?.full_name || 'Dr. Suresh Kulkarni'} ({user?.specialization || (lang === 'mr' ? 'वैद्यकीय अधिकारी' : 'General Medicine')})
+            {user?.facility_name || 'District Hospital Satara'} · {user?.full_name || 'Dr. S Saindhavi, MD'} ({user?.specialization || 'OB-GYN Specialist'})
           </p>
         </div>
         <div>

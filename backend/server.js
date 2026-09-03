@@ -74,7 +74,7 @@ const defaultSeed = {
     {
       id: 'r1', patient_id: 'p2', patient_name: 'Priyanka Gaikwad', patient_age: 22, patient_gender: 'Female', patient_risk_level: 'moderate',
       from_facility: 'f3', from_facility_name: 'PHC Karjat', to_facility: 'f7', to_facility_name: 'District Hospital Satara',
-      referred_by: 'w4', referred_by_name: 'Dr. Suresh Kulkarni',
+      referred_by: 'w4', referred_by_name: 'Dr. S Saindhavi, MD',
       status: 'closed', urgency: 'routine', reason: 'ANC 32-week ultrasound evaluation', complaint_category: 'Obstetrics',
       consultation_outcome: 'Ultrasound normal. Baby growth on track.', feedback_to_referrer: 'Normal obstetric evaluation completed. Next checkup at PHC level.',
       created_at: new Date(Date.now() - 259200000).toISOString()

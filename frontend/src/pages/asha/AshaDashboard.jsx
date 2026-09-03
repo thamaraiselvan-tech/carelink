@@ -71,7 +71,7 @@ export default function AshaDashboard() {
   });
 
   return (
-    <div style={{ paddingBottom: '88px' }}>
+    <div style={{ paddingTop: '12px', paddingBottom: '100px' }}>
       {/* Mobile-First Header */}
       <div className="page-header-box" style={{ marginBottom: '20px' }}>
         <div>

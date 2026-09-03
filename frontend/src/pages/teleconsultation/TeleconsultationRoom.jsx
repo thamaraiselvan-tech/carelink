@@ -133,63 +133,60 @@ export default function TeleconsultationRoom() {
 
   return (
     <div style={{ background: '#0F172A', color: '#FFFFFF', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      {/* TOP ROOM HEADER */}
+      {/* TOP ROOM HEADER — Mobile Responsive Layout */}
       <header style={{
-        height: '64px',
-        background: 'rgba(30, 41, 59, 0.95)',
+        minHeight: '60px',
+        background: 'rgba(30, 41, 59, 0.98)',
         backdropFilter: 'blur(12px)',
         borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-        padding: '0 20px',
+        padding: '10px 16px',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        flexWrap: 'nowrap',
+        flexWrap: 'wrap',
+        gap: '10px',
         zIndex: 10
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', minWidth: 0 }}>
-          <button className="btn btn-ghost btn-sm" style={{ color: '#94A3B8', padding: '4px 8px' }} onClick={() => navigate(-1)}>
-            <ChevronLeft size={18} /> Back
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0, flex: 1 }}>
+          <button className="btn btn-ghost btn-sm" style={{ color: '#94A3B8', padding: '4px 6px' }} onClick={() => navigate(-1)}>
+            <ChevronLeft size={18} />
           </button>
-          <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-            <div style={{ fontSize: '0.9375rem', fontWeight: 800, color: '#FFFFFF', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>eSanjeevani Teleconsultation Hub</span>
-              <span className="badge badge-teal" style={{ fontSize: '10px', flexShrink: 0 }}>ACTIVE SESSION</span>
+          <div style={{ overflow: 'hidden', minWidth: 0 }}>
+            <div style={{ fontSize: '0.875rem', fontWeight: 800, color: '#FFFFFF', display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
+              <span>eSanjeevani Teleconsultation</span>
+              <span className="badge badge-teal" style={{ fontSize: '9px', padding: '2px 6px' }}>ACTIVE</span>
             </div>
-            <div style={{ fontSize: '0.71875rem', color: '#94A3B8', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-              Spoke: Sub-centre Wai ➔ Hub: District Hospital Satara · Patient: <strong>{patientData.full_name}</strong>
+            <div style={{ fontSize: '0.6875rem', color: '#94A3B8', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              Patient: <strong>{patientData.full_name}</strong> · Satara
             </div>
           </div>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
-          <RealtimeCallNetwork phone={patientData.phone} />
-
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
           {/* Direct Cellular Phone Call Trigger to Doctor +91 9677563417 */}
           <a
             href="tel:+919677563417"
             className="btn btn-primary btn-sm"
-            style={{ background: 'linear-gradient(135deg, #0D9488 0%, #2563EB 100%)', textDecoration: 'none', color: '#FFFFFF', fontWeight: 800 }}
+            style={{ background: 'linear-gradient(135deg, #0D9488 0%, #2563EB 100%)', textDecoration: 'none', color: '#FFFFFF', fontWeight: 800, fontSize: '0.75rem', height: '32px', padding: '0 10px' }}
             title="Call Doctor Dr. S Saindhavi, MD on +91 9677563417"
           >
-            <PhoneCall size={14} /> Call Doctor (+91 9677563417)
+            <PhoneCall size={13} /> Call Doctor
           </a>
 
-          <button className="btn btn-secondary btn-sm" onClick={triggerIncomingCallSimulation} title={`Ring patient ${patientData.phone}`}>
-            <PhoneCall size={14} style={{ color: '#10B981' }} /> Ring Frontline ({patientData.phone})
+          <button className="btn btn-secondary btn-sm" onClick={triggerIncomingCallSimulation} style={{ height: '32px', fontSize: '0.75rem', padding: '0 8px' }} title={`Ring patient ${patientData.phone}`}>
+            <PhoneCall size={13} style={{ color: '#10B981' }} /> Ring Patient
           </button>
           
-          <TelephonyDispatcher phone={patientData.phone} patientName={patientData.full_name} />
-          
-          <button className="btn btn-success btn-sm" onClick={() => setShowPrescription(true)}>
-            <FileText size={15} /> Issue e-Prescription
+          <button className="btn btn-success btn-sm" onClick={() => setShowPrescription(true)} style={{ height: '32px', fontSize: '0.75rem', padding: '0 10px' }}>
+            <FileText size={14} /> Prescription
           </button>
         </div>
       </header>
 
       {/* MAIN VIDEO ROOM BODY */}
-      <div style={{ flex: 1, display: 'flex', position: 'relative', overflow: 'hidden' }}>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', position: 'relative', overflow: 'hidden' }}>
         {/* VIDEO STREAMS VIEWPORT */}
-        <div style={{ flex: 1, position: 'relative', background: '#020617', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ flex: 1, position: 'relative', background: '#020617', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '320px' }}>
           
           {/* MAIN SCREEN VIEW (DOCTOR OR LOCAL CAMERA) */}
           <div style={{ position: 'relative', width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -203,32 +200,37 @@ export default function TeleconsultationRoom() {
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                position: 'relative'
+                position: 'relative',
+                padding: '16px 20px',
+                textAlign: 'center'
               }}>
                 <div style={{
-                  width: '130px',
-                  height: '130px',
+                  width: '90px',
+                  height: '90px',
                   borderRadius: '50%',
                   background: 'linear-gradient(135deg, #0D9488 0%, #2563EB 100%)',
                   color: '#FFFFFF',
-                  fontSize: '2.75rem',
+                  fontSize: '2rem',
                   fontWeight: 800,
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  boxShadow: micActive ? '0 0 50px rgba(13, 148, 136, 0.6)' : '0 0 20px rgba(0,0,0,0.5)',
-                  marginBottom: '16px',
-                  transition: 'all 0.3s ease'
+                  boxShadow: micActive ? '0 0 36px rgba(13, 148, 136, 0.6)' : '0 0 16px rgba(0,0,0,0.5)',
+                  marginBottom: '12px',
+                  transition: 'all 0.3s ease',
+                  flexShrink: 0
                 }}>
                   SS
                 </div>
-                <h3 style={{ fontSize: '1.375rem', fontWeight: 800, color: '#FFFFFF' }}>Dr. S Saindhavi, MD (OB-GYN & Maternal-Fetal Specialist)</h3>
-                <p style={{ fontSize: '0.875rem', color: '#14B8A6', fontWeight: 700, marginTop: '4px' }}>
-                  District Hospital Satara · Specialist Teleconsultation Hub
+                <h3 style={{ fontSize: 'clamp(1rem, 3.5vw, 1.25rem)', fontWeight: 800, color: '#FFFFFF', lineHeight: 1.3, maxWidth: '90%' }}>
+                  Dr. S Saindhavi, MD
+                </h3>
+                <p style={{ fontSize: '0.75rem', color: '#14B8A6', fontWeight: 700, marginTop: '2px' }}>
+                  OB-GYN & Maternal-Fetal Specialist · District Hospital Satara
                 </p>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '12px', background: 'rgba(16, 185, 129, 0.15)', padding: '6px 14px', borderRadius: '9999px', border: '1px solid rgba(52, 211, 153, 0.3)' }}>
-                  <CheckCircle2 size={16} color="#34D399" />
-                  <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#34D399' }}>Verified MoHFW eSanjeevani Teleconsultant</span>
+                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', marginTop: '10px', background: 'rgba(16, 185, 129, 0.15)', padding: '4px 10px', borderRadius: '9999px', border: '1px solid rgba(52, 211, 153, 0.3)' }}>
+                  <CheckCircle2 size={14} color="#34D399" />
+                  <span style={{ fontSize: '0.6875rem', fontWeight: 800, color: '#34D399' }}>Verified MoHFW Teleconsultant</span>
                 </div>
               </div>
             ) : (
