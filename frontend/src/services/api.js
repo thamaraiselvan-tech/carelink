@@ -116,4 +116,7 @@ export const getDashboardTrends = () => safeCall(() => api.get('/dashboard/trend
 export const getOutreachAlerts = () => safeCall(() => api.get('/outreach/alerts'), seedData.followups);
 export const syncOfflineRecords = (records) => safeCall(() => api.post('/sync', { records }), { synced: records?.length || 0, results: [] });
 
+export const initiateTelephonyCall = (phone, reason) => safeCall(() => api.post('/telephony/call', { phone, reason }), { success: true });
+export const sendTelephonySMS = (phone, message) => safeCall(() => api.post('/telephony/sms', { phone, message }), { success: true });
+
 export default api;
