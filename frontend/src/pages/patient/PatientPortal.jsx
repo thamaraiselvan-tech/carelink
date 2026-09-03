@@ -116,18 +116,22 @@ export default function PatientPortal() {
           <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
             <button
               className="btn btn-primary"
-              onClick={() => navigate('/teleconsultation')}
+              onClick={() => {
+                // Trigger auto dial to doctor phone when switching to video call
+                window.location.href = 'tel:+919677563417';
+                setTimeout(() => navigate('/teleconsultation'), 800);
+              }}
               style={{ background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)', border: 'none', height: '42px', padding: '0 20px', fontWeight: 800, fontSize: '0.875rem' }}
             >
-              <Video size={18} /> Accept & Join Video Call
+              <Video size={18} /> Join Video & Call Doctor (+91 9677563417)
             </button>
             <a
-              href="tel:+919342222160"
+              href="tel:+919677563417"
               className="btn btn-ghost"
               style={{ background: 'rgba(255, 255, 255, 0.12)', color: '#FFFFFF', height: '42px', padding: '0 16px', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 700, fontSize: '0.8125rem' }}
-              title="Call +91 9342222160"
+              title="Call Doctor Dr. S Saindhavi, MD on +91 9677563417"
             >
-              <PhoneCall size={16} /> Dial Phone (+91 9342222160)
+              <PhoneCall size={16} /> Dial Doctor (+91 9677563417)
             </a>
           </div>
         </div>

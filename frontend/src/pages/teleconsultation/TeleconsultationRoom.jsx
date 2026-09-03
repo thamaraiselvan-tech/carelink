@@ -164,8 +164,18 @@ export default function TeleconsultationRoom() {
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
           <RealtimeCallNetwork phone={patientData.phone} />
 
+          {/* Direct Cellular Phone Call Trigger to Doctor +91 9677563417 */}
+          <a
+            href="tel:+919677563417"
+            className="btn btn-primary btn-sm"
+            style={{ background: 'linear-gradient(135deg, #0D9488 0%, #2563EB 100%)', textDecoration: 'none', color: '#FFFFFF', fontWeight: 800 }}
+            title="Call Doctor Dr. S Saindhavi, MD on +91 9677563417"
+          >
+            <PhoneCall size={14} /> Call Doctor (+91 9677563417)
+          </a>
+
           <button className="btn btn-secondary btn-sm" onClick={triggerIncomingCallSimulation} title={`Ring patient ${patientData.phone}`}>
-            <PhoneCall size={14} style={{ color: '#10B981' }} /> Ring ({patientData.phone})
+            <PhoneCall size={14} style={{ color: '#10B981' }} /> Ring Frontline ({patientData.phone})
           </button>
           
           <TelephonyDispatcher phone={patientData.phone} patientName={patientData.full_name} />
@@ -275,9 +285,9 @@ export default function TeleconsultationRoom() {
             ) : (
               <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: '#1E293B' }}>
                 <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: '#0D9488', color: '#FFFFFF', fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  KP
+                  SS
                 </div>
-                <span style={{ fontSize: '11px', color: '#38BDF8', fontWeight: 800, marginTop: '4px' }}>Dr. Kavita Patil</span>
+                <span style={{ fontSize: '11px', color: '#38BDF8', fontWeight: 800, marginTop: '4px' }}>Dr. S Saindhavi, MD</span>
               </div>
             )}
 
