@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Phone, MessageSquare, Send, CheckCircle2, PhoneCall, X, Smartphone } from 'lucide-react';
 import { useLang } from '../../context/LanguageContext';
 
-export default function TelephonyDispatcher({ phone = '8428705251', patientName = 'Sunita Jadhav', customMessage = '' }) {
+export default function TelephonyDispatcher({ phone = '9342222160', patientName = 'Sunita Jadhav', customMessage = '' }) {
   const { lang, t } = useLang();
   const [showModal, setShowModal] = useState(false);
   const [mode, setMode] = useState('sms'); // 'sms' | 'call'

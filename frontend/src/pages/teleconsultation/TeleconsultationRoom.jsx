@@ -26,7 +26,7 @@ export default function TeleconsultationRoom() {
   const [incomingCall, setIncomingCall] = useState(false);
   const [messages, setMessages] = useState([
     { sender: 'System', text: 'eSanjeevani Teleconsultation Session Connected securely.', time: 'Just now' },
-    { sender: 'Dr. Kavita Patil', text: 'Hello, I have reviewed the vitals and red flags from Sub-centre Wai. Let us examine the BP trend.', time: '1 min ago' }
+    { sender: 'Dr. S Saindhavi, MD', text: 'Hello, I have reviewed the vitals and red flags from Sub-centre Wai. Let us examine the BP trend.', time: '1 min ago' }
   ]);
   const [inputMsg, setInputMsg] = useState('');
 
@@ -36,7 +36,7 @@ export default function TeleconsultationRoom() {
     full_name_mr: 'सुनीता जाधव',
     age: 26,
     gender: 'Female',
-    phone: '8428705251',
+    phone: '9342222160',
     abha_id: '91-8428-7052-5101',
     conditions: ['ANC'],
     risk_level: 'high',
@@ -210,15 +210,15 @@ export default function TeleconsultationRoom() {
                   marginBottom: '16px',
                   transition: 'all 0.3s ease'
                 }}>
-                  KP
+                  SS
                 </div>
-                <h3 style={{ fontSize: '1.375rem', fontWeight: 800, color: '#FFFFFF' }}>Dr. Kavita Patil (OB-GYN Specialist)</h3>
+                <h3 style={{ fontSize: '1.375rem', fontWeight: 800, color: '#FFFFFF' }}>Dr. S Saindhavi, MD (OB-GYN & Maternal-Fetal Specialist)</h3>
                 <p style={{ fontSize: '0.875rem', color: '#14B8A6', fontWeight: 700, marginTop: '4px' }}>
                   District Hospital Satara · Specialist Teleconsultation Hub
                 </p>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '12px', background: 'rgba(16, 185, 129, 0.15)', padding: '6px 14px', borderRadius: '9999px', border: '1px solid rgba(52, 211, 153, 0.3)' }}>
                   <CheckCircle2 size={16} color="#34D399" />
-                  <span style={{ fontSize: '0.8125rem', color: '#34D399', fontWeight: 700 }}>Live HD Video Stream Connected</span>
+                  <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#34D399' }}>Verified MoHFW eSanjeevani Teleconsultant</span>
                 </div>
               </div>
             ) : (
@@ -575,9 +575,9 @@ export default function TeleconsultationRoom() {
               INCOMING eSANJEEVANI TELECONSULTATION CALL
             </div>
 
-            <h2 style={{ fontSize: '1.375rem', fontWeight: 800, marginTop: '6px' }}>Dr. Kavita Patil (OB-GYN)</h2>
+            <h2 style={{ fontSize: '1.375rem', fontWeight: 800, marginTop: '6px' }}>Dr. S Saindhavi, MD</h2>
             <p style={{ fontSize: '0.8125rem', color: '#94A3B8', marginTop: '2px' }}>
-              District Hospital Satara · Calling +91 8428705251
+              District Hospital Satara · Calling Frontline Worker / Patient +91 9342222160
             </p>
 
             <div style={{ margin: '24px 0', padding: '12px', background: 'rgba(255, 255, 255, 0.06)', borderRadius: '12px', fontSize: '0.75rem', color: '#34D399', fontWeight: 700 }}>

@@ -201,10 +201,10 @@ export default function VoiceAssistantWidget() {
     }
     // 9. TELEPHONY PHONE CALL ALERT
     else if (cmd.includes('phone') || cmd.includes('mobile') || cmd.includes('सेल')) {
-      const reply = lang === 'mr' ? '+91 8428705251 वर टेलिफोनी कॉल ट्रिगर केला आहे.' : 'Triggered telephony phone call alert to +91 8428705251.';
+      const reply = lang === 'mr' ? '+91 9677563417 वर टेलिफोनी कॉल ट्रिगर केला आहे.' : 'Triggered telephony phone call alert to +91 9677563417.';
       setAssistantResponse(reply);
       speakText(reply);
-      window.location.href = 'tel:+918428705251';
+      window.location.href = 'tel:+919677563417';
     }
     // DEFAULT GENERIC ACTION
     else {

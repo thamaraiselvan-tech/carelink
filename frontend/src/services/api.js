@@ -11,27 +11,27 @@ const api = axios.create({
 // Seed data fallbacks for static production previews when backend is unreachable
 const seedData = {
   workers: [
-    { id: 'w1', full_name: 'Anita Shinde', role: 'asha', facility_id: 'f1', facility_name: 'Sub-centre Wai', facility_type: 'sub_centre' },
-    { id: 'w4', full_name: 'Dr. Suresh Kulkarni', role: 'doctor', specialization: 'General Medicine', facility_id: 'f3', facility_name: 'PHC Karjat', facility_type: 'phc' },
-    { id: 'w6', full_name: 'Manoj Thorat', role: 'admin', facility_id: 'f7', facility_name: 'District Hospital Satara', facility_type: 'district_hospital' }
+    { id: 'w1', full_name: 'Poojha G', role: 'asha', phone: '9342222160', facility_id: 'f1', facility_name: 'Sub-centre Wai', facility_type: 'sub_centre' },
+    { id: 'w4', full_name: 'Dr. S Saindhavi, MD', role: 'doctor', phone: '9677563417', specialization: 'OB-GYN & Maternal-Fetal Specialist', facility_id: 'f7', facility_name: 'District Hospital Satara', facility_type: 'district_hospital' },
+    { id: 'w6', full_name: 'Manoj Thorat', role: 'admin', phone: '9812345003', facility_id: 'f7', facility_name: 'District Hospital Satara', facility_type: 'district_hospital' }
   ],
   patients: [
-    { id: 'p1', full_name: 'Sunita Jadhav', full_name_mr: 'सुनीता जाधव', age: 26, gender: 'Female', phone: '9812345001', village: 'Wai', taluka: 'Wai', district: 'Satara', blood_group: 'B+', conditions: ['ANC'], risk_level: 'high', registered_by: 'w1', last_visit_at: '2026-07-15T10:00:00Z', status: 'active' },
+    { id: 'p1', full_name: 'Sunita Jadhav', full_name_mr: 'सुनीता जाधव', age: 26, gender: 'Female', phone: '9342222160', village: 'Wai', taluka: 'Wai', district: 'Satara', blood_group: 'B+', conditions: ['ANC'], risk_level: 'high', registered_by: 'w1', last_visit_at: '2026-07-15T10:00:00Z', status: 'active' },
     { id: 'p2', full_name: 'Priyanka Gaikwad', full_name_mr: 'प्रियांका गायकवाड', age: 22, gender: 'Female', phone: '9812345002', village: 'Mahabaleshwar', taluka: 'Mahabaleshwar', district: 'Satara', blood_group: 'A+', conditions: ['ANC'], risk_level: 'moderate', registered_by: 'w2', last_visit_at: '2026-08-20T10:00:00Z', status: 'active' },
     { id: 'p3', full_name: 'Asha Pawar', full_name_mr: 'आशा पवार', age: 28, gender: 'Female', phone: '9812345004', village: 'Wai', taluka: 'Wai', district: 'Satara', blood_group: 'AB+', conditions: ['ANC'], risk_level: 'high', registered_by: 'w1', last_visit_at: '2026-06-10T10:00:00Z', status: 'active' },
     { id: 'p4', full_name: 'Ramesh Patil', full_name_mr: 'रमेश पाटील', age: 58, gender: 'Male', phone: '9812345008', village: 'Phaltan', taluka: 'Phaltan', district: 'Satara', blood_group: 'A-', conditions: ['Diabetes', 'Hypertension'], risk_level: 'high', registered_by: 'w1', last_visit_at: '2026-08-01T10:00:00Z', status: 'active' },
     { id: 'p5', full_name: 'Ganesh More', full_name_mr: 'गणेश मोरे', age: 45, gender: 'Male', phone: '9812345010', village: 'Wai', taluka: 'Wai', district: 'Satara', blood_group: 'O-', conditions: ['TB'], risk_level: 'high', registered_by: 'w1', last_visit_at: '2026-08-05T10:00:00Z', status: 'active' }
   ],
   records: [
-    { id: 'mr1', patient_id: 'p1', facility_name: 'Sub-centre Wai', recorded_by_name: 'Anita Shinde (ASHA)', record_type: 'vitals', vitals: { bp: '118/76', temp: 98.2, pulse: 78, spo2: 99, weight: 54 }, notes: 'ANC registration. 12 weeks pregnant.', created_at: '2026-04-10T10:00:00Z' },
-    { id: 'mr2', patient_id: 'p1', facility_name: 'PHC Karjat', recorded_by_name: 'Dr. Suresh Kulkarni', record_type: 'consultation', symptoms: ['fatigue', 'mild_nausea'], vitals: { bp: '122/78', temp: 98.4, pulse: 80, spo2: 98, weight: 55 }, assessment_urgency: 'routine', diagnosis: 'Normal pregnancy progression', notes: 'Second trimester checkup completed.', created_at: '2026-06-05T10:00:00Z' },
-    { id: 'mr3', patient_id: 'p1', facility_name: 'Sub-centre Wai', recorded_by_name: 'Anita Shinde (ASHA)', record_type: 'vitals', vitals: { bp: '152/96', temp: 98.6, pulse: 84, spo2: 98, weight: 58 }, notes: 'Third trimester check. High BP warning + pedal edema.', created_at: '2026-07-15T10:00:00Z' }
+    { id: 'mr1', patient_id: 'p1', facility_name: 'Sub-centre Wai', recorded_by_name: 'Poojha G (ASHA)', record_type: 'vitals', vitals: { bp: '118/76', temp: 98.2, pulse: 78, spo2: 99, weight: 54 }, notes: 'ANC registration. 12 weeks pregnant.', created_at: '2026-04-10T10:00:00Z' },
+    { id: 'mr2', patient_id: 'p1', facility_name: 'PHC Karjat', recorded_by_name: 'Dr. S Saindhavi, MD', record_type: 'consultation', symptoms: ['fatigue', 'mild_nausea'], vitals: { bp: '122/78', temp: 98.4, pulse: 80, spo2: 98, weight: 55 }, assessment_urgency: 'routine', diagnosis: 'Normal pregnancy progression', notes: 'Second trimester checkup completed.', created_at: '2026-06-05T10:00:00Z' },
+    { id: 'mr3', patient_id: 'p1', facility_name: 'Sub-centre Wai', recorded_by_name: 'Poojha G (ASHA)', record_type: 'vitals', vitals: { bp: '152/96', temp: 98.6, pulse: 84, spo2: 98, weight: 58 }, notes: 'Third trimester check. High BP warning + pedal edema.', created_at: '2026-07-15T10:00:00Z' }
   ],
   referrals: [
     {
       id: 'r2', patient_id: 'p1', patient_name: 'Sunita Jadhav', patient_age: 26, patient_gender: 'Female', patient_risk_level: 'high',
       from_facility: 'f1', from_facility_name: 'Sub-centre Wai', to_facility: 'f7', to_facility_name: 'District Hospital Satara',
-      referred_by: 'w1', referred_by_name: 'Anita Shinde',
+      referred_by: 'w1', referred_by_name: 'Poojha G',
       status: 'created', urgency: 'emergency_review', reason: 'Pre-eclampsia warning signs: Elevated BP (152/96) + headache + swelling in 3rd trimester ANC.', complaint_category: 'Obstetrics',
       symptoms_summary: 'Headache, Swelling in feet', duration: '3 days', severity: 'high',
       created_at: new Date().toISOString()

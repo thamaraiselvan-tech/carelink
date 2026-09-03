@@ -18,19 +18,19 @@ export default function SihJudgeDemoBar() {
   const steps = [
     { num: 1, title: 'Village Entry', route: '/login', role: null, notes: 'Imagine I am Sunita, a patient from a rural village in Maharashtra. This is my first time using CareLink AI. I choose Marathi language.' },
     { num: 2, title: 'New Patient + Identity', route: '/login', role: null, notes: 'Register new patient Sunita Patil, Age 28. Identity verified in Sandbox mode, creating CareLink Patient ID CL-MH-0001 linked to ABHA ID.' },
-    { num: 3, title: 'ASHA-Assisted Profile', route: '/asha', role: 'asha', notes: 'ASHA worker Anita Shinde assists Sunita at Sub-centre Wai. CareLink AI does not assume every rural patient owns a smartphone.' },
-    { num: 4, title: 'Symptoms, Vitals & Safety', route: '/asha/triage/p1', role: 'asha', notes: 'Enter headache, swelling of feet, BP 152/96. CareLink outputs URGENT care level and red flags. CareLink does not diagnose; it identifies risk.' },
+    { num: 3, title: 'ASHA-Assisted Profile', route: '/asha', role: 'asha', notes: 'ASHA worker Poojha G assists Sunita at Sub-centre Wai. CareLink AI does not assume every rural patient owns a smartphone.' },
+    { num: 4, title: 'Red-Flag Safety Assessment', route: '/asha/triage/p1', role: 'asha', notes: 'Engine evaluates ANC vitals (BP 152/96, pedal edema) and triggers URGENT MATERNAL EVALUATION red-flag banner.' },
     { num: 5, title: 'Smart Facility Recommendation', route: '/asha/referral/create/p1', role: 'asha', notes: 'Smart Facility Matcher recommends District Hospital Satara based on OB-GYN specialty, diagnostic capability (Ultrasound), and doctor availability.' },
     { num: 6, title: 'Digital Referral', route: '/asha/referral/create/p1', role: 'asha', notes: 'Click Create Referral CL-REF-00124. Status transitions: CREATED -> NOTIFIED -> CONFIRMED. A referral becomes a trackable digital journey.' },
     { num: 7, title: 'Before the Journey — Queue & Availability', route: '/patient', role: 'patient', notes: 'Don\'t travel blindly! Patient sees District Hospital Satara queue status: 4 ahead, 35 min wait before starting travel.' },
-    { num: 8, title: 'Specialist Worklist', route: '/doctor', role: 'doctor', notes: 'Switch to Doctor Suresh Kulkarni at District Hospital Satara. Incoming referral CL-REF-00124 appears in urgent worklist.' },
+    { num: 8, title: 'Specialist Worklist', route: '/doctor', role: 'doctor', notes: 'Switch to Doctor S Saindhavi at District Hospital Satara. Incoming referral CL-REF-00124 appears in urgent worklist.' },
     { num: 9, title: 'eSanjeevani Consultation', route: '/teleconsultation', role: 'doctor', notes: 'Open eSanjeevani WebRTC room. Review patient vitals HUD, local video feed, and in-call chat.' },
     { num: 10, title: 'Physician e-Prescription', route: '/teleconsultation', role: 'doctor', notes: 'Physician enters ICD-10 diagnosis O14.0 and issues CareLink AI Dual Bilingual A4 PDF e-Prescription.' },
     { num: 11, title: 'Referral Completed', route: '/doctor/referral/r1', role: 'doctor', notes: 'Referral status transitions to COMPLETED. Closed-loop care achieved.' },
     { num: 12, title: 'Follow-Up Scheduled', route: '/doctor/referral/r1', role: 'doctor', notes: 'Doctor schedules ANC 3rd Trimester follow-up for 15 September 2026.' },
     { num: 13, title: 'Longitudinal Patient Timeline', route: '/patient', role: 'patient', notes: 'Patient longitudinal record tracks every event across the health system from registration to prescription.' },
     { num: 14, title: 'Missed Care Detection', route: '/patient', role: 'patient', notes: 'Jump forward in time: 15 Sep follow-up missed. System triggers Overdue Care Alert.' },
-    { num: 15, title: 'ASHA Re-engagement', route: '/asha/referrals', role: 'asha', notes: 'ASHA receives overdue care alert for Sunita Patil and dispatches SMS / IVR voice outreach to +91 8428705251.' },
+    { num: 15, title: 'ASHA Re-engagement', route: '/asha/referrals', role: 'asha', notes: 'ASHA receives overdue care alert for Sunita Patil and dispatches SMS / IVR voice outreach to +91 9342222160.' },
     { num: 16, title: 'Public Health Dashboard', route: '/admin', role: 'admin', notes: 'Executive dashboard reflects completed referral, active follow-ups, and district-wide care coordination metrics.' }
   ];
 
@@ -50,13 +50,13 @@ export default function SihJudgeDemoBar() {
 
     // Set correct role context for the step
     if (target.role === 'asha') {
-      login({ id: 'w1', full_name: 'Anita Shinde', role: 'asha', facility_name: 'Sub-centre Wai' });
+      login({ id: 'w1', full_name: 'Poojha G', role: 'asha', facility_name: 'Sub-centre Wai' });
     } else if (target.role === 'doctor') {
-      login({ id: 'doc1', full_name: 'Dr. Suresh Kulkarni', role: 'doctor', facility_name: 'District Hospital Satara' });
+      login({ id: 'doc1', full_name: 'Dr. S Saindhavi, MD', role: 'doctor', facility_name: 'District Hospital Satara' });
     } else if (target.role === 'admin') {
       login({ id: 'admin1', full_name: 'Manoj Thorat (DHO)', role: 'admin', facility_name: 'Satara District Health Office' });
     } else if (target.role === 'patient') {
-      login({ id: 'demo_patient', full_name: 'Sunita Patil', role: 'patient', phone: '8428705251', abha_id: '91-8428-7052-5101' });
+      login({ id: 'demo_patient', full_name: 'Sunita Patil', role: 'patient', phone: '9342222160', abha_id: '91-8428-7052-5101' });
     }
 
     if (location.pathname !== target.route) {

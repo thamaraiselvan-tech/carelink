@@ -13,14 +13,14 @@ export default function EPrescriptionModal({ isOpen, onClose, patient, referral,
   const age = patient?.age || referral?.patient_age || 26;
   const genderEn = patient?.gender || referral?.patient_gender || 'Female';
   const genderMr = genderEn === 'Female' ? 'महिला' : 'पुरुष';
-  const phone = patient?.phone || '8428705251';
+  const phone = patient?.phone || '9342222160';
   const abhaId = patient?.abha_id || '91-8428-7052-5101';
   const rxId = prescriptionData?.rxId || `Rx-CL-2026-${Math.floor(1000 + Math.random() * 9000)}`;
   const dateStr = new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
 
-  const doctorNameEn = prescriptionData?.doctorName || referral?.referred_by_name || 'Dr. Kavita Patil (OB-GYN Specialist)';
-  const doctorNameMr = 'डॉ. कविता पाटील (स्त्रीरोग व प्रसूती तज्ज्ञ)';
-  const doctorReg = prescriptionData?.doctorReg || 'MMC Reg No: 2014/05/1892';
+  const doctorNameEn = prescriptionData?.doctorName || referral?.referred_by_name || 'Dr. S Saindhavi, MD (OB-GYN & Maternal-Fetal Specialist)';
+  const doctorNameMr = 'डॉ. एस सेंधवी (स्त्रीरोग व प्रसूती तज्ज्ञ)';
+  const doctorReg = prescriptionData?.doctorReg || 'MMC Reg No: 2014/05/1892 · Contact: +91 9677563417';
   const facilityNameEn = prescriptionData?.facilityName || referral?.to_facility_name || 'District Hospital Satara';
   const facilityNameMr = 'जिल्हा रुग्णालय सातारा';
 
@@ -327,7 +327,7 @@ export default function EPrescriptionModal({ isOpen, onClose, patient, referral,
                 {abhaId}
               </div>
               <div style={{ fontSize: '0.75rem', color: '#334155', marginTop: '4px' }}>
-                ABHA Address: 8428705251@abdm
+                ABHA Address: 9342222160@abdm
               </div>
             </div>
 

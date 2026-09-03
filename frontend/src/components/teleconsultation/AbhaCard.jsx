@@ -5,8 +5,8 @@ export default function AbhaCard({ patient }) {
   const { lang } = useLang();
 
   const abhaId = patient?.abha_id || '91-8428-7052-5101';
-  const abhaAddress = patient?.abha_address || '8428705251@abdm';
-  const phone = patient?.phone || '8428705251';
+  const abhaAddress = patient?.abha_address || '9342222160@abdm';
+  const phone = patient?.phone || '9342222160';
   const name = patient?.full_name || 'Sunita Jadhav';
   const nameMr = patient?.full_name_mr || 'सुनीता जाधव';
 

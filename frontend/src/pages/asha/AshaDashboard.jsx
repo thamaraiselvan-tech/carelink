@@ -77,7 +77,7 @@ export default function AshaDashboard() {
         <div>
           <h1 className="page-title" style={{ fontSize: '1.75rem' }}>{t('patients')}</h1>
           <p className="page-subtitle" style={{ fontSize: '0.9375rem', fontWeight: 600 }}>
-            {user?.facility_name || 'Sub-centre Wai'} · {user?.full_name || 'Anita Shinde'} (Field Officer)
+            {user?.facility_name || 'Sub-centre Wai'} · {user?.full_name || 'Poojha G'} (Field Officer)
           </p>
         </div>
       </div>

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Wifi, PhoneCall, ShieldCheck, Activity, Smartphone, Radio, Zap } from 'lucide-react';
 import { CareLinkPeerEngine } from '../../services/webrtcEngine';
 
-export default function RealtimeCallNetwork({ phone = '8428705251' }) {
+export default function RealtimeCallNetwork({ phone = '9342222160' }) {
   const [stats, setStats] = useState({
     rttMs: 32,
     bitrateKbps: 64,

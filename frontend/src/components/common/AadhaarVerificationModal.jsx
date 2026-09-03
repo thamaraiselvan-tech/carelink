@@ -30,7 +30,7 @@ export default function AadhaarVerificationModal({ isOpen, onClose, onVerified, 
   const handleVerifyOtp = (e) => {
     e.preventDefault();
     if (otp.length < 4) {
-      setError('Please enter the OTP sent to linked mobile +91 8428705251');
+      setError('Please enter the OTP sent to linked mobile +91 9677563417');
       return;
     }
     setError('');
@@ -121,7 +121,7 @@ export default function AadhaarVerificationModal({ isOpen, onClose, onVerified, 
                 style={{ fontSize: '1rem', fontWeight: 800, letterSpacing: '0.08em', fontFamily: 'monospace' }}
               />
               <div style={{ fontSize: '0.71875rem', color: '#64748B', marginTop: '4px' }}>
-                OTP will be sent to registered mobile: <strong>+91 8428705251</strong>
+                OTP will be sent to registered mobile: <strong>+91 9677563417</strong>
               </div>
             </div>
 
@@ -134,7 +134,7 @@ export default function AadhaarVerificationModal({ isOpen, onClose, onVerified, 
         {step === 2 && (
           <form onSubmit={handleVerifyOtp}>
             <div style={{ background: '#ECFDF5', border: '1px solid #10B981', padding: '10px 14px', borderRadius: '10px', color: '#065F46', fontSize: '0.75rem', marginBottom: '16px' }}>
-              🔑 Demo OTP sent to <strong>+91 8428705251</strong>. Enter <strong>654321</strong> to verify.
+              🔑 Demo OTP sent to <strong>+91 9677563417</strong>. Enter <strong>654321</strong> to verify.
             </div>
 
             <div className="form-group" style={{ marginBottom: '16px' }}>

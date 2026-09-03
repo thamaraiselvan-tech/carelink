@@ -94,10 +94,15 @@ export default function PatientPortal() {
           </div>
 
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '12px', borderTop: '1px solid var(--border-subtle)', flexWrap: 'wrap', gap: '10px' }}>
-            <div style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)' }}>
-              Target Mobile Contact: <strong style={{ color: 'var(--brand-teal)' }}>+91 8428705251</strong>
-            </div>
-            <TelephonyDispatcher phone={patient?.phone || '8428705251'} patientName={patient?.full_name || 'Sunita Jadhav'} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.8125rem', color: 'var(--text-secondary)' }}>
+            <PhoneCall size={16} style={{ color: 'var(--brand-teal)' }} />
+            <span>
+              Target Mobile Contact: <strong style={{ color: 'var(--brand-teal)' }}>+91 9342222160</strong>
+            </span>
+          </div>
+          <div>
+            <TelephonyDispatcher phone={patient?.phone || '9342222160'} patientName={patient?.full_name || 'Sunita Jadhav'} />
+          </div>
           </div>
         </div>
 
@@ -200,7 +205,7 @@ export default function PatientPortal() {
                 ⚠ ANC 3rd Trimester Checkup — Due: 15/08/2026 (Overdue)
               </div>
               <div style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)', marginTop: '4px' }}>
-                High-risk follow-up scheduled with Anita Shinde (ASHA Sub-centre Wai). BP monitoring required.
+                High-risk follow-up scheduled with Poojha G (ASHA Sub-centre Wai). BP monitoring required.
               </div>
             </div>
           </div>
@@ -224,7 +229,7 @@ export default function PatientPortal() {
                   ANC Registration Vitals Logged
                 </div>
                 <div className="event-detail">📊 BP: 118/76 · Temp: 98.2°F · Pulse: 78 · Weight: 54kg</div>
-                <div className="event-detail">First ANC registration completed by Anita Shinde (ASHA).</div>
+                <div className="event-detail">First ANC registration completed by Poojha G (ASHA).</div>
               </div>
             </div>
 

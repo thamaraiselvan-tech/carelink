@@ -314,14 +314,14 @@ export default function LoginPage() {
                 {t('quick_demo_access')}
               </div>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', justifyContent: 'center' }}>
-                <button type="button" className="btn btn-ghost btn-sm" onClick={() => { setSelectedRole('patient'); setUsername('8428705251'); }} style={{ fontSize: '0.71875rem', height: '30px', color: '#059669', background: '#ECFDF5' }}>
+                <button type="button" className="btn btn-ghost btn-sm" onClick={() => { setSelectedRole('patient'); setUsername('9342222160'); }} style={{ fontSize: '0.71875rem', height: '30px', color: '#059669', background: '#ECFDF5' }}>
                   <User size={13} /> Sunita (Patient)
                 </button>
-                <button type="button" className="btn btn-ghost btn-sm" onClick={() => { setSelectedRole('asha'); setUsername('9812345001'); }} style={{ fontSize: '0.71875rem', height: '30px' }}>
-                  <Heart size={13} /> Anita Shinde
+                <button type="button" className="btn btn-ghost btn-sm" onClick={() => { setSelectedRole('asha'); setUsername('9342222160'); }} style={{ fontSize: '0.71875rem', height: '30px' }}>
+                  <Heart size={13} /> Poojha G (Frontline: 9342222160)
                 </button>
-                <button type="button" className="btn btn-ghost btn-sm" onClick={() => { setSelectedRole('doctor'); setUsername('dr.kulkarni@carelink.gov.in'); }} style={{ fontSize: '0.71875rem', height: '30px' }}>
-                  <Stethoscope size={13} /> Dr. Kulkarni
+                <button type="button" className="btn btn-ghost btn-sm" onClick={() => { setSelectedRole('doctor'); setUsername('9677563417'); }} style={{ fontSize: '0.71875rem', height: '30px' }}>
+                  <Stethoscope size={13} /> Dr. S Saindhavi (Doctor: 9677563417)
                 </button>
                 <button type="button" className="btn btn-ghost btn-sm" onClick={() => { setSelectedRole('admin'); setUsername('dho.satara@carelink.gov.in'); }} style={{ fontSize: '0.71875rem', height: '30px' }}>
                   <LayoutDashboard size={13} /> Manoj Thorat
@@ -356,31 +356,37 @@ export default function LoginPage() {
                   <div style={{ fontSize: '0.9375rem', fontWeight: 800, color: '#F8FAFC', lineHeight: 1.25 }}>
                     📞 {t('ivr_banner_title')}
                   </div>
-                  <span className="badge badge-teal" style={{ height: '22px', fontSize: '0.6875rem', marginTop: '4px' }}>
-                    1800-CareLink · +91 8428705251
-                  </span>
+                  <div style={{ display: 'flex', gap: '6px', marginTop: '4px', flexWrap: 'wrap' }}>
+                    <span className="badge badge-teal" style={{ height: '22px', fontSize: '0.6875rem' }}>
+                      Frontline Worker: +91 9342222160
+                    </span>
+                    <span className="badge badge-blue" style={{ height: '22px', fontSize: '0.6875rem', background: 'rgba(37, 99, 235, 0.2)', color: '#60A5FA', border: '1px solid rgba(96, 165, 250, 0.3)' }}>
+                      Doctor Hub: +91 9677563417
+                    </span>
+                  </div>
                 </div>
               </div>
 
-              <div style={{ fontSize: '0.78125rem', color: '#94A3B8', lineHeight: 1.45 }}>
-                {t('ivr_banner_desc')}
-              </div>
+              <p style={{ fontSize: '0.75rem', color: '#94A3B8', lineHeight: 1.5, margin: 0 }}>
+                Patients or family members can dial 1800-CareLink or give a missed call to Frontline Worker line +91 9342222160. CareLink AI executes autonomous Marathi voice triage by phone call.
+              </p>
 
-              <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+              <div style={{ display: 'flex', gap: '10px' }}>
                 <button
-                  onClick={startIvrSimulation}
+                  type="button"
                   className="btn btn-primary"
-                  style={{ flex: 1, height: '42px', fontSize: '0.8125rem', fontWeight: 800, borderRadius: '12px', background: 'linear-gradient(135deg, #0D9488, #2563EB)' }}
+                  onClick={startIvrSimulation}
+                  style={{ flex: 1, fontSize: '0.78125rem', fontWeight: 800, background: 'linear-gradient(135deg, #0D9488 0%, #2563EB 100%)', border: 'none', height: '42px' }}
                 >
-                  {t('simulate_ivr_btn')}
+                  <Volume2 size={16} /> Simulate IVR Call & Marathi Voice Triage
                 </button>
                 <a
-                  href="tel:+918428705251"
-                  className="btn btn-secondary"
-                  style={{ height: '42px', padding: '0 12px', color: '#F8FAFC', background: 'rgba(255, 255, 255, 0.12)', border: '1px solid rgba(255, 255, 255, 0.2)', textDecoration: 'none', display: 'inline-flex', alignItems: 'center' }}
-                  title="Call +91 8428705251"
+                  href="tel:+919342222160"
+                  className="btn btn-ghost"
+                  style={{ color: '#F8FAFC', background: 'rgba(255, 255, 255, 0.1)', fontSize: '0.78125rem', fontWeight: 700, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '6px', height: '42px', padding: '0 16px' }}
+                  title="Call Frontline Worker +91 9342222160"
                 >
-                  📞 Call
+                  <PhoneCall size={14} /> Call Frontline
                 </a>
               </div>
             </div>

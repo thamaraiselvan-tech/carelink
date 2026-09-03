@@ -8,7 +8,7 @@ const EXOTEL_CALLER_ID = process.env.EXOTEL_CALLER_ID || '08047108428';
 /**
  * Initiates an actual PSTN cellular phone call to a target mobile number (e.g. +91 8428705251)
  */
-export async function initiatePhoneCall(targetPhone = '8428705251', customReason = 'eSanjeevani Teleconsultation Session') {
+export async function initiatePhoneCall(targetPhone = '9677563417', customReason = 'eSanjeevani Teleconsultation Session') {
   const cleanPhone = targetPhone.replace(/[^0-9]/g, '');
   const formattedPhone = cleanPhone.length === 10 ? `91${cleanPhone}` : cleanPhone;
 
